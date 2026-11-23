@@ -1,0 +1,2093 @@
+{
+  "asked": "2026-11-23T21:41:58.339Z",
+  "rows": [
+    {
+      "text": "39 N, 44.4",
+      "query": "39 N, 44.4",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.5970854320173748",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "North Main Street",
+          "place_name": "39 North Main Street, Holly, Colorado 81047, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.122704,
+            38.053441
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6790407732530840",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "4440 East",
+          "place_name": "39 4440 East, Rigby, Idaho 83442, United States",
+          "matching_text": "N 4440 E",
+          "matching_place_name": "39 N 4440 E, Rigby, Idaho 83442, United States",
+          "center": [
+            -111.81555,
+            43.672666
+          ]
+        }
+      }
+    },
+    {
+      "text": "105° W, 39.7401",
+      "query": "105° W, 39.7401",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.3157621719231188",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "W Boulevard",
+          "place_name": "W Boulevard, Walsh, Kansas 81090, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.041892,
+            37.294763
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.65339949388134",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "William C. Morris",
+          "place_name": "William C. Morris, Mar del Plata, Buenos Aires Province, B7603, Argentina",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -57.572994,
+            -38.054173
+          ]
+        }
+      }
+    },
+    {
+      "text": "39° 44.4",
+      "query": "39° 44.4",
+      "boxed": {
+        "http": 200,
+        "feature": null
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "postcode.1519151",
+          "place_type": [
+            "postcode"
+          ],
+          "relevance": 0.5,
+          "accuracy": null,
+          "address": null,
+          "text": "4440000",
+          "place_name": "Los Ángeles, Biobío, 4440000, Chile",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -72.352357,
+            -37.470189
+          ]
+        }
+      }
+    },
+    {
+      "text": "39, -105",
+      "query": "39, -105",
+      "boxed": {
+        "http": 200,
+        "feature": null
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": null
+      }
+    },
+    {
+      "text": "39 44.4",
+      "query": "39 44.4",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.4834813356820028",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.8,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "County Road 4441",
+          "place_name": "39 County Road 4441, Grand Lake, Colorado 80447, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.870639,
+            40.205322
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.4758860834038604",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "طريق 4445",
+          "place_name": "39 طريق 4445, 0644, النويدرات, Capital Governorate, Bahrain",
+          "matching_text": "4445",
+          "matching_place_name": "39 4445, 0644, النويدرات, Capital Governorate, Bahrain",
+          "center": [
+            50.598909,
+            26.138614
+          ]
+        }
+      }
+    },
+    {
+      "text": "39 N, 104 W",
+      "query": "39 N, 104 W",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.5970854320173748",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "North Main Street",
+          "place_name": "39 North Main Street, Holly, Colorado 81047, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.122704,
+            38.053441
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.1434841359095306",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "Newton",
+          "place_name": "Newton 39, Mar de Ajó, Buenos Aires Province, B7109, Argentina",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -56.675817,
+            -36.773758
+          ]
+        }
+      }
+    },
+    {
+      "text": "39.7401°",
+      "query": "39.7401°",
+      "boxed": {
+        "http": 200,
+        "feature": null
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": null
+      }
+    },
+    {
+      "text": "39.7401° N",
+      "query": "39.7401° N",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.4821414099056508",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.99,
+          "accuracy": "street",
+          "address": null,
+          "text": "North Josephine Street",
+          "place_name": "North Josephine Street, Denver, Colorado 80206, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.958255,
+            39.731141
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.3308623187912662",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.99,
+          "accuracy": "street",
+          "address": null,
+          "text": "Nambour Mapleton Road",
+          "place_name": "Nambour Mapleton Road, Kureelpa Queensland 4560, Australia",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            152.901907,
+            -26.619734
+          ]
+        }
+      }
+    },
+    {
+      "text": "104°, 39",
+      "query": "104°, 39",
+      "boxed": {
+        "http": 200,
+        "feature": null
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "postcode.134770412",
+          "place_type": [
+            "postcode"
+          ],
+          "relevance": 0.5,
+          "accuracy": null,
+          "address": null,
+          "text": "39759",
+          "place_name": "Starkville, Mississippi 39759, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -88.816466,
+            33.462737
+          ]
+        }
+      }
+    },
+    {
+      "text": "E 470 N",
+      "query": "E 470 N",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.3413731806152394",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.994259,
+          "accuracy": "rooftop",
+          "address": "470",
+          "text": "East 134th Avenue",
+          "place_name": "470 East 134th Avenue, Northglenn, Colorado 80241, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.982343,
+            39.938007
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.7715625652009774",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "470",
+          "text": "Nygård",
+          "place_name": "Nygård 470, 8519 Narvik, Norway",
+          "matching_text": "E 10",
+          "matching_place_name": "E 10 470, 8519 Narvik, Norway",
+          "center": [
+            17.646019,
+            68.475984
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 N 14",
+      "query": "1437 N 14",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6510637472609282",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "1437",
+          "text": "North 14th Street",
+          "place_name": "1437 North 14th Street, Gunnison, Colorado 81230, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -106.932094,
+            38.555119
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.8923726556341020",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "North 14th Street",
+          "place_name": "1437 North 14th Street, Cambridge, Ohio 43725, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -81.580318,
+            40.041218
+          ]
+        }
+      }
+    },
+    {
+      "text": "500 N 200 W 84103",
+      "query": "500 N 200 W 84103",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.1265821424902358",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.455556,
+          "accuracy": "parcel",
+          "address": "200",
+          "text": "West",
+          "place_name": "200 West, Fort Morgan, Colorado 80701, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -103.80841,
+            40.24472
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.8186431365869464",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "500",
+          "text": "North 200 West",
+          "place_name": "500 North 200 West, Salt Lake City, Utah 84103, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -111.896748,
+            40.780394
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock St, Denver, CO",
+      "query": "1437 Bannock St, Denver, Colorado",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock St, Denver",
+      "query": "1437 Bannock St, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock St",
+      "query": "1437 Bannock St",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "200 E Colfax Ave, Denver",
+      "query": "200 E Colfax Ave, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "200",
+          "text": "East Colfax Avenue",
+          "place_name": "200 East Colfax Avenue, Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98487,
+            39.739608
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "200",
+          "text": "East Colfax Avenue",
+          "place_name": "200 East Colfax Avenue, Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98487,
+            39.739608
+          ]
+        }
+      }
+    },
+    {
+      "text": "E Colfax Ave, Denver",
+      "query": "E Colfax Ave, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.805556,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Aurora, Colorado 80010, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.861927,
+            39.740112
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.805556,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Aurora, Colorado 80010, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.861927,
+            39.740112
+          ]
+        }
+      }
+    },
+    {
+      "text": "E Colfax Ave",
+      "query": "E Colfax Ave",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.8609881603925358",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Strasburg, Colorado 80136, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.318362,
+            39.738396
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.1467601198230076",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Mishawaka, Indiana 46545, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -86.17587,
+            41.678023
+          ]
+        }
+      }
+    },
+    {
+      "text": "W Colfax Ave, Lakewood",
+      "query": "W Colfax Ave, Lakewood",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.7982941759819734",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "West Colfax Avenue",
+          "place_name": "West Colfax Avenue, Lakewood, Colorado 80215, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.098841,
+            39.740176
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.7982941759819734",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "West Colfax Avenue",
+          "place_name": "West Colfax Avenue, Lakewood, Colorado 80215, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.098841,
+            39.740176
+          ]
+        }
+      }
+    },
+    {
+      "text": "E Bayaud Ave, Denver",
+      "query": "E Bayaud Ave, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.7144250694302506",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Bayaud Avenue",
+          "place_name": "East Bayaud Avenue, Denver, Colorado 80012, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.863585,
+            39.714697
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.7144250694302506",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Bayaud Avenue",
+          "place_name": "East Bayaud Avenue, Denver, Colorado 80012, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.863585,
+            39.714697
+          ]
+        }
+      }
+    },
+    {
+      "text": "Lookout Mountain Rd",
+      "query": "Lookout Mountain Rd",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.1755828164731744",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Lookout Mountain Road",
+          "place_name": "Lookout Mountain Road, Golden, Colorado 80401, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.237917,
+            39.73333
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.3564526142106630",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Lookout Mountain Rd Thorn",
+          "place_name": "Lookout Mountain Rd Thorn, Oberlin, Ohio 44074, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -82.30113,
+            41.31484
+          ]
+        }
+      }
+    },
+    {
+      "text": "Lookout Mountain Rd, Golden",
+      "query": "Lookout Mountain Rd, Golden",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.1755828164731744",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Lookout Mountain Road",
+          "place_name": "Lookout Mountain Road, Golden, Colorado 80401, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.237917,
+            39.73333
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.1755828164731744",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Lookout Mountain Road",
+          "place_name": "Lookout Mountain Road, Golden, Colorado 80401, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.237917,
+            39.73333
+          ]
+        }
+      }
+    },
+    {
+      "text": "Gamble Gulch Rd",
+      "query": "Gamble Gulch Rd",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6302473791764454",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Gamble Gulch Road",
+          "place_name": "Gamble Gulch Road, Black Hawk, Colorado 80422, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.51263,
+            39.896746
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6302473791764454",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Gamble Gulch Road",
+          "place_name": "Gamble Gulch Road, Black Hawk, Colorado 80422, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.51263,
+            39.896746
+          ]
+        }
+      }
+    },
+    {
+      "text": "E-470",
+      "query": "E-470",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.3845458442398158",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "North Valdai Street",
+          "place_name": "North Valdai Street, Aurora, Colorado 80018, United States",
+          "matching_text": "E-470 Frontage Road",
+          "matching_place_name": "E-470 Frontage Road, Aurora, Colorado 80018, United States",
+          "center": [
+            -104.724384,
+            39.718761
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.4512433723770318",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "470",
+          "text": "E. M. Berro",
+          "place_name": "E. M. Berro 470, Lobos, Buenos Aires Province, B7240, Argentina",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -59.091768,
+            -35.190484
+          ]
+        }
+      }
+    },
+    {
+      "text": "I-25",
+      "query": "I-25",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.5405770489918948",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "Interstate 25",
+          "place_name": "Interstate 25, Trinidad, Colorado 81082, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.43235,
+            36.99775
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.3391239394764438",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "25",
+          "text": "1. Maja",
+          "place_name": "1. Maja 25, 76250 Gradačac, Bosnia and Herzegovina",
+          "matching_text": "I. Maja",
+          "matching_place_name": "I. Maja 25, 76250 Gradačac, Bosnia and Herzegovina",
+          "center": [
+            18.423835,
+            44.880836
+          ]
+        }
+      }
+    },
+    {
+      "text": "US 36",
+      "query": "US 36",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.2057181246188308",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "US Route 36",
+          "place_name": "US Route 36, Idalia, Colorado 80758, United States",
+          "matching_text": "US 36",
+          "matching_place_name": "US 36, Idalia, Colorado 80758, United States",
+          "center": [
+            -102.173517,
+            39.746045
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6116111292648408",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "36",
+          "text": "Us Küme Evler",
+          "place_name": "Cevizli, Us Küme Evler 36, 61300 Akçaabat/Trabzon, Türkiye",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            39.516002,
+            40.939224
+          ]
+        }
+      }
+    },
+    {
+      "text": "Union Station, Denver",
+      "query": "Union Station, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "neighborhood.667045100",
+          "place_type": [
+            "neighborhood"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Union Station",
+          "place_name": "Union Station, Denver, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.997955,
+            39.75148
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "neighborhood.667045100",
+          "place_type": [
+            "neighborhood"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Union Station",
+          "place_name": "Union Station, Denver, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.997955,
+            39.75148
+          ]
+        }
+      }
+    },
+    {
+      "text": "Lafayette, CO",
+      "query": "Lafayette, Colorado",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "place.174811372",
+          "place_type": [
+            "place"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Lafayette",
+          "place_name": "Lafayette, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.090462,
+            39.998235
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "place.174811372",
+          "place_type": [
+            "place"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Lafayette",
+          "place_name": "Lafayette, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.090462,
+            39.998235
+          ]
+        }
+      }
+    },
+    {
+      "text": "Denver",
+      "query": "Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "place.84625644",
+          "place_type": [
+            "place"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Denver",
+          "place_name": "Denver, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.986109,
+            39.741681
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "place.84625644",
+          "place_type": [
+            "place"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "Denver",
+          "place_name": "Denver, Colorado, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.986109,
+            39.741681
+          ]
+        }
+      }
+    },
+    {
+      "text": "80203",
+      "query": "80203",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "postcode.277974764",
+          "place_type": [
+            "postcode"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "80203",
+          "place_name": "Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98613,
+            39.740009
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "postcode.277974764",
+          "place_type": [
+            "postcode"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "80203",
+          "place_name": "Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98613,
+            39.740009
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Banock St, Denver",
+      "query": "1437 Banock St, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.988175,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.988175,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock, Denver, CO 80202",
+      "query": "1437 Bannock, Denver, Colorado 80202",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.946667,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.946667,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "200 Colfax, Denver",
+      "query": "200 Colfax, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.7087059211692382",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.459259,
+          "accuracy": "rooftop",
+          "address": "200",
+          "text": "Colfax Street",
+          "place_name": "200 Colfax Street, Oak Creek, Colorado 80467, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -106.95595,
+            40.274877
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.5197720201572842",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.574074,
+          "accuracy": "parcel",
+          "address": "200-02",
+          "text": "Colfax Street",
+          "place_name": "200-02 Colfax Street, Gary, Indiana 46406, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -87.413578,
+            41.60656
+          ]
+        }
+      }
+    },
+    {
+      "text": "200 E Colfax Avenue Denver Colorado",
+      "query": "200 E Colfax Avenue Denver Colorado",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "200",
+          "text": "East Colfax Avenue",
+          "place_name": "200 East Colfax Avenue, Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98487,
+            39.739608
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6613336203775964",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "200",
+          "text": "East Colfax Avenue",
+          "place_name": "200 East Colfax Avenue, Denver, Colorado 80203, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.98487,
+            39.739608
+          ]
+        }
+      }
+    },
+    {
+      "text": "E Colfax Ave, Aurora",
+      "query": "E Colfax Ave, Aurora",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.3472539138234768",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Aurora, Colorado 80018, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.702887,
+            39.73986
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.3472539138234768",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East Colfax Avenue",
+          "place_name": "East Colfax Avenue, Aurora, Colorado 80018, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.702887,
+            39.73986
+          ]
+        }
+      }
+    },
+    {
+      "text": "123 Main St, Lakewood",
+      "query": "123 Main St, Lakewood",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.8782475486017628",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.796296,
+          "accuracy": "street",
+          "address": null,
+          "text": "Main St",
+          "place_name": "Main St, Lakewood, Colorado 80214, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.070022,
+            39.740052
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.1735641070707010",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "123",
+          "text": "Main Street",
+          "place_name": "123 Main Street, Lakewood, New Jersey 08701, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -74.211169,
+            40.090263
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock St Apt 4, Denver",
+      "query": "1437 Bannock St Apt 4, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "1437 Bannock St #210, Denver",
+      "query": "1437 Bannock St #210, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.709316402043816",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "1437",
+          "text": "Bannock Street",
+          "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.99097,
+            39.739247
+          ]
+        }
+      }
+    },
+    {
+      "text": "Coors Field",
+      "query": "Coors Field",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.8911662375780600",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.65,
+          "accuracy": "street",
+          "address": null,
+          "text": "Coors Street",
+          "place_name": "Coors Street, Arvada, Colorado 80002, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.15381,
+            39.792784
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.4481642231452798",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.954545,
+          "accuracy": "street",
+          "address": null,
+          "text": "Moors Field Drive",
+          "place_name": "Moors Field Drive, Little Dunmow, Dunmow, CM6 3ZL, United Kingdom",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            0.41431,
+            51.86623
+          ]
+        }
+      }
+    },
+    {
+      "text": "Denver International Airport",
+      "query": "Denver International Airport",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.4768407439816120",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.666667,
+          "accuracy": "street",
+          "address": null,
+          "text": "North Airport Way",
+          "place_name": "North Airport Way, Denver, Colorado 80239, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.794681,
+            39.780844
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.4768407439816120",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.666667,
+          "accuracy": "street",
+          "address": null,
+          "text": "North Airport Way",
+          "place_name": "North Airport Way, Denver, Colorado 80239, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.794681,
+            39.780844
+          ]
+        }
+      }
+    },
+    {
+      "text": "King Soopers, Lakewood",
+      "query": "King Soopers, Lakewood",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6163684181750840",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.433333,
+          "accuracy": "street",
+          "address": null,
+          "text": "King Street",
+          "place_name": "King Street, Denver, Colorado 80204, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -105.033425,
+            39.737299
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.408954100753100",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.433333,
+          "accuracy": "street",
+          "address": null,
+          "text": "King Street",
+          "place_name": "King Street, South Boulder Western Australia 6432, Australia",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            121.485851,
+            -30.78676
+          ]
+        }
+      }
+    },
+    {
+      "text": "Hwy 36",
+      "query": "Hwy 36",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.2057181246188308",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "US Route 36",
+          "place_name": "US Route 36, Idalia, Colorado 80758, United States",
+          "matching_text": "Highway 36",
+          "matching_place_name": "Highway 36, Idalia, Colorado 80758, United States",
+          "center": [
+            -102.173517,
+            39.746045
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6836752307633176",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "point",
+          "address": "36",
+          "text": "Highway Avenue",
+          "place_name": "36 Highway Avenue, West Wollongong New South Wales 2500, Australia",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            150.867881,
+            -34.42706
+          ]
+        }
+      }
+    },
+    {
+      "text": "Highway 285",
+      "query": "Highway 285",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.1469925391288280",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "US Route 285",
+          "place_name": "US Route 285, Conifer, Colorado 80433, United States",
+          "matching_text": "Highway 285",
+          "matching_place_name": "Highway 285, Conifer, Colorado 80433, United States",
+          "center": [
+            -105.298356,
+            39.54009
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.2646140266997658",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "point",
+          "address": "285",
+          "text": "Highway 320",
+          "place_name": "285 Highway 320, Louisdale, Nova Scotia B0E 1V0, Canada",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -61.064958,
+            45.609495
+          ]
+        }
+      }
+    },
+    {
+      "text": "CO-93",
+      "query": "CO-93",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.7598188858893656",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "County Road 93",
+          "place_name": "County Road 93, Crook, Colorado 80726, United States",
+          "matching_text": "County Road 93 Crook Co 80726-9209",
+          "matching_place_name": "County Road 93 Crook Co 80726-9209, Crook, Colorado 80726, United States",
+          "center": [
+            -102.691667,
+            40.98895
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.5162706026443504",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "rooftop",
+          "address": "93",
+          "text": "County Drive",
+          "place_name": "93 County Drive, Cherrybrook New South Wales 2126, Australia",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            151.034862,
+            -33.725926
+          ]
+        }
+      }
+    },
+    {
+      "text": "E 6th Ave, Denver",
+      "query": "E 6th Ave, Denver",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6035017392452216",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East 6th Avenue",
+          "place_name": "East 6th Avenue, Denver, Colorado 80230, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.89729,
+            39.725837
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.6035017392452216",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "street",
+          "address": null,
+          "text": "East 6th Avenue",
+          "place_name": "East 6th Avenue, Denver, Colorado 80230, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -104.89729,
+            39.725837
+          ]
+        }
+      }
+    },
+    {
+      "text": "6th and Lincoln",
+      "query": "6th and Lincoln",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.5794500403896790",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "intersection",
+          "address": null,
+          "text": "Lincoln Street",
+          "place_name": "East 6th Avenue and Lincoln Street, Otis, Colorado 80743, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.962203,
+            40.154018
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.2370711327242234",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "intersection",
+          "address": null,
+          "text": "Lincoln Place",
+          "place_name": "North 6th Street and Lincoln Place, Steubenville, Ohio 43952, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -80.61355,
+            40.369324
+          ]
+        }
+      }
+    },
+    {
+      "text": "39 Denver 44.4",
+      "query": "39 Denver 44.4",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.1846289313046654",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.568333,
+          "accuracy": "point",
+          "address": "444",
+          "text": "Denver Street",
+          "place_name": "444 Denver Street, Holyoke, Colorado 80734, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.297151,
+            40.585475
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.8635896659576380",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 0.574074,
+          "accuracy": "rooftop",
+          "address": "39",
+          "text": "Rua Denver",
+          "place_name": "Rua Denver 39, Mato Grande, Canoas - Rio Grande do Sul, 92320, Brazil",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -51.197699,
+            -29.922738
+          ]
+        }
+      }
+    },
+    {
+      "text": "44.4",
+      "query": "44.4",
+      "boxed": {
+        "http": 200,
+        "feature": null
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "postcode.1519151",
+          "place_type": [
+            "postcode"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "4440000",
+          "place_name": "Los Ángeles, Biobío, 4440000, Chile",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -72.352357,
+            -37.470189
+          ]
+        }
+      }
+    },
+    {
+      "text": "39 N",
+      "query": "39 N",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.5970854320173748",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "interpolated",
+          "address": "39",
+          "text": "North Main Street",
+          "place_name": "39 North Main Street, Holly, Colorado 81047, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.122704,
+            38.053441
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "locality.24513131",
+          "place_type": [
+            "locality"
+          ],
+          "relevance": 1,
+          "accuracy": null,
+          "address": null,
+          "text": "39 Ndr",
+          "place_name": "39 Ndr, Hanumangarh, Hanumangarh, Rajasthan, India",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            74.19515,
+            29.396587
+          ]
+        }
+      }
+    },
+    {
+      "text": "105 W",
+      "query": "105 W",
+      "boxed": {
+        "http": 200,
+        "feature": {
+          "id": "address.6408937313075742",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "point",
+          "address": "105",
+          "text": "West Goff Avenue",
+          "place_name": "105 West Goff Avenue, Granada, Colorado 81041, United States",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            -102.310975,
+            38.06292
+          ]
+        }
+      },
+      "anywhere": {
+        "http": 200,
+        "feature": {
+          "id": "address.8451564897219428",
+          "place_type": [
+            "address"
+          ],
+          "relevance": 1,
+          "accuracy": "point",
+          "address": "105",
+          "text": "Wesselényi Miklós Utca",
+          "place_name": "Nagyecsed, Wesselényi Miklós Utca 105, 4355, Szabolcs-Szatmár-Bereg, Hungary",
+          "matching_text": null,
+          "matching_place_name": null,
+          "center": [
+            22.393884,
+            47.875957
+          ]
+        }
+      }
+    }
+  ]
+}
