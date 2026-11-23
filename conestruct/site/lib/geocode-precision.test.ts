@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { geocodeErrorMessage, geocodeFailureMessage, isPreciseGeocode } from "./geocode-precision";
+import {
+  geocodeErrorMessage,
+  geocodeFailureMessage,
+  isPreciseGeocode,
+  weakMatchNotice,
+} from "./geocode-precision";
 
 describe("isPreciseGeocode", () => {
   it("street-level classes are precise", () => {
@@ -27,6 +32,14 @@ describe("isPreciseGeocode", () => {
     expect(isPreciseGeocode(null)).toBe(false);
     expect(isPreciseGeocode("some_future_type")).toBe(false);
     expect(isPreciseGeocode("")).toBe(false);
+  });
+});
+
+describe("weakMatchNotice (#554)", () => {
+  it("names the place in Ryan's sentence", () => {
+    expect(weakMatchNotice("39 North Main Street, Holly, Colorado 81047")).toBe(
+      "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on.",
+    );
   });
 });
 

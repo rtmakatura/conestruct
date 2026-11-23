@@ -27,6 +27,28 @@ describe("POST /api/geocode", () => {
     expect(await res.json()).toEqual({ lat: 39.739964, lng: -104.966006, placeType: "intersection" });
   });
 
+  it("#554: a weak match carries weak and placeName; no other answer has either field", async () => {
+    geocodeAddress.mockResolvedValue({
+      ok: true,
+      lat: 38.053441,
+      lng: -102.122704,
+      placeType: "address",
+      weak: true,
+      placeName: "39 North Main Street, Holly, Colorado 81047",
+    });
+    const res = await POST(req({ address: "39 N, 44.4" }));
+    expect(await res.json()).toEqual({
+      lat: 38.053441,
+      lng: -102.122704,
+      placeType: "address",
+      weak: true,
+      placeName: "39 North Main Street, Holly, Colorado 81047",
+    });
+    geocodeAddress.mockResolvedValue({ ok: true, lat: 39.739247, lng: -104.99097, placeType: "address" });
+    const plain = await (await POST(req({ address: "1437 Bannock St, Denver, CO" }))).json();
+    expect(Object.keys(plain)).toEqual(["lat", "lng", "placeType"]);
+  });
+
   it("a missing or non-string jurisdiction_key is null", async () => {
     geocodeAddress.mockResolvedValue({ ok: false, status: 404, reason: "no intersection match" });
     const res = await POST(req({ address: "Colfax & Main", jurisdiction_key: 7 }));

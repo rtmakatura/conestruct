@@ -9,7 +9,7 @@
 // the end hold every example in #548, #550, #551 and #552.
 
 import { describe, expect, it } from "vitest";
-import { readSearchCoords } from "./search-coords";
+import { MAX_COORDS_TEXT, readSearchCoords } from "./search-coords";
 
 const POINT = { kind: "point", lat: 39.7401, lng: -104.9811 };
 
@@ -434,5 +434,59 @@ describe("#552: every input it names", () => {
     expect(readSearchCoords("9".repeat(30000))).toEqual(ADDRESS);
     expect(readSearchCoords("9".repeat(30000) + " N")).toEqual(ADDRESS);
     expect(performance.now() - started).toBeLessThan(1000);
+  });
+});
+
+// #553 (folded into #554; validation-artifacts/committed/
+// issue-554-weak-match-notice/rulings.md § #553).
+describe("#553: the round-4 findings", () => {
+  it("finding 1: a long digit run after a degree sign is answered at once (650 ms and 7.6 s before)", () => {
+    const started = performance.now();
+    expect(readSearchCoords("39° " + "9".repeat(30000))).toEqual(ADDRESS);
+    expect(readSearchCoords("39° " + "9".repeat(100000))).toEqual(ADDRESS);
+    expect(readSearchCoords("39° " + "9".repeat(100000) + "' N, 104° 59' W")).toEqual(ADDRESS);
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
+  it("finding 1: text is read as coordinates up to 100 characters, and not past it", () => {
+    expect(MAX_COORDS_TEXT).toBe(100);
+    // A run of spaces counts as one space.
+    expect(readSearchCoords("39.7401," + " ".repeat(300) + "-104.9811")).toEqual(POINT);
+    // Zeros after the last decimal count in full.
+    const long = (n: number) => "39.7401" + "0".repeat(n - 18) + ", -104.9811";
+    expect(long(100)).toHaveLength(100);
+    expect(readSearchCoords(long(100))).toEqual(POINT);
+    expect(readSearchCoords(long(101))).toEqual(ADDRESS);
+  });
+
+  it.each([
+    "39° 44.' N, 104° 58.' W", // minutes with nothing after the point
+    "39° 44' 24.\" N, 104° 58' 51.\" W", // seconds the same
+  ])("finding 2: %s is an address (a pin before)", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+
+  it("finding 2: minutes written .5 are still read, as .5 is for a decimal number", () => {
+    expect(readSearchCoords("39° .5' N, 104° .5' W")).toEqual({
+      kind: "point",
+      lat: 39 + 0.5 / 60,
+      lng: -(104 + 0.5 / 60),
+    });
+  });
+
+  it("finding 3: one letter in front and one behind is a pin", () => {
+    expect(readSearchCoords("N 39° 44', 104° 59' W")).toEqual({
+      kind: "point",
+      lat: (39 * 3600 + 44 * 60) / 3600,
+      lng: -(104 * 3600 + 59 * 60) / 3600,
+    });
+  });
+
+  it("finding 3: 39° 44.4' N, 104° 58.9' W is a pin (the old \"can't be read\" line before #548)", () => {
+    expect(readSearchCoords("39° 44.4' N, 104° 58.9' W")).toEqual({
+      kind: "point",
+      lat: (39 * 3600 + 44.4 * 60) / 3600,
+      lng: -(104 * 3600 + 58.9 * 60) / 3600,
+    });
   });
 });

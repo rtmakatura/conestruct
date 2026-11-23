@@ -71,7 +71,9 @@ const PIN = { lat: 39.7401, lng: -104.9811 };
 let detects: { lat: number; lng: number }[] = [];
 let geocodes: { address: string }[] = [];
 // What the geocoder answers, when it is asked.
-let geocodeAnswer: { lat: number; lng: number; placeType: string } | null = null;
+let geocodeAnswer:
+  | { lat: number; lng: number; placeType: string; weak?: true; placeName?: string }
+  | null = null;
 // null parks every road lookup (the answer doesn't matter); set, it answers.
 let roadAnswer: RoadDetectResponse | null = null;
 
@@ -721,5 +723,99 @@ describe("#548: half a coordinate goes to the geocoder and places no pin", () =>
     expect(list().textContent).toBe("Latitude must be between -90 and 90");
     expect(geocodes).toEqual([]);
     expect(detects).toEqual([]);
+  });
+});
+
+// #554, Ryan's ruling of 2026-11-23 (validation-artifacts/committed/
+// issue-554-weak-match-notice/rulings.md): a weak geocoder match "shows the
+// floating "weak match" notice like the town one ("Closest match: <place>.
+// Check the pin before you go on.") and nothing moves."  The answers are
+// the ones /api/geocode gives for the ruling's two texts (lib/geocode.ts
+// marks them; lib/geocode.test.ts).
+describe("#554: a weak match is named in the list and nothing moves", () => {
+  const HOLLY = {
+    lat: 38.053441,
+    lng: -102.122704,
+    placeType: "address",
+    weak: true as const,
+    placeName: "39 North Main Street, Holly, Colorado 81047",
+  };
+  const WALSH = {
+    lat: 37.294763,
+    lng: -102.041892,
+    placeType: "address",
+    weak: true as const,
+    placeName: "W Boulevard, Walsh, Kansas 81090",
+  };
+  const CASES: [string, typeof HOLLY, string][] = [
+    ["39 N, 44.4", HOLLY, "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on."],
+    ["105° W, 39.7401", WALSH, "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on."],
+  ];
+
+  it.each(CASES)("%s typed and Enter: the notice, no pin, no fly, no road lookup", async (text, answer, notice) => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    geocodeAnswer = answer;
+    await searchFor(user, text);
+    const line = await screen.findByText(notice);
+    expect(list().contains(line)).toBe(true);
+    expect(line.className).toBe("mw-note mw-search-line");
+    expect(list().textContent).toBe(notice);
+    expect(geocodes).toEqual([{ address: text, jurisdiction_key: null }]);
+    expect(bar().textContent).toBe("No pin yet");
+    expect(detects).toEqual([]);
+    expect(camera.flies).toEqual([]);
+  });
+
+  it.each(CASES)("%s as a saved address (the open-time sender): the same notice, nothing moves", async (address, answer, notice) => {
+    geocodeAnswer = answer;
+    mount({ address });
+    const line = await screen.findByText(notice);
+    expect(list().contains(line)).toBe(true);
+    expect(geocodes).toHaveLength(1);
+    expect(bar().textContent).toBe("No pin yet");
+    expect(detects).toEqual([]);
+    expect(camera.flies).toEqual([]);
+  });
+
+  it("a pin already placed stays where it is", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "39.7401, -104.9811");
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    const flies = camera.flies.length;
+    geocodeAnswer = HOLLY;
+    await searchFor(user, "39 N, 44.4");
+    await screen.findByText(CASES[0][2]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(detects).toEqual([PIN]);
+    expect(camera.flies).toHaveLength(flies);
+  });
+
+  it("the same answer without the mark pins as before; the next search takes the notice away", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    geocodeAnswer = HOLLY;
+    await searchFor(user, "39 N, 44.4");
+    await screen.findByText(CASES[0][2]);
+    geocodeAnswer = { lat: HOLLY.lat, lng: HOLLY.lng, placeType: "address" };
+    await searchFor(user, "39 N Main St, Holly");
+    await waitFor(() => expect(detects).toEqual([{ lat: HOLLY.lat, lng: HOLLY.lng }]));
+    expect(screen.queryByText(CASES[0][2])).toBeNull();
+    expect(bar().textContent).toBe("Pin at 38.0534, -102.1227");
+  });
+
+  it("a weak match of a town's type is the weak notice, not the town one (the server's mark wins)", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    geocodeAnswer = { lat: 39.7559, lng: -104.9942, placeType: "poi", weak: true, placeName: "Coors Field, Denver, Colorado 80205" };
+    await searchFor(user, "Coors Field");
+    await screen.findByText("Closest match: Coors Field, Denver, Colorado 80205. Check the pin before you go on.");
+    expect(camera.flies).toEqual([]);
+    expect(bar().textContent).toBe("No pin yet");
   });
 });

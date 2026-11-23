@@ -24,6 +24,13 @@ export function isPreciseGeocode(placeType: string | null): boolean {
   return placeType !== null && PRECISE_PLACE_TYPES.has(placeType);
 }
 
+/** #554 (Ryan, 2026-11-23): the notice for a weak match, in the search's
+ *  floating list.  `place` is the server's name for its answer
+ *  (lib/geocode.ts).  No pin, no camera move, no road lookup goes with it. */
+export function weakMatchNotice(place: string): string {
+  return `Closest match: ${place}. Check the pin before you go on.`;
+}
+
 /** The search bar's line for a failed /api/geocode answer.  422 is a
  *  street pair typed with no city and no jurisdiction whose corner is
  *  not inside our places (#347, lib/geocode.ts).  #376: `reason` is the

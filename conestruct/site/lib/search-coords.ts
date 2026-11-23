@@ -60,7 +60,8 @@ const SEP = String.raw`(?:\s*,\s*|\s+)`;
 const PAIR = new RegExp(String.raw`^${PART}${SEP}${PART}$`, "i");
 // #548 (b): whole degrees with the degree sign, minutes with their mark,
 // seconds with theirs.  Three groups.
-const UNSIGNED = String.raw`(?:\d+\.?\d*|\.\d+)`;
+// #553: a digit follows the point here too ("44.'" is not minutes).
+const UNSIGNED = String.raw`(?:\d+(?:\.\d+)?|\.\d+)`;
 const DMS = String.raw`(\d+)\s*[°º]\s*(${UNSIGNED})['′’](?:\s*(${UNSIGNED})["″”])?`;
 // One half, its letter in front or behind.  Eight groups: the front
 // letter, its three numbers, the other three numbers, the back letter.
@@ -70,6 +71,11 @@ const DMS_PAIR = new RegExp(String.raw`^${DMS_PART}${SEP}${DMS_PART}$`, "i");
 // bracket inside it.  CHOSEN: a mismatched pair, two pairs or a bracket
 // round each number is left as typed (an address).
 const WRAPPED = /^(?:\(([^()[\]]*)\)|\[([^()[\]]*)\])$/;
+// #553, CHOSEN: longer text is never read as coordinates.  The longest
+// form above, with seconds to six places and brackets, is under 50
+// characters; the cap bounds the degrees-minutes pattern on a long digit
+// run after a degree sign (7.6 s for 100,000 digits before).
+export const MAX_COORDS_TEXT = 100;
 
 function validLat(n: number): boolean {
   return Number.isFinite(n) && n >= -90 && n <= 90;
@@ -128,6 +134,7 @@ export function readSearchCoords(raw: string): SearchCoords {
     // #548: two minutes marks together are a seconds mark.
     .replace(/(['′’])\1/g, '"')
     .trim();
+  if (typed.length > MAX_COORDS_TEXT) return { kind: "address" };
   const wrapped = WRAPPED.exec(typed);
   const text = wrapped ? (wrapped[1] ?? wrapped[2]).trim() : typed;
   const m = PAIR.exec(text);

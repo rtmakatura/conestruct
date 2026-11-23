@@ -64,3 +64,36 @@ No answer in the run had the type `poi`.
 1. **CHOSEN (not safety): the parser reads at most 100 characters.** Longer text is an address. The longest form in the parser's list, with seconds to six places and brackets, is under 50 characters. This bounds the degrees-minutes pattern on a long digit run after a degree sign.
 2. **R145 self-ruled: minutes and seconds need a digit after the point**, as decimal numbers do (#548 call 2). `39° 44.' N, 104° 58.' W` is an address. `.5'` is still read, as `.5` is for a decimal number.
 3. The two missing parser cases are added: `N 39° 44', 104° 59' W` and `39° 44.4' N, 104° 58.9' W`.
+
+## Churn: predicted against actual
+
+Against the base `e3b5e69` (the code of `94a7d95`); predicted in `checkpoint.md` before the diff.
+
+| File | Predicted | Actual |
+|---|---|---|
+| `conestruct/site/lib/geocode.ts` | +50 / -3 | +64 / -1 |
+| `conestruct/site/lib/geocode.test.ts` | +70 / -1 | +167 / -2 |
+| `conestruct/site/app/api/geocode/route.ts` | +6 / -1 | +2 / -0 |
+| `conestruct/site/app/api/geocode/route.test.ts` | +12 / -0 | +22 / -0 |
+| `conestruct/site/lib/geocode-precision.ts` | +8 / -0 | +7 / -0 |
+| `conestruct/site/lib/geocode-precision.test.ts` | +8 / -1 | +14 / -1 |
+| `conestruct/site/components/LocationPickerModal.tsx` | +22 / -4 | +16 / -2 |
+| `conestruct/site/components/LocationPickerModal.coords-bar.test.tsx` | +65 / -1 | +97 / -1 |
+| `conestruct/site/lib/search-coords.ts` (#553) | +10 / -3 | +8 / -1 |
+| `conestruct/site/lib/search-coords.test.ts` (#553) | +30 / -0 | +55 / -1 |
+| this folder | new | new |
+
+Rule 5 misses, recorded: `lib/geocode.test.ts` is 97 added lines over (eleven not-weak cases, six threshold rows and the type cases, each on a recorded shape, were not counted); the mounted tests 32 over (five tests, two of them at both texts); `lib/geocode.ts` 14 over (the comments on the three CHOSEN details); `lib/search-coords.test.ts` 25 over (six tests where two were counted). The same ten files as predicted, none added. Behaviour changes are (A), (B) and (C) in `checkpoint.md` and nothing else.
+
+Existing tests changed, each stated:
+
+- `lib/geocode.test.ts`: the Longmont fixture gains its recorded `place_name` (the typed ZIP `80501` is in the real answer; the bare fixture had no text to hold it). Its assertion is unchanged.
+- The import lines of four test files.
+
+## Tests
+
+- Red proof: `red-proof.txt`. With the five source files put back to the base, 28 of the 410 tests in the five files fail (the weak-match tests, the notice helper, the route's two fields, #553's findings 1 and 2).
+- After the change: the six files of the baseline, 427 passed (376 before, 51 new).
+- `npx tsc --noEmit`: clean. `next lint` on the ten changed files: 0 errors, 1 warning, not from this change (`react-hooks/exhaustive-deps` on `restoreFallbackRef`, `LocationPickerModal.tsx`).
+- `python scripts/cosmetic_lane_check.py`: OUT OF LANE (the API route, `lib/geocode.ts`, `lib/search-coords.ts` and their tests), so the diff-verifier runs.
+- No local browser walk. The notice is the town notice's element and class (`mw-note mw-search-line`, #543) with other words; the mounted tests (Rule 11) drive the real window at both senders. The production check after the ship types both texts on the real site at three sizes.

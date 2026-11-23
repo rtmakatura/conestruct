@@ -30,7 +30,16 @@ import {
 } from "@/lib/jurisdiction-areas";
 
 export type GeocodeResult =
-  | { ok: true; lat: number; lng: number; placeType: string | null }
+  | {
+      ok: true;
+      lat: number;
+      lng: number;
+      placeType: string | null;
+      /** #554: set, with `placeName`, only on a weak match (weakMatch
+       *  below).  The window names the place and moves nothing. */
+      weak?: true;
+      placeName?: string;
+    }
   | { ok: false; status: number; reason: string };
 
 export interface GeocodeOptions {
@@ -49,6 +58,12 @@ interface MapboxContext {
 interface MapboxFeature {
   id?: string;
   text?: string;
+  /** The answer in full: "39 North Main Street, Holly, Colorado 81047,
+   *  United States". */
+  place_name?: string;
+  /** The same, in the words that matched, when they differ ("E-470
+   *  Frontage Road, …" for a street Mapbox names North Valdai Street). */
+  matching_place_name?: string;
   center?: [number, number];
   place_type?: string[];
   bbox?: BBox;
@@ -239,7 +254,55 @@ export async function geocodeAddress(
   // from a whole-town centroid — road detection at a town centroid
   // produces a confidently wrong road (lib/geocode-precision.ts).
   const placeType = plain.feature.place_type?.[0] ?? null;
+  if (weakMatch(trimmed, plain.feature)) {
+    // Rule 10: the notice always names something.
+    const placeName =
+      plain.feature.place_name?.replace(/, United States$/, "") ||
+      `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+    return { ok: true, lat, lng, placeType, weak: true, placeName };
+  }
   return { ok: true, lat, lng, placeType };
+}
+
+// #554 (Ryan, 2026-11-23; validation-artifacts/committed/
+// issue-554-weak-match-notice/rulings.md): "any geocoder result that is
+// not a street address or intersection match, or falls below a relevance
+// threshold you record, shows the floating "weak match" notice like the
+// town one … and nothing moves."
+//
+// CHOSEN (call 4): right answers that pass geocodePlain below 1 were
+// recorded at 0.927778, 0.946667 and 0.988175; wrong ones at 0.872889 and
+// lower.
+export const WEAK_RELEVANCE = 0.9;
+// The town notice's types (call 2): an area is not a weak match.
+const AREA_TYPES: ReadonlySet<string> = new Set([
+  "country",
+  "region",
+  "postcode",
+  "district",
+  "place",
+  "locality",
+  "neighborhood",
+]);
+// CHOSEN (call 3): a unit number, and the four digits of a ZIP+4, are not
+// checked against the answer.
+const UNIT = /(?:#|\b(?:apt|apartment|unit|suite|ste)\b\.?)\s*\d+/gi;
+const ZIP4 = /\b(\d{5})-\d{4}\b/g;
+const numbersIn = (s: string): string[] => s.match(/\d+(?:\.\d+)?/g) ?? [];
+
+/** Whether the plain-address answer `f` is a weak match for the typed
+ *  `text`.  Exported for the tests. */
+export function weakMatch(text: string, f: MapboxFeature): boolean {
+  const type = f.place_type?.[0] ?? null;
+  if (type !== "address") return type === null || !AREA_TYPES.has(type);
+  if (typeof f.relevance !== "number" || f.relevance < WEAK_RELEVANCE) return true;
+  // Call 3: Mapbox scores "39 N, 44.4" a full match for 39 North Main
+  // Street, Holly; the 44.4 is dropped.  Every typed number must be in
+  // the answer's own text.
+  const held = new Set(
+    numbersIn([f.place_name, f.matching_place_name, f.text, f.address].filter(Boolean).join(" ")),
+  );
+  return numbersIn(text.replace(UNIT, " ").replace(ZIP4, "$1")).some((n) => !held.has(n));
 }
 
 // #384 (R1 Ryan): a plain address resolves only inside Colorado.  The

@@ -16,7 +16,7 @@ import type {
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
-import { geocodeFailureMessage, isPreciseGeocode } from "@/lib/geocode-precision";
+import { geocodeFailureMessage, isPreciseGeocode, weakMatchNotice } from "@/lib/geocode-precision";
 import { readSearchCoords, type SearchCoords } from "@/lib/search-coords";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import type { CrossStreetCandidate } from "@/lib/road-detection/cross-street";
@@ -1186,9 +1186,14 @@ export function LocationPickerModal({
                 lat: number;
                 lng: number;
                 placeType?: string | null;
+                weak?: boolean;
+                placeName?: string;
               };
               setSearchStatus({ state: "idle" });
-              if (!isPreciseGeocode(j.placeType ?? null)) {
+              if (j.weak) {
+                // #554: a weak match is named and nothing moves.
+                setCoarseNotice(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`));
+              } else if (!isPreciseGeocode(j.placeType ?? null)) {
                 // Area-level match (town/region centroid) — recenter
                 // only.  No pin, no detection: a road detected at a
                 // centroid is a confidently wrong road.
@@ -1332,8 +1337,17 @@ export function LocationPickerModal({
           lat: number;
           lng: number;
           placeType?: string | null;
+          weak?: boolean;
+          placeName?: string;
         };
         setSearchStatus({ state: "idle" });
+        if (j.weak) {
+          // #554 (Ryan, 2026-11-23): a weak match is named in the
+          // floating list and nothing moves: no pin, no fly, no road
+          // lookup, and the text is not saved as the address.
+          setCoarseNotice(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`));
+          return;
+        }
         if (!isPreciseGeocode(j.placeType ?? null)) {
           // Coarse match (locality/place, e.g. "Lafayette, CO"):
           // recenter the map and ask for a pin.  Detection fires only

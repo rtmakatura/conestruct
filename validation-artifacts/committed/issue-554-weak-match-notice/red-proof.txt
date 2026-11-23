@@ -1,0 +1,66 @@
+Red proof: the new tests against the base sources (e3b5e69, code as on 94a7d95).
+The five source files were put back to HEAD for this run; the test files are this change's.
+
+      Tests  28 failed | 382 passed (410)
+   → (0 , weakMatch) is not a function
+   → (0 , weakMatchNotice) is not a function
+ FAIL  app/api/geocode/route.test.ts > POST /api/geocode > #554: a weak match carries weak and placeName; no other answer has either field
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 105° W, 39.7401 as a saved address (the open-time sender): the same notice, nothing moves
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 105° W, 39.7401 typed and Enter: the notice, no pin, no fly, no road lookup
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 39 N, 44.4 as a saved address (the open-time sender): the same notice, nothing moves
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 39 N, 44.4 typed and Enter: the notice, no pin, no fly, no road lookup
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > a pin already placed stays where it is
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > a weak match of a town's type is the weak notice, not the town one (the server's mark wins)
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > the same answer without the mark pins as before; the next search takes the notice away
+ FAIL  lib/geocode-precision.test.ts > weakMatchNotice (#554) > names the place in Ryan's sentence
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > 105° W, 39.7401: a street address at relevance 1 that lacks a typed number is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > 39 N, 104 W: a street address at relevance 1 that lacks a typed number is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > 39 N, 44.4: a street address at relevance 1 that lacks a typed number is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > a unit word inside another word is not a unit: 4 after 'Flapt' is checked
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > a weak answer with no place_name is named by its coordinates (Rule 10)
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > an answer with no relevance is weak (Rule 10)
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (null) is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (poi) is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (some_future_type) is weak
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.872889 in the typed city: weak is true
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.899999 in the typed city: weak is true
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.9 in the typed city: weak is false
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.927778 in the typed city: weak is false
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.946667 in the typed city: weak is false
+ FAIL  lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.988175 in the typed city: weak is false
+ FAIL  lib/search-coords.test.ts > #553: the round-4 findings > finding 1: a long digit run after a degree sign is answered at once (650 ms and 7.6 s before)
+ FAIL  lib/search-coords.test.ts > #553: the round-4 findings > finding 1: text is read as coordinates up to 100 characters, and not past it
+ FAIL  lib/search-coords.test.ts > #553: the round-4 findings > finding 2: 39° 44' 24." N, 104° 58' 51." W is an address (a pin before)
+ FAIL  lib/search-coords.test.ts > #553: the round-4 findings > finding 2: 39° 44.' N, 104° 58.' W is an address (a pin before)
+ Test Files  5 failed (5)
+ × app/api/geocode/route.test.ts > POST /api/geocode > #554: a weak match carries weak and placeName; no other answer has either field 9ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 105° W, 39.7401 as a saved address (the open-time sender): the same notice, nothing moves 1010ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 105° W, 39.7401 typed and Enter: the notice, no pin, no fly, no road lookup 1423ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 39 N, 44.4 as a saved address (the open-time sender): the same notice, nothing moves 1009ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > 39 N, 44.4 typed and Enter: the notice, no pin, no fly, no road lookup 1363ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > a pin already placed stays where it is 1732ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > a weak match of a town's type is the weak notice, not the town one (the server's mark wins) 1371ms
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the list and nothing moves > the same answer without the mark pins as before; the next search takes the notice away 1360ms
+ × lib/geocode-precision.test.ts > weakMatchNotice (#554) > names the place in Ryan's sentence 4ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > 105° W, 39.7401: a street address at relevance 1 that lacks a typed number is weak 2ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > 39 N, 104 W: a street address at relevance 1 that lacks a typed number is weak 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > 39 N, 44.4: a street address at relevance 1 that lacks a typed number is weak 13ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > a unit word inside another word is not a unit: 4 after 'Flapt' is checked 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > a weak answer with no place_name is named by its coordinates (Rule 10) 3ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > an answer with no relevance is weak (Rule 10) 0ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (null) is weak 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (poi) is weak 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > neither a street address nor an area (some_future_type) is weak 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.872889 in the typed city: weak is true 0ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.899999 in the typed city: weak is true 0ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.9 in the typed city: weak is false 0ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.927778 in the typed city: weak is false 1ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.946667 in the typed city: weak is false 0ms
+ × lib/geocode.test.ts > #554: a weak match is marked, named and still located > relevance 0.988175 in the typed city: weak is false 1ms
+ × lib/search-coords.test.ts > #553: the round-4 findings > finding 1: a long digit run after a degree sign is answered at once (650 ms and 7.6 s before) 7436ms
+ × lib/search-coords.test.ts > #553: the round-4 findings > finding 1: text is read as coordinates up to 100 characters, and not past it 2ms
+ × lib/search-coords.test.ts > #553: the round-4 findings > finding 2: 39° 44' 24." N, 104° 58' 51." W is an address (a pin before) 1ms
+ × lib/search-coords.test.ts > #553: the round-4 findings > finding 2: 39° 44.' N, 104° 58.' W is an address (a pin before) 3ms
+TypeError: (0 , weakMatch) is not a function
+TypeError: (0 , weakMatchNotice) is not a function
+⎯⎯⎯⎯⎯⎯ Failed Tests 28 ⎯⎯⎯⎯⎯⎯⎯

@@ -3,7 +3,7 @@
 // (validation-artifacts/committed/issue-347-geocoder/outcome.md); the live
 // run of the same cases is lib/geocode.live.test.ts.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { geocodeAddress, parseCrossStreets } from "./geocode";
+import { geocodeAddress, parseCrossStreets, WEAK_RELEVANCE, weakMatch } from "./geocode";
 import {
   areaForKey,
   areaForName,
@@ -116,7 +116,11 @@ describe("a plain street address resolves only inside Colorado (#384)", () => {
   });
 
   it("a partial match in a typed city, with the typed house number, is the answer", async () => {
-    const longmont = addr([-105.1033, 40.1598], 0.927778, "Longmont", CO, "1");
+    const longmont = {
+      ...addr([-105.1033, 40.1598], 0.927778, "Longmont", CO, "1"),
+      // #554: the answer holds the typed ZIP, as recorded in #384's probe.
+      place_name: "1 South Main Street, Longmont, Colorado 80501, United States",
+    };
     answer = () => ({ features: [longmont] });
     const r = await geocodeAddress("1 Main St, Longmont, CO 80501");
     expect(r).toEqual({ ok: true, lat: 40.1598, lng: -105.1033, placeType: "address" });
@@ -189,6 +193,167 @@ describe("a plain street address resolves only inside Colorado (#384)", () => {
     answer = () => ({ features: [] });
     const r = await geocodeAddress("zzzz");
     expect(r).toEqual({ ok: false, status: 404, reason: "no match" });
+  });
+});
+
+// #554 (Ryan, 2026-11-23): a weak match is marked and named.  The shapes
+// are the answers Mapbox v5 gave on 2026-11-23 (validation-artifacts/
+// committed/issue-554-weak-match-notice/probe/mapbox-answers.json).
+function hit(
+  place_name: string,
+  center: [number, number],
+  relevance: number,
+  more: Record<string, unknown> = {},
+) {
+  const city = place_name.split(", ")[1];
+  return {
+    id: "address.1",
+    place_type: ["address"],
+    relevance,
+    place_name,
+    center,
+    context: [
+      { id: "place.1", text: city },
+      { id: "region.1", text: "Colorado", short_code: "US-CO" },
+    ],
+    ...more,
+  };
+}
+const HOLLY = hit("39 North Main Street, Holly, Colorado 81047, United States", [-102.122704, 38.053441], 1, {
+  address: "39",
+});
+const WALSH = hit("W Boulevard, Walsh, Kansas 81090, United States", [-102.041892, 37.294763], 1);
+const ELSEWHERE = { id: "address.9", place_type: ["address"], relevance: 1, center: [-111.81555, 43.672666] };
+
+describe("#554: a weak match is marked, named and still located", () => {
+  it.each([
+    ["39 N, 44.4", HOLLY, "39 North Main Street, Holly, Colorado 81047"],
+    ["105° W, 39.7401", WALSH, "W Boulevard, Walsh, Kansas 81090"],
+    ["39 N, 104 W", HOLLY, "39 North Main Street, Holly, Colorado 81047"],
+  ])("%s: a street address at relevance 1 that lacks a typed number is weak", async (q, boxedHit, name) => {
+    answer = (u) => ({ features: [boxed(u) ? boxedHit : ELSEWHERE] });
+    const [lng, lat] = boxedHit.center;
+    expect(await geocodeAddress(q)).toEqual({
+      ok: true,
+      lat,
+      lng,
+      placeType: "address",
+      weak: true,
+      placeName: name,
+    });
+  });
+
+  it("the weak answer's numbers are the pins #554 reports", () => {
+    expect([HOLLY.center[1].toFixed(4), HOLLY.center[0].toFixed(4)]).toEqual(["38.0534", "-102.1227"]);
+    expect([WALSH.center[1].toFixed(4), WALSH.center[0].toFixed(4)]).toEqual(["37.2948", "-102.0419"]);
+  });
+
+  it.each([
+    ["1437 Bannock St, Denver", "1437 Bannock Street, Denver, Colorado 80202, United States", {}],
+    ["1437 Bannock St Apt 4, Denver", "1437 Bannock Street, Denver, Colorado 80202, United States", {}],
+    ["1437 Bannock St #210, Denver", "1437 Bannock Street, Denver, Colorado 80202, United States", {}],
+    ["1437 Bannock St, Suite 300, Denver", "1437 Bannock Street, Denver, Colorado 80202, United States", {}],
+    ["1437 Bannock St, Denver, CO 80202-5337", "1437 Bannock Street, Denver, Colorado 80202, United States", {}],
+    ["1437 N 14", "1437 North 14th Street, Gunnison, Colorado 81230, United States", {}],
+    ["E 6th Ave, Denver", "East 6th Avenue, Denver, Colorado 80230, United States", {}],
+    ["Lookout Mountain Rd", "Lookout Mountain Road, Golden, Colorado 80401, United States", {}],
+    ["I-25", "Interstate 25, Trinidad, Colorado 81082, United States", {}],
+    // Mapbox names the street otherwise; the words that matched hold the number.
+    [
+      "E-470",
+      "North Valdai Street, Aurora, Colorado 80018, United States",
+      { matching_place_name: "E-470 Frontage Road, Aurora, Colorado 80018, United States" },
+    ],
+    [
+      "Hwy 36",
+      "US Route 36, Idalia, Colorado 80758, United States",
+      { matching_place_name: "Highway 36, Idalia, Colorado 80758, United States" },
+    ],
+  ] as [string, string, Record<string, unknown>][])("%s: a full match that holds every typed number is not weak", async (q, name, more) => {
+    answer = () => ({ features: [hit(name, [-104.99, 39.74], 1, more)] });
+    expect(await geocodeAddress(q)).toEqual({ ok: true, lat: 39.74, lng: -104.99, placeType: "address" });
+  });
+
+  it("a unit word inside another word is not a unit: 4 after 'Flapt' is checked", () => {
+    expect(weakMatch("12 Flapt 4", hit("12 Flapt Street, Denver, Colorado 80202, United States", [0, 0], 1))).toBe(true);
+    expect(weakMatch("12 Flapt St Apt. 4", hit("12 Flapt Street, Denver, Colorado 80202, United States", [0, 0], 1))).toBe(false);
+  });
+
+  // The threshold, 0.9 CHOSEN (rulings.md call 4), on answers #384 lets
+  // through below 1: in the typed city, with the typed house number.
+  it.each([
+    [0.988175, false], // "1437 Banock St, Denver", recorded
+    [0.946667, false], // "1437 Bannock, Denver, CO 80202", recorded
+    [0.927778, false], // "1 Main St, Longmont, CO 80501", #384's probe
+    [0.9, false],
+    [0.899999, true],
+    [0.872889, true], // a wrong answer in #384's probe
+  ])("relevance %f in the typed city: weak is %s", async (relevance, weak) => {
+    expect(WEAK_RELEVANCE).toBe(0.9);
+    const f = hit("1437 Bannock Street, Denver, Colorado 80202, United States", [-104.99097, 39.739247], relevance, {
+      address: "1437",
+    });
+    answer = () => ({ features: [f] });
+    const r = await geocodeAddress("1437 Banock St, Denver");
+    expect(r).toEqual({
+      ok: true,
+      lat: 39.739247,
+      lng: -104.99097,
+      placeType: "address",
+      ...(weak ? { weak: true, placeName: "1437 Bannock Street, Denver, Colorado 80202" } : {}),
+    });
+  });
+
+  it("an answer with no relevance is weak (Rule 10)", () => {
+    const { relevance: _dropped, ...f } = hit("1437 Bannock Street, Denver, Colorado 80202, United States", [0, 0], 1);
+    expect(weakMatch("1437 Bannock St", f)).toBe(true);
+  });
+
+  it.each(["country", "region", "postcode", "district", "place", "locality", "neighborhood"])(
+    "an area (%s) is the town notice's, not weak",
+    async (type) => {
+      answer = () => ({
+        features: [{ id: `${type}.1`, place_type: [type], relevance: 1, place_name: "Lafayette, Colorado, United States", center: [-105.0897, 39.9936] }],
+      });
+      expect(await geocodeAddress("Lafayette")).toEqual({ ok: true, lat: 39.9936, lng: -105.0897, placeType: type });
+    },
+  );
+
+  it.each([["poi"], ["some_future_type"], [null]])(
+    "neither a street address nor an area (%s) is weak",
+    async (type) => {
+      answer = () => ({
+        features: [
+          {
+            id: "x.1",
+            ...(type ? { place_type: [type] } : {}),
+            relevance: 1,
+            place_name: "Coors Field, 2001 Blake St, Denver, Colorado 80205, United States",
+            center: [-104.9942, 39.7559],
+          },
+        ],
+      });
+      expect(await geocodeAddress("Coors Field")).toEqual({
+        ok: true,
+        lat: 39.7559,
+        lng: -104.9942,
+        placeType: type,
+        weak: true,
+        placeName: "Coors Field, 2001 Blake St, Denver, Colorado 80205",
+      });
+    },
+  );
+
+  it("a weak answer with no place_name is named by its coordinates (Rule 10)", async () => {
+    answer = () => ({ features: [{ id: "poi.1", place_type: ["poi"], relevance: 1, center: [-104.9942, 39.7559] }] });
+    const r = await geocodeAddress("Coors Field");
+    expect(r).toMatchObject({ weak: true, placeName: "39.75590, -104.99420" });
+  });
+
+  it("#384's refusals stand: a partial match outside a typed city is still 404, never a weak pin", async () => {
+    const josephine = hit("North Josephine Street, Denver, Colorado 80206, United States", [-104.958255, 39.731141], 0.99);
+    answer = () => ({ features: [josephine] });
+    expect(await geocodeAddress("39.7401° N")).toEqual({ ok: false, status: 404, reason: "check address" });
   });
 });
 

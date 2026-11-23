@@ -38,5 +38,7 @@ export async function POST(req: NextRequest) {
     lat: result.lat,
     lng: result.lng,
     placeType: result.placeType,
+    // #554: a weak match names its place; the window moves nothing.
+    ...(result.weak ? { weak: true, placeName: result.placeName } : {}),
   });
 }
