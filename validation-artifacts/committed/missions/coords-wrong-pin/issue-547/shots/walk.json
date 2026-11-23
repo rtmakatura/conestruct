@@ -1,0 +1,503 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "posts": {
+   "geocode": 1,
+   "roads": 0
+  },
+  "scriptsLoaded": 8,
+  "scriptsNamingBearingWarning": 0,
+  "scriptsNamingCoarseNotice": 1,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "list": null,
+    "listDisplay": "none",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+    "listChildren": 0,
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "coarse": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 35.5
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 35.5
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 653,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "posts": {
+   "geocode": 1,
+   "roads": 0
+  },
+  "scriptsLoaded": 8,
+  "scriptsNamingBearingWarning": 0,
+  "scriptsNamingCoarseNotice": 1,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "list": null,
+    "listDisplay": "none",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+    "listChildren": 0,
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "coarse": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 53
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 35.5
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 680,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   }
+  }
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "posts": {
+   "geocode": 1,
+   "roads": 0
+  },
+  "scriptsLoaded": 8,
+  "scriptsNamingBearingWarning": 0,
+  "scriptsNamingCoarseNotice": 1,
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "list": null,
+    "listDisplay": "none",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"></div>",
+    "listChildren": 0,
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "coarse": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 70.5
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-search-line\">That search found a town or area. Tap the map on the road where the work starts.</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   },
+   "outOfRange": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 35.5
+    },
+    "listDisplay": "block",
+    "listHtml": "<div class=\"mw-search-list\" role=\"status\" data-testid=\"search-list\"><p class=\"mw-note mw-note-fail mw-search-line\">Latitude must be between -90 and 90</p></div>",
+    "listChildren": 1,
+    "scrollHeight": 640,
+    "barText": "No pin yet",
+    "flow": [
+     "mw-search",
+     "picker-map",
+     "mw-cbar"
+    ],
+    "axe": []
+   }
+  }
+ }
+]

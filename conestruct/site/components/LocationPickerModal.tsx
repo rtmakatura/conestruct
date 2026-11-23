@@ -481,8 +481,6 @@ export function LocationPickerModal({
     | CoordsRefusal
   >({ state: "idle" });
 
-  // ---- Bearing detection warning ----------------------------------------
-  const [bearingWarning, setBearingWarning] = useState<string | null>(null);
   // #507 ruling 4: the way the road runs, said in the fallback.  Restored
   // from the saved plan only when no road was confirmed there.
   const [roadAxis, setRoadAxis] = useState<RoadAxis | null>(
@@ -779,7 +777,6 @@ export function LocationPickerModal({
       // loading skeleton (classify: resolving) takes their place.
       setBearingCandidates([]);
       setSelectedCandidateIdx(null);
-      setBearingWarning(null);
       confirmedMethodRef.current = null;
       setClassify({ state: "resolving" });
       try {
@@ -817,7 +814,6 @@ export function LocationPickerModal({
           setClassify({ state: "error", reason: "none" });
           return;
         }
-        setBearingWarning(null);
         setBearingCandidates(cands);
         if (cands.length === 1) {
           // Unambiguous — select it and synthesize properties from the
@@ -1534,9 +1530,8 @@ export function LocationPickerModal({
                     over the top of the map, so none of them resizes the
                     map or moves the rail (P1).  Always mounted, so a line
                     that arrives is announced.
-                    #543 (ruling 2): the coarse-match notice and the bearing
-                    note are lines here too; neither is in the column's flow.
-                    (The bearing note has had no words since #507.) */}
+                    #543 (ruling 2): the coarse-match notice is a line here
+                    too, not in the column's flow. */}
                 <div className="mw-search-list" role="status" data-testid="search-list">
                   {coarseNotice && <p className="mw-note mw-search-line">{coarseNotice}</p>}
                   {searchStatus.state === "error" && (
@@ -1557,7 +1552,6 @@ export function LocationPickerModal({
                     ) : (
                       <p className="mw-note mw-note-fail mw-search-line">{searchStatus.line}</p>
                     ))}
-                  {bearingWarning && <p className="mw-note mw-search-line">{bearingWarning}</p>}
                 </div>
               </div>
               <button

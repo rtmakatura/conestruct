@@ -434,12 +434,13 @@ describe("#541 without a map (no Mapbox token)", () => {
   });
 });
 
-// #543 (mission ux-map-window-tidy, ruling 2): the coarse-match notice and
-// the bearing note are lines in the search's floating list, not paragraphs
-// in the map column's flow, so neither can resize the map or move the
-// right panel.  The sizes are measured in a browser (the walk in
+// #543 (mission ux-map-window-tidy, ruling 2): the coarse-match notice is a
+// line in the search's floating list, not a paragraph in the map column's
+// flow, so it can't resize the map or move the right panel.  (#547 deleted
+// the bearing note, the ruling's other line: nothing had set it since
+// #507.)  The sizes are measured in a browser (the walk in
 // validation-artifacts/committed/missions/ux-map-window-tidy/issue-543/);
-// here the mounted window is asked where each line is.
+// here the mounted window is asked where the line is.
 describe("#543: the notices float in the search's list", () => {
   const COARSE = "That search found a town or area. Tap the map on the road where the work starts.";
   const column = () => document.querySelector(".mw-map-col") as HTMLElement;
@@ -494,21 +495,6 @@ describe("#543: the notices float in the search's list", () => {
     const line = await screen.findByText(COARSE);
     expect(list().contains(line)).toBe(true);
     expect(inFlow()).toEqual(["mw-search", "mw-map-off", "mw-cbar"]);
-  });
-
-  // The bearing note has had no words since #507 (nothing sets it), so it
-  // can't be mounted.  Its slot is pinned in the source: inside the list,
-  // and nowhere in the column's flow.
-  it("the bearing note's slot is in the list, not in the flow", async () => {
-    const { readFileSync } = await import("node:fs");
-    const { join } = await import("node:path");
-    const src = readFileSync(join(__dirname, "LocationPickerModal.tsx"), "utf-8").replace(/\r\n/g, "\n");
-    const open = src.indexOf('<div className="mw-search-list"');
-    const listSrc = src.slice(open, src.indexOf("</div>", open));
-    expect(listSrc).toContain('{bearingWarning && <p className="mw-note mw-search-line">{bearingWarning}</p>}');
-    expect(listSrc).toContain('{coarseNotice && <p className="mw-note mw-search-line">{coarseNotice}</p>}');
-    expect(src.match(/\{bearingWarning &&/g)?.length).toBe(1);
-    expect(src.match(/\{coarseNotice &&/g)?.length).toBe(1);
   });
 });
 
@@ -579,10 +565,11 @@ describe("#544: bracketed coordinates, and the choice's numbers", () => {
 });
 
 // #545, Ryan's ruling 1 of 2026-11-22 (docs/prompts/
-// cc-prompt-ux-map-window-tidy.md): "With no pin, the mark beside 'No pin
-// yet' is a hollow ring: an --ink-faint outline, no fill.  It turns into
-// today's orange (--dim) dot only once a pin exists.  The bar keeps its
-// height and position."  The mounted modal says which state the mark is in
+// cc-prompt-ux-map-window-tidy.md has the exact text; its three bullets,
+// reworded here): with no pin the mark beside "No pin yet" is a hollow
+// ring, an --ink-faint outline with no fill; it turns into today's orange
+// (--dim) dot only once a pin exists; the bar keeps its height and
+// position.  The mounted modal says which state the mark is in
 // (data-pin); globals.css draws the two states.  happy-dom doesn't load
 // globals.css, so the rules are read as text here and the drawn mark is
 // measured in a browser (the walk in validation-artifacts/committed/
