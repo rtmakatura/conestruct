@@ -1584,9 +1584,12 @@ export function LocationPickerModal({
 
             {/* #541 (ruling 2): the pin's coordinates, read-only, always here
                 at 44 px, so the map and the rail never move (P1).  The
-                numbers can be selected and copied; nothing here is a control. */}
+                numbers can be selected and copied; nothing here is a control.
+                #545 (ruling 1): the mark is a hollow ring with no pin and
+                the filled dot with one; globals.css draws both from
+                data-pin, in the same 10 x 10 box. */}
             <div className="mw-cbar" data-testid="coords-bar">
-              <span className="mw-cbar-dot" aria-hidden="true" />
+              <span className="mw-cbar-dot" data-pin={hasPin ? "true" : "false"} aria-hidden="true" />
               {hasPin ? (
                 <span className="mw-cbar-line">
                   <span className="mw-cbar-lead">{COORDS_PIN_AT}</span>{" "}

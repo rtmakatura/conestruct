@@ -5591,11 +5591,23 @@ input[type="number"] {
   line-height: 1.4;
   color: var(--ink);
 }
+/* #545 (Ryan, 2026-11-22, ruling 1): with no pin the mark is a hollow
+   ring, an --ink-faint outline with no fill; once a pin exists it is the
+   --dim dot.  Ring or dot is a shape, not a hue alone (Rule 13).  Both are
+   the same 10 x 10 box, so the line's text never moves.  The 2 px stroke is
+   CHOSEN (Rule 12): whole pixels at 1x, and it leaves a 6 px hole, so the
+   ring reads as hollow.  Measured 6.47:1 on --da-ground (validation-
+   artifacts/committed/missions/ux-map-window-tidy/issue-545/walk.md). */
 .map-window .mw-cbar-dot {
   flex: none;
+  box-sizing: border-box;
   width: 10px;
   height: 10px;
+  border: 2px solid var(--ink-faint);
   border-radius: 50%;
+}
+.map-window .mw-cbar-dot[data-pin="true"] {
+  border: 0;
   background: var(--dim);
 }
 .map-window .mw-cbar-line {
@@ -6971,6 +6983,30 @@ input[type="number"] {
    wordmark is Mapbox's, exempt from rule 163's 44 px (R142). */
 .mapboxgl-ctrl:has(> .mapboxgl-ctrl-logo) {
   display: block !important;
+}
+
+/* #545 (Ryan, 2026-11-22, ruling 4): Mapbox shows its compact "Toggle
+   attribution" button whenever the map itself is 640 px wide or less,
+   whatever the viewport; the map window's map is 620 px wide at a 1198 px
+   viewport, where the 480 px block below doesn't apply and the button is
+   Mapbox's 24 x 24.  A 44 x 44 ::after centred on the button takes the
+   taps round it.  It draws nothing, and the button's box, icon and ground
+   are untouched.  With the line open, Mapbox's text ends 4 px left of that
+   24 px button, so the ::after's left 6 px would lie over it: there a notch
+   6 px wide and 20 px high (the line's height) is cut out, and those taps
+   still reach Mapbox's line and its last link.  At 480 px and under the
+   button itself is 44 x 44 (the block below) and covers the notch. */
+.picker-map .mapboxgl-ctrl-attrib-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+.picker-map .mapboxgl-compact-show .mapboxgl-ctrl-attrib-button::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 32px, 6px 32px, 6px 12px, 0 12px);
 }
 
 /* R138 (Phase 4, tap targets) — rule 163's 44 px for controls styled in

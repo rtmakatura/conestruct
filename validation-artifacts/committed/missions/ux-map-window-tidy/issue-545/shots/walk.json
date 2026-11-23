@@ -1,0 +1,2059 @@
+[
+ {
+  "size": "1440x900",
+  "inter": true,
+  "exceptionReason": "#505 (Ryan, 2026-11-10): Mapbox's logo and attribution links are Mapbox's, placed under its terms, not controls we design",
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "barText": "No pin yet",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "border": "2px solid rgb(147, 160, 176)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": true,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 7,
+    "smallBox": [],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "rail": {
+     "x": 823,
+     "y": 86.75,
+     "w": 456,
+     "h": 653.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 653.25
+    },
+    "dialog": {
+     "w": 1280,
+     "h": 810
+    },
+    "barText": "Pin at 39.7401, -104.9811",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "border": "0px none rgb(234, 240, 247)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": false,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 9,
+    "smallBox": [],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"\u00a9 Mapbox\"",
+      "w": 54.88,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 OpenStreetMap\"",
+      "w": 96.89,
+      "h": 14
+     },
+     {
+      "what": "a \"Improve this map\"",
+      "w": 99.36,
+      "h": 14
+     },
+     {
+      "what": "a \"\u00a9 Maxar\"",
+      "w": 45.52,
+      "h": 14
+     },
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "closes": [
+   {
+    "how": "Cancel",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [
+     "mapbox.eventData.uuid:",
+     "mapbox.eventData.uuidTimestamp:",
+     "mapbox.eventData:"
+    ],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "div \"STEP 1 OF 4WHEREWhere is the work?Type a\"",
+     "focusIsOpener": false,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047",
+      "mapbox.eventData.uuid:": "36:1168780172",
+      "mapbox.eventData.uuidTimestamp:": "13:617735855",
+      "mapbox.eventData:": "43:1253176891"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Close",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047",
+      "mapbox.eventData.uuid:": "36:1168780172",
+      "mapbox.eventData.uuidTimestamp:": "13:617735855",
+      "mapbox.eventData:": "43:1253176891"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047",
+      "mapbox.eventData.uuid:": "36:1168780172",
+      "mapbox.eventData.uuidTimestamp:": "13:617735855",
+      "mapbox.eventData:": "43:1253176891"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Escape",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047",
+      "mapbox.eventData.uuid:": "36:1168780172",
+      "mapbox.eventData.uuidTimestamp:": "13:617735855",
+      "mapbox.eventData:": "43:1253176891"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 900,
+     "opener": {
+      "x": 1011,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 280,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 240,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:381158047",
+      "mapbox.eventData.uuid:": "36:1168780172",
+      "mapbox.eventData.uuidTimestamp:": "13:617735855",
+      "mapbox.eventData:": "43:1253176891"
+     },
+     "sessionStorage": {}
+    }
+   }
+  ],
+  "attrib": {
+   "asOpened": {
+    "mapWidth": 822,
+    "compact": false,
+    "expanded": false,
+    "container": {
+     "w": 318.67,
+     "h": 20,
+     "fromMapRight": 0,
+     "fromMapBottom": 0
+    },
+    "innerShown": true,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 54.88,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 644.2
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 96.89,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": false,
+      "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner",
+      "right": 744.44
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 99.36,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a.mapbox-improve-map",
+      "right": 849.14
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 45.52,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 898
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": null
+   },
+   "fullLineShots": {
+    "crop": "1440-attrib-full-line.png",
+    "clip": {
+     "w": 334.67,
+     "h": 36
+    },
+    "ruleOnVsOff": {
+     "pixels": 12024,
+     "differ": 0,
+     "pillPixels": 6360,
+     "differInPill": 0
+    },
+    "ruleOnVsOnAgain": {
+     "pixels": 12024,
+     "differ": 0,
+     "pillPixels": 6360,
+     "differInPill": 0
+    }
+   }
+  }
+ },
+ {
+  "size": "1198x930",
+  "inter": true,
+  "exceptionReason": "#505 (Ryan, 2026-11-10): Mapbox's logo and attribution links are Mapbox's, placed under its terms, not controls we design",
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "barText": "No pin yet",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "border": "2px solid rgb(147, 160, 176)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": true,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 8,
+    "smallBox": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24,
+      "probes": 1936,
+      "reachControl": 1936,
+      "reachMapboxMark": 0
+     }
+    ],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "rail": {
+     "x": 621.19,
+     "y": 86.75,
+     "w": 456,
+     "h": 680.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 680.25
+    },
+    "dialog": {
+     "w": 1078.19,
+     "h": 837
+    },
+    "barText": "Pin at 39.7401, -104.9811",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "border": "0px none rgb(234, 240, 247)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": false,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 10,
+    "smallBox": [
+     {
+      "what": "button \"Toggle attribution\"",
+      "cls": "mapboxgl-ctrl-attrib-button",
+      "w": 24,
+      "h": 24,
+      "probes": 1936,
+      "reachControl": 1936,
+      "reachMapboxMark": 0
+     }
+    ],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "closes": [
+   {
+    "how": "Cancel",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [
+     "mapbox.eventData.uuid:",
+     "mapbox.eventData.uuidTimestamp:",
+     "mapbox.eventData:"
+    ],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "div \"STEP 1 OF 4WHEREWhere is the work?Type a\"",
+     "focusIsOpener": false,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714",
+      "mapbox.eventData.uuid:": "36:612952280",
+      "mapbox.eventData.uuidTimestamp:": "13:641687732",
+      "mapbox.eventData:": "43:-1925541482"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Close",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714",
+      "mapbox.eventData.uuid:": "36:612952280",
+      "mapbox.eventData.uuidTimestamp:": "13:641687732",
+      "mapbox.eventData:": "43:-1925541482"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714",
+      "mapbox.eventData.uuid:": "36:612952280",
+      "mapbox.eventData.uuidTimestamp:": "13:641687732",
+      "mapbox.eventData:": "43:-1925541482"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Escape",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 0,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714",
+      "mapbox.eventData.uuid:": "36:612952280",
+      "mapbox.eventData.uuidTimestamp:": "13:641687732",
+      "mapbox.eventData:": "43:-1925541482"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 0,
+     "docHeight": 930,
+     "opener": {
+      "x": 890,
+      "y": 284.75,
+      "w": 132,
+      "h": 44
+     },
+     "band": {
+      "x": 159,
+      "y": 159,
+      "w": 880,
+      "h": 186.75
+     },
+     "main": {
+      "x": 119,
+      "y": 52,
+      "w": 960,
+      "h": 633.5
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1712935714",
+      "mapbox.eventData.uuid:": "36:612952280",
+      "mapbox.eventData.uuidTimestamp:": "13:641687732",
+      "mapbox.eventData:": "43:-1925541482"
+     },
+     "sessionStorage": {}
+    }
+   }
+  ],
+  "attrib": {
+   "asOpened": {
+    "mapWidth": 620.19,
+    "compact": true,
+    "expanded": false,
+    "container": {
+     "w": 24,
+     "h": 24,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": false,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 24,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10
+     },
+     "background": "rgba(255, 255, 255, 0.5)",
+     "backgroundSize": "auto",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1936,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {}
+    }
+   },
+   "collapsed": {
+    "mapWidth": 620.19,
+    "compact": true,
+    "expanded": false,
+    "container": {
+     "w": 24,
+     "h": 24,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": false,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 24,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10
+     },
+     "background": "rgba(255, 255, 255, 0.5)",
+     "backgroundSize": "auto",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1936,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {}
+    }
+   },
+   "collapsedShots": {
+    "crop": "1198-attrib-collapsed.png",
+    "clip": {
+     "w": 50,
+     "h": 50
+    },
+    "ruleOnVsOff": {
+     "pixels": 2500,
+     "differ": 0,
+     "pillPixels": 0,
+     "differInPill": 0
+    },
+    "ruleOnVsOnAgain": {
+     "pixels": 2500,
+     "differ": 0,
+     "pillPixels": 0,
+     "differInPill": 0
+    }
+   },
+   "clickOffCentre": {
+    "pxUpAndLeftOfCentre": 17,
+    "opensAttribution": true,
+    "barAfter": "No pin yet"
+   },
+   "expanded": {
+    "mapWidth": 620.19,
+    "compact": true,
+    "expanded": true,
+    "container": {
+     "w": 344.67,
+     "h": 24,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": true,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 54.88,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 389.3
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 96.89,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": false,
+      "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner",
+      "right": 489.53
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 99.36,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a.mapbox-improve-map",
+      "right": 594.23
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 45.52,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 643.09
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 24,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10
+     },
+     "background": "rgba(0, 0, 0, 0.05)",
+     "backgroundSize": "auto",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1816,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {
+      "div.mapboxgl-ctrl-attrib-inner": 30,
+      "a \"\u00a9 Maxar\"": 90
+     }
+    }
+   },
+   "expandedShots": {
+    "crop": "1198-attrib-expanded.png",
+    "clip": {
+     "w": 370.67,
+     "h": 50
+    },
+    "ruleOnVsOff": {
+     "pixels": 18500,
+     "differ": 0,
+     "pillPixels": 7680,
+     "differInPill": 0
+    },
+    "ruleOnVsOnAgain": {
+     "pixels": 18500,
+     "differ": 0,
+     "pillPixels": 7680,
+     "differInPill": 0
+    }
+   },
+   "clickOffCentreAgain": {
+    "pxDownAndLeftOfCentre": 17,
+    "closesAttribution": true,
+    "barAfter": "No pin yet"
+   }
+  }
+ },
+ {
+  "size": "390x844",
+  "inter": true,
+  "exceptionReason": "#505 (Ryan, 2026-11-10): Mapbox's logo and attribution links are Mapbox's, placed under its terms, not controls we design",
+  "states": {
+   "noPin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 125.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "barText": "No pin yet",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "border": "2px solid rgb(147, 160, 176)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": true,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 8,
+    "smallBox": [],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   },
+   "pin": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "rail": {
+     "x": 1,
+     "y": 598.86,
+     "w": 388,
+     "h": 341.25
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "column": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 491.86
+    },
+    "dialog": {
+     "w": 390,
+     "h": 844
+    },
+    "barText": "Pin at 39.7401, -104.9811",
+    "barGround": "rgb(16, 28, 41)",
+    "barControls": 0,
+    "mark": {
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "border": "0px none rgb(234, 240, 247)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "boxSizing": "border-box",
+     "ariaHidden": "true",
+     "hollow": false,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "#93a0b0",
+     "dim": "#ff8a2e",
+     "daGround": "#101c29"
+    },
+    "font": "__Inter_176161",
+    "countedControls": 10,
+    "smallBox": [],
+    "under44": [],
+    "mapboxExceptions": [
+     {
+      "what": "a \"Mapbox homepage\"",
+      "w": 88,
+      "h": 23
+     }
+    ],
+    "scrollTop": 0,
+    "axe": []
+   }
+  },
+  "closes": [
+   {
+    "how": "Cancel",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [
+     "mapbox.eventData.uuid:",
+     "mapbox.eventData.uuidTimestamp:",
+     "mapbox.eventData:"
+    ],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 93,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "div \"STEP 1 OF 4WHEREWhere is the work?Type a\"",
+     "focusIsOpener": false,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743",
+      "mapbox.eventData.uuid:": "36:-1921531714",
+      "mapbox.eventData.uuidTimestamp:": "13:646369044",
+      "mapbox.eventData:": "43:1511823158"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Close",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 93,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743",
+      "mapbox.eventData.uuid:": "36:-1921531714",
+      "mapbox.eventData.uuidTimestamp:": "13:646369044",
+      "mapbox.eventData:": "43:1511823158"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743",
+      "mapbox.eventData.uuid:": "36:-1921531714",
+      "mapbox.eventData.uuidTimestamp:": "13:646369044",
+      "mapbox.eventData:": "43:1511823158"
+     },
+     "sessionStorage": {}
+    }
+   },
+   {
+    "how": "Escape",
+    "barBeforeClose": "Pin at 39.7401, -104.9811",
+    "windowClosed": true,
+    "focusOn": "button \"Pick on map\"",
+    "focusIsOpener": true,
+    "scrollMovedPx": 0,
+    "docHeightChangePx": 0,
+    "openerBoxSame": true,
+    "bandBoxSame": true,
+    "mainBoxSame": true,
+    "bandTextSame": true,
+    "localStorageKeysChanged": [],
+    "sessionStorageKeysChanged": [],
+    "whileOpen": {
+     "scrollY": 93,
+     "openerBoxSame": true,
+     "dialogs": 1
+    },
+    "requestsOnClose": [],
+    "nextWindowBar": "No pin yet",
+    "before": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743",
+      "mapbox.eventData.uuid:": "36:-1921531714",
+      "mapbox.eventData.uuidTimestamp:": "13:646369044",
+      "mapbox.eventData:": "43:1511823158"
+     },
+     "sessionStorage": {}
+    },
+    "after": {
+     "dialogs": 0,
+     "scrollX": 0,
+     "scrollY": 93,
+     "docHeight": 937,
+     "opener": {
+      "x": 31,
+      "y": 273.25,
+      "w": 328,
+      "h": 48
+     },
+     "band": {
+      "x": 14,
+      "y": 79,
+      "w": 362,
+      "h": 259.25
+     },
+     "main": {
+      "x": 0,
+      "y": -41,
+      "w": 390,
+      "h": 764.25
+     },
+     "bandText": "STEP 1 OF 4 WHERE Where is the work? Type an address or two cross streets, the way an 811 ticket describes it. Or drop a pin on the map. Pick on map",
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "localStorage": {
+      "__clerk_environment": "6093:-1567801743",
+      "mapbox.eventData.uuid:": "36:-1921531714",
+      "mapbox.eventData.uuidTimestamp:": "13:646369044",
+      "mapbox.eventData:": "43:1511823158"
+     },
+     "sessionStorage": {}
+    }
+   }
+  ],
+  "attrib": {
+   "asOpened": {
+    "mapWidth": 388,
+    "compact": true,
+    "expanded": false,
+    "container": {
+     "w": 44,
+     "h": 48,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": false,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 44,
+      "h": 44,
+      "fromMapRight": 10,
+      "fromMapBottom": 14
+     },
+     "background": "rgba(255, 255, 255, 0.5)",
+     "backgroundSize": "24px 24px",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1936,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {}
+    }
+   },
+   "collapsed": {
+    "mapWidth": 388,
+    "compact": true,
+    "expanded": false,
+    "container": {
+     "w": 44,
+     "h": 48,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": false,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 0,
+      "h": 0,
+      "centreReachesLink": null,
+      "rightEdgeReachesLink": null,
+      "rightEdgeReaches": null,
+      "right": 0
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 44,
+      "h": 44,
+      "fromMapRight": 10,
+      "fromMapBottom": 14
+     },
+     "background": "rgba(255, 255, 255, 0.5)",
+     "backgroundSize": "24px 24px",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1936,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {}
+    }
+   },
+   "collapsedShots": {
+    "crop": "390-attrib-collapsed.png",
+    "clip": {
+     "w": 70,
+     "h": 74
+    },
+    "ruleOnVsOff": {
+     "pixels": 5180,
+     "differ": 0,
+     "pillPixels": 176,
+     "differInPill": 0
+    },
+    "ruleOnVsOnAgain": {
+     "pixels": 5180,
+     "differ": 0,
+     "pillPixels": 176,
+     "differInPill": 0
+    }
+   },
+   "clickOffCentre": {
+    "pxUpAndLeftOfCentre": 0,
+    "opensAttribution": true,
+    "barAfter": "No pin yet"
+   },
+   "expanded": {
+    "mapWidth": 388,
+    "compact": true,
+    "expanded": true,
+    "container": {
+     "w": 360.67,
+     "h": 48,
+     "fromMapRight": 10,
+     "fromMapBottom": 10
+    },
+    "innerShown": true,
+    "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+    "links": [
+     {
+      "text": "\u00a9 Mapbox",
+      "href": "https://www.mapbox.com/about/maps",
+      "w": 54.88,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 81.2
+     },
+     {
+      "text": "\u00a9 OpenStreetMap",
+      "href": "https://www.openstreetmap.org/copyright/",
+      "w": 96.89,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": false,
+      "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner",
+      "right": 181.44
+     },
+     {
+      "text": "Improve this map",
+      "href": "https://apps.mapbox.com/feedback/",
+      "w": 99.36,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a.mapbox-improve-map",
+      "right": 286.14
+     },
+     {
+      "text": "\u00a9 Maxar",
+      "href": "https://www.maxar.com/",
+      "w": 45.52,
+      "h": 14,
+      "centreReachesLink": true,
+      "rightEdgeReachesLink": true,
+      "rightEdgeReaches": "a",
+      "right": 335
+     }
+    ],
+    "logo": {
+     "shown": true,
+     "w": 88,
+     "h": 23
+    },
+    "button": {
+     "label": "Toggle attribution",
+     "box": {
+      "w": 44,
+      "h": 44,
+      "fromMapRight": 10,
+      "fromMapBottom": 14
+     },
+     "background": "rgba(0, 0, 0, 0.05)",
+     "backgroundSize": "24px 24px",
+     "after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "w": "44px",
+      "h": "44px",
+      "background": "rgba(0, 0, 0, 0)"
+     },
+     "probes": 1936,
+     "reachButton": 1936,
+     "reachBox": {
+      "w": 44,
+      "h": 44
+     },
+     "reachOther": {}
+    }
+   },
+   "expandedShots": {
+    "crop": "390-attrib-expanded.png",
+    "clip": {
+     "w": 386.67,
+     "h": 74
+    },
+    "ruleOnVsOff": {
+     "pixels": 28564,
+     "differ": 0,
+     "pillPixels": 15344,
+     "differInPill": 0
+    },
+    "ruleOnVsOnAgain": {
+     "pixels": 28564,
+     "differ": 0,
+     "pillPixels": 15344,
+     "differInPill": 0
+    }
+   },
+   "clickOffCentreAgain": {
+    "pxDownAndLeftOfCentre": 0,
+    "closesAttribution": true,
+    "barAfter": "No pin yet"
+   }
+  }
+ }
+]

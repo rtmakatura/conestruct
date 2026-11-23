@@ -1,0 +1,72 @@
+[
+ {
+  "size": "1440x900",
+  "state": "full-line",
+  "file": "1440-attrib-full-line.png",
+  "boxBefore": "318.67x20",
+  "boxAfter": "318.67x20",
+  "cornerSquaresLeftOut": 0,
+  "crop": "334x36",
+  "cropPixels": 12024,
+  "differInCrop": 1,
+  "boxPixels": 6360,
+  "differInBox": 1,
+  "maxStepInBox": 1
+ },
+ {
+  "size": "1198x930",
+  "state": "collapsed",
+  "file": "1198-attrib-collapsed.png",
+  "boxBefore": "24x24",
+  "boxAfter": "24x24",
+  "cornerSquaresLeftOut": 12,
+  "crop": "50x50",
+  "cropPixels": 2500,
+  "differInCrop": 0,
+  "boxPixels": 0,
+  "differInBox": 0,
+  "maxStepInBox": 0
+ },
+ {
+  "size": "1198x930",
+  "state": "expanded",
+  "file": "1198-attrib-expanded.png",
+  "boxBefore": "344.67x24",
+  "boxAfter": "344.67x24",
+  "cornerSquaresLeftOut": 12,
+  "crop": "370x50",
+  "cropPixels": 18500,
+  "differInCrop": 580,
+  "boxPixels": 7680,
+  "differInBox": 1,
+  "maxStepInBox": 1
+ },
+ {
+  "size": "390x844",
+  "state": "collapsed",
+  "file": "390-attrib-collapsed.png",
+  "boxBefore": "44x48",
+  "boxAfter": "44x48",
+  "cornerSquaresLeftOut": 22,
+  "crop": "70x74",
+  "cropPixels": 5180,
+  "differInCrop": 0,
+  "boxPixels": 176,
+  "differInBox": 0,
+  "maxStepInBox": 0
+ },
+ {
+  "size": "390x844",
+  "state": "expanded",
+  "file": "390-attrib-expanded.png",
+  "boxBefore": "360.67x48",
+  "boxAfter": "360.67x48",
+  "cornerSquaresLeftOut": 22,
+  "crop": "386x74",
+  "cropPixels": 28564,
+  "differInCrop": 13,
+  "boxPixels": 15344,
+  "differInBox": 13,
+  "maxStepInBox": 10
+ }
+]

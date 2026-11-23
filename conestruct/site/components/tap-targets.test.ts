@@ -92,3 +92,45 @@ describe("R138 tap targets", () => {
     expect(ni.match(/className="undo-link"/g)?.length).toBe(1);
   });
 });
+
+// #545, Ryan's ruling 4 of 2026-11-22 (docs/prompts/
+// cc-prompt-ux-map-window-tidy.md).  Mapbox shows its compact "Toggle
+// attribution" button whenever the map is 640 px wide or less, whatever the
+// viewport, so its 44 px tap area can't live in the phone-width block.  The
+// tap area itself is probed in a browser (validation-artifacts/committed/
+// missions/ux-map-window-tidy/issue-545/); this keeps the rules in place.
+describe("#545 the attribution button's tap area", () => {
+  const rule =
+    '\n.picker-map .mapboxgl-ctrl-attrib-button::after {\n  content: "";\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 44px;\n  height: 44px;\n  transform: translate(-50%, -50%);\n}\n';
+
+  it("globals.css gives the picker's attribution button a 44 x 44 ::after centred on it, with no background, border or shadow", () => {
+    expect(css).toContain(rule);
+  });
+
+  it("that rule is at the top level of globals.css, before the 480 px block, so it holds at every width", () => {
+    // Top level: the last thing before it that starts at column 0 closes a
+    // block (rules inside an @media block are indented), and the 480 px
+    // block opens after it.
+    const at = css.indexOf(rule);
+    expect(at).toBeGreaterThanOrEqual(0);
+    expect(at).toBeLessThan(css.indexOf("@media (max-width: 480px) {\n  .tap-44 {"));
+    const before = css.slice(0, at);
+    expect(before.lastIndexOf("\n}\n")).toBeGreaterThan(before.lastIndexOf("\n@media"));
+  });
+
+  it("with the line open, a clip-path cuts a 6 x 20 px notch out of that ::after's left edge, and no rule in globals.css styles the attribution's line or its links", () => {
+    expect(css).toContain(
+      "\n.picker-map .mapboxgl-compact-show .mapboxgl-ctrl-attrib-button::after {\n  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 32px, 6px 32px, 6px 12px, 0 12px);\n}\n",
+    );
+    expect(css).not.toMatch(/mapboxgl-ctrl-attrib-inner[^{}]*\{/);
+    expect(css).not.toMatch(/mapboxgl-ctrl-attrib[^{}]* a\b[^{}]*\{/);
+  });
+
+  it("no rule in globals.css that names the attribution sets display: none, visibility: hidden, opacity: 0, a font size or a text colour", () => {
+    const rules = [...css.matchAll(/([^{}]*mapboxgl-ctrl-attrib[^{}]*)\{([^}]*)\}/g)];
+    expect(rules.length).toBeGreaterThan(0);
+    for (const m of rules) {
+      expect(m[2], m[1].trim()).not.toMatch(/display:\s*none|visibility:\s*hidden|opacity:\s*0|font-size|(?<![-\w])color:/);
+    }
+  });
+});

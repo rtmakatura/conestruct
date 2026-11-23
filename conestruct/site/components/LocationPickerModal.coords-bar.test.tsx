@@ -577,3 +577,67 @@ describe("#544: bracketed coordinates, and the choice's numbers", () => {
     expect(css).toContain("\n.map-window .mw-search-pair {\n  white-space: nowrap;\n}\n");
   });
 });
+
+// #545, Ryan's ruling 1 of 2026-11-22 (docs/prompts/
+// cc-prompt-ux-map-window-tidy.md): "With no pin, the mark beside 'No pin
+// yet' is a hollow ring: an --ink-faint outline, no fill.  It turns into
+// today's orange (--dim) dot only once a pin exists.  The bar keeps its
+// height and position."  The mounted modal says which state the mark is in
+// (data-pin); globals.css draws the two states.  happy-dom doesn't load
+// globals.css, so the rules are read as text here and the drawn mark is
+// measured in a browser (the walk in validation-artifacts/committed/
+// missions/ux-map-window-tidy/issue-545/).
+describe("#545 ruling 1: the bar's mark is a ring until a pin exists", () => {
+  const marks = () => bar().querySelectorAll(".mw-cbar-dot");
+
+  it('no pin: the bar has one mark, aria-hidden, with data-pin="false"', () => {
+    mount();
+    expect(bar().textContent).toBe("No pin yet");
+    expect(marks()).toHaveLength(1);
+    expect(marks()[0].getAttribute("data-pin")).toBe("false");
+    expect(marks()[0].getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it('a saved pin: the one mark has data-pin="true"', () => {
+    mount(PIN);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(marks()).toHaveLength(1);
+    expect(marks()[0].getAttribute("data-pin")).toBe("true");
+    expect(marks()[0].getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it('coordinates searched in the box turn the mark from data-pin="false" to "true"', async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    expect(marks()[0].getAttribute("data-pin")).toBe("false");
+    await searchFor(user, "39.7401, -104.9811");
+    await waitFor(() => expect(bar().textContent).toBe("Pin at 39.7401, -104.9811"));
+    expect(marks()).toHaveLength(1);
+    expect(marks()[0].getAttribute("data-pin")).toBe("true");
+  });
+
+  it('out-of-range coordinates place no pin, and the mark keeps data-pin="false"', async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "139.7401, -104.9811");
+    await waitFor(() => expect(list().textContent).not.toBe(""));
+    expect(bar().textContent).toBe("No pin yet");
+    expect(marks()[0].getAttribute("data-pin")).toBe("false");
+  });
+
+  it('globals.css: the mark\'s own rule is a 10 x 10 box with a 2px --ink-faint border and no background, and the data-pin="true" rule swaps the border for a --dim background', async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toContain(
+      "\n.map-window .mw-cbar-dot {\n  flex: none;\n  box-sizing: border-box;\n  width: 10px;\n  height: 10px;\n  border: 2px solid var(--ink-faint);\n  border-radius: 50%;\n}\n",
+    );
+    expect(css).toContain(
+      '\n.map-window .mw-cbar-dot[data-pin="true"] {\n  border: 0;\n  background: var(--dim);\n}\n',
+    );
+    // No other rule styles the mark.
+    expect(css.match(/\.mw-cbar-dot[^{]*\{/g)).toHaveLength(2);
+  });
+});

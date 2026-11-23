@@ -1,0 +1,29 @@
+# #545 red proof: the new tests in
+# conestruct/site/components/LocationPickerModal.coords-bar.test.tsx and
+# conestruct/site/components/tap-targets.test.ts run on 5737d8d2's code (the
+# worktree before any edit to LocationPickerModal.tsx or globals.css),
+# 2026-11-22.
+# Command: NO_COLOR=1 npx vitest run --reporter=verbose components/LocationPickerModal.coords-bar.test.tsx components/tap-targets.test.ts -t "#545"
+# 8 of 9 fail.  The one that passes on the base is a control: no rule that
+# names the attribution hides it or restyles its text, before the fix or
+# after it.
+
+ × components/tap-targets.test.ts > #545 the attribution button's tap area > globals.css gives the picker's attribution button a 44 x 44 ::after centred on it, with no background, border or shadow
+   → expected '@tailwind base;\n@tailwind components…' to contain '\n.picker-map .mapboxgl-ctrl-attrib-b…'
+ × components/tap-targets.test.ts > #545 the attribution button's tap area > that rule is at the top level of globals.css, before the 480 px block, so it holds at every width
+   → expected -1 to be greater than or equal to 0
+ × components/tap-targets.test.ts > #545 the attribution button's tap area > with the line open, a clip-path cuts a 6 x 20 px notch out of that ::after's left edge, and no rule in globals.css styles the attribution's line or its links
+   → expected '@tailwind base;\n@tailwind components…' to contain '\n.picker-map .mapboxgl-compact-show …'
+ ✓ components/tap-targets.test.ts > #545 the attribution button's tap area > no rule in globals.css that names the attribution sets display: none, visibility: hidden, opacity: 0, a font size or a text colour
+ × components/LocationPickerModal.coords-bar.test.tsx > #545 ruling 1: the bar's mark is a ring until a pin exists > no pin: the bar has one mark, aria-hidden, with data-pin="false"
+   → expected null to be 'false' // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #545 ruling 1: the bar's mark is a ring until a pin exists > a saved pin: the one mark has data-pin="true"
+   → expected null to be 'true' // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #545 ruling 1: the bar's mark is a ring until a pin exists > coordinates searched in the box turn the mark from data-pin="false" to "true"
+   → expected null to be 'false' // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #545 ruling 1: the bar's mark is a ring until a pin exists > out-of-range coordinates place no pin, and the mark keeps data-pin="false"
+   → expected null to be 'false' // Object.is equality
+ × components/LocationPickerModal.coords-bar.test.tsx > #545 ruling 1: the bar's mark is a ring until a pin exists > globals.css: the mark's own rule is a 10 x 10 box with a 2px --ink-faint border and no background, and the data-pin="true" rule swaps the border for a --dim background
+   → expected '@tailwind base;\n@tailwind components…' to contain '\n.map-window .mw-cbar-dot {\n  flex:…'
+ Test Files  2 failed (2)
+      Tests  8 failed | 1 passed | 47 skipped (56)
