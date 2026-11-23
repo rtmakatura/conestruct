@@ -1,0 +1,7095 @@
+{
+ "ranAt": "2026-11-23T07:35:43.287Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "20f88a9824d3e13cad40c07e14528aa09905b1ec",
+ "featSha": "86712cdac39465343d9c7342136c17d9fc08c4c0",
+ "exceptionReason": "#505 (Ryan, 2026-11-10): Mapbox's logo and attribution links are Mapbox's, placed under its terms, not controls we design",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "done",
+   "console": [],
+   "chunkShas": [
+    "20f88a9824d3e13cad40c07e14528aa09905b1ec"
+   ],
+   "nonGet": [
+    {
+     "step": "W1 town search",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "W2 round brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W3 square brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "retries": [],
+   "tokenChecks": 5,
+   "tokenHits": 0,
+   "states": {
+    "w1NoPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 7,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Notice": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 694.16,
+      "h": 35.5,
+      "position": "absolute",
+      "role": "status",
+      "text": "That search found a town or area. Tap the map on the road where the work starts.",
+      "overMapPx": 23.5
+     },
+     "notice": {
+      "x": 22,
+      "y": 152.25,
+      "w": 692.16,
+      "h": 33.5,
+      "inList": true,
+      "shown": true,
+      "centreReachesNotice": true,
+      "font": "__Inter_176161 12.5px",
+      "color": "rgb(147, 160, 176)",
+      "lines": 1
+     },
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 7,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "Pin at 40.0175, -105.0905",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 11,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"East\u2013west\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "button \"North\u2013south\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "button \"Northeast\u2013southwest\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "button \"Northwest\u2013southeast\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2NoPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 7,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Choice": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 694.16,
+      "h": 46,
+      "position": "absolute",
+      "role": "status",
+      "text": "Did you mean 39.7401, -104.9811?",
+      "overMapPx": 34
+     },
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Did you mean 39.7401, -104.9811?\"",
+       "w": 692.16,
+       "h": 44
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Round": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w3Square": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w4Address": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7400, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w5AttribFull": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "w": 1280,
+      "h": 810
+     },
+     "scrollHeight": 653,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 713,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 7,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    }
+   },
+   "closes": [
+    {
+     "how": "Escape",
+     "barBeforeClose": "Pin at 40.0175, -105.0905",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [
+      "mapbox.eventData.uuid:",
+      "mapbox.eventData.uuidTimestamp:",
+      "mapbox.eventData:"
+     ],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Cancel",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Close",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    }
+   ],
+   "inter": true,
+   "i543": {
+    "search": "Lafayette, CO",
+    "noticeText": "That search found a town or area. Tap the map on the road where the work starts.",
+    "notice": {
+     "x": 22,
+     "y": 152.25,
+     "w": 692.16,
+     "h": 33.5,
+     "inList": true,
+     "shown": true,
+     "centreReachesNotice": true,
+     "font": "__Inter_176161 12.5px",
+     "color": "rgb(147, 160, 176)",
+     "lines": 1
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 694.16,
+     "h": 35.5,
+     "position": "absolute",
+     "role": "status",
+     "text": "That search found a town or area. Tap the map on the road where the work starts.",
+     "overMapPx": 23.5
+    },
+    "movedNoticeVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "scrollHeightChange": 0,
+    "townCamera": {
+     "zoom": 12,
+     "lat": 39.99823,
+     "lng": -105.09046,
+     "moving": false,
+     "drawn": false
+    },
+    "townRequests": {
+     "geocode": 1,
+     "roads": 0
+    },
+    "tap": {
+     "pxBelowMapTop": 120,
+     "pxBelowNotice": 96.5,
+     "barText": "Pin at 40.0175, -105.0905",
+     "pinPlaced": true,
+     "markers": 1,
+     "noticeGone": true,
+     "listAfter": null,
+     "roadPanel": false,
+     "roadRequests": 1
+    },
+    "movedPinVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "address": {
+    "text": "E Colfax Ave & Pennsylvania St, Denver",
+    "geocodeRequests": 1,
+    "geocodeStatus": 200,
+    "geocodeMethod": "POST",
+    "pinPlaced": true,
+    "camera": {
+     "zoom": 16,
+     "lat": 39.73999,
+     "lng": -104.98112,
+     "moving": false,
+     "drawn": true
+    },
+    "barText": "Pin at 39.7400, -104.9811",
+    "listAfter": null,
+    "rows": [
+     "Pennsylvania Street at East Colfax Avenue",
+     "East Colfax Avenue at Pennsylvania Street"
+    ],
+    "lookupRetries": 0,
+    "dialogsAfterEscape": 0
+   },
+   "attrib": {
+    "asOpened": {
+     "mapWidth": 822,
+     "compact": false,
+     "expanded": false,
+     "container": {
+      "w": 318.67,
+      "h": 20,
+      "fromMapRight": 0,
+      "fromMapBottom": 0,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": true,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 54.88,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 96.89,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": false,
+       "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner"
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 99.36,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a.mapbox-improve-map"
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 45.52,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": null
+    },
+    "dialogsAfterEscape": 0
+   },
+   "axe": {
+    "w1NoPin": [],
+    "w1Notice": [],
+    "w1Pin": [],
+    "w2NoPin": [],
+    "w2Choice": [],
+    "w2Round": [],
+    "w3Square": [],
+    "w4Address": [],
+    "w5AttribFull": []
+   },
+   "axeRuns": 9,
+   "axeViolations": 0,
+   "controlsMeasured": 74,
+   "minControlW": 44,
+   "minControlH": 44,
+   "boxUnder44": [],
+   "under44": [],
+   "openLineNotch": [],
+   "mapboxExceptions": [
+    "a \"\u00a9 Mapbox\" 54.88x14",
+    "a \"\u00a9 OpenStreetMap\" 96.89x14",
+    "a \"Improve this map\" 99.36x14",
+    "a \"\u00a9 Maxar\" 45.52x14",
+    "a \"Mapbox homepage\" 88x23"
+   ],
+   "barBoxes": {
+    "w1NoPin": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w1Notice": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w1Pin": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w2NoPin": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w2Choice": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w2Round": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w3Square": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w4Address": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "w5AttribFull": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    }
+   },
+   "barHeights": [
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44
+   ],
+   "barControls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "marks": {
+    "w1NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Notice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Pin": {
+     "barText": "Pin at 40.0175, -105.0905",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w2NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Choice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Round": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w3Square": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w4Address": {
+     "barText": "Pin at 39.7400, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w5AttribFull": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    }
+   },
+   "requests": {
+    "geocode": 2,
+    "roads": 4
+   },
+   "nonGetByPath": {
+    "POST /api/geocode": 2,
+    "POST /api/road-bearing": 4,
+    "POST /api/render/corridor-geometry": 1
+   },
+   "i544": {
+    "choice": {
+     "text": "Did you mean 39.7401, -104.9811?",
+     "button": {
+      "w": 692.16,
+      "h": 44
+     },
+     "roomForText": 668.16,
+     "sentenceOnOneLine": 237.17,
+     "choiceLines": 1,
+     "pair": {
+      "text": "39.7401, -104.9811?",
+      "w": 144.13,
+      "h": 16,
+      "lines": 1,
+      "whiteSpace": "nowrap"
+     }
+    },
+    "choiceRequests": {
+     "geocode": 0,
+     "roads": 0
+    },
+    "movedChoiceVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "round": {
+     "typed": "(39.7401, -104.9811)",
+     "boxValue": "(39.7401, -104.9811)",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": true
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null
+    },
+    "square": {
+     "typed": "[39.7401, -104.9811]",
+     "boxValue": "[39.7401, -104.9811]",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": true
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null,
+     "barBefore": "No pin yet"
+    },
+    "movedRoundVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "i545": {
+    "noPinStates": 5,
+    "pinStates": 4,
+    "ringInEveryNoPinState": true,
+    "dotInEveryPinState": true,
+    "ring": {
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "dot": {
+     "box": {
+      "x": 21,
+      "y": 713,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "rgb(147, 160, 176)",
+     "dim": "rgb(255, 138, 46)"
+    },
+    "barNoPin": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barPin": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "barMovedPx": 0,
+    "markMovedPx": 0,
+    "barHeightsAll44": true
+   },
+   "verdict543": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "noticeShown": true,
+     "noticeInFloatingList": true,
+     "noticeLiesOverTheMap": true,
+     "map0px": true,
+     "searchRow0px": true,
+     "rightPanel0px": true,
+     "bar0px": true,
+     "tapPlacesPin": true,
+     "tapClearsNotice": true
+    }
+   },
+   "verdict544": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "roundPlacesPin": true,
+     "roundZeroGeocode": true,
+     "squarePlacesPin": true,
+     "squareZeroGeocode": true,
+     "addressControlOneGeocode": true,
+     "choiceText": true,
+     "numbersOnOneLine": true,
+     "choiceAtLeast44High": true,
+     "choiceZeroGeocode": true
+    }
+   },
+   "verdict545": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "ringWithNoPin": true,
+     "dotWithPin": true,
+     "bar44": true,
+     "barSameBoxBothStates": true,
+     "attributionShown": true,
+     "attributionReadsAsMapbox": true,
+     "cancelCloses": true,
+     "closeButtonCloses": true,
+     "escapeCloses": true
+    }
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "failedByKind": {
+    "api.mapbox.com net::ERR_ABORTED": 88,
+    "o4511428711153664.ingest.us.sentry.io net::ERR_ABORTED": 4
+   },
+   "failedTotal": 92,
+   "http429": 0,
+   "verdictCommon": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "axeZero": true,
+     "noControlUnder44": true,
+     "noConsoleErrors": true,
+     "tokenNotInPage": true,
+     "servedChunksCarryTheBuild": true,
+     "onlyReadPosts": true
+    }
+   }
+  },
+  {
+   "size": "1198x930",
+   "step": "done",
+   "console": [],
+   "chunkShas": [
+    "20f88a9824d3e13cad40c07e14528aa09905b1ec"
+   ],
+   "nonGet": [
+    {
+     "step": "W1 town search",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "W2 round brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W3 square brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "retries": [],
+   "tokenChecks": 5,
+   "tokenHits": 0,
+   "states": {
+    "w1NoPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Notice": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 492.34,
+      "h": 53,
+      "position": "absolute",
+      "role": "status",
+      "text": "That search found a town or area. Tap the map on the road where the work starts.",
+      "overMapPx": 41
+     },
+     "notice": {
+      "x": 22,
+      "y": 152.25,
+      "w": 490.34,
+      "h": 51,
+      "inList": true,
+      "shown": true,
+      "centreReachesNotice": true,
+      "font": "__Inter_176161 12.5px",
+      "color": "rgb(147, 160, 176)",
+      "lines": 2
+     },
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "Pin at 40.0194, -105.0905",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Powell StreetTraffic both ways \u00b7 14 m from your pin\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2NoPin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Choice": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 151.25,
+      "w": 492.34,
+      "h": 46,
+      "position": "absolute",
+      "role": "status",
+      "text": "Did you mean 39.7401, -104.9811?",
+      "overMapPx": 34
+     },
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Did you mean 39.7401, -104.9811?\"",
+       "w": 490.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Round": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w3Square": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w4Address": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7400, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w5AttribClosed": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1936,
+       "reachMapboxMark": 0
+      }
+     ],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w5AttribOpen": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "w": 1078.19,
+      "h": 837
+     },
+     "scrollHeight": 680,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 21,
+       "y": 740,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1816,
+       "reachMapboxMark": 90
+      }
+     ],
+     "under44": [
+      {
+       "what": "button \"Toggle attribution\"",
+       "cls": "mapboxgl-ctrl-attrib-button",
+       "w": 24,
+       "h": 24,
+       "probes": 1936,
+       "reachControl": 1816,
+       "reachMapboxMark": 90
+      }
+     ],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    }
+   },
+   "closes": [
+    {
+     "how": "Escape",
+     "barBeforeClose": "Pin at 40.0194, -105.0905",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [
+      "mapbox.eventData.uuid:",
+      "mapbox.eventData.uuidTimestamp:",
+      "mapbox.eventData:"
+     ],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Cancel",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Close",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    }
+   ],
+   "inter": true,
+   "i543": {
+    "search": "Lafayette, CO",
+    "noticeText": "That search found a town or area. Tap the map on the road where the work starts.",
+    "notice": {
+     "x": 22,
+     "y": 152.25,
+     "w": 490.34,
+     "h": 51,
+     "inList": true,
+     "shown": true,
+     "centreReachesNotice": true,
+     "font": "__Inter_176161 12.5px",
+     "color": "rgb(147, 160, 176)",
+     "lines": 2
+    },
+    "list": {
+     "x": 21,
+     "y": 151.25,
+     "w": 492.34,
+     "h": 53,
+     "position": "absolute",
+     "role": "status",
+     "text": "That search found a town or area. Tap the map on the road where the work starts.",
+     "overMapPx": 41
+    },
+    "movedNoticeVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "scrollHeightChange": 0,
+    "townCamera": {
+     "zoom": 12,
+     "lat": 39.99823,
+     "lng": -105.09046,
+     "moving": false,
+     "drawn": false
+    },
+    "townRequests": {
+     "geocode": 1,
+     "roads": 0
+    },
+    "tap": {
+     "pxBelowMapTop": 120,
+     "pxBelowNotice": 79,
+     "barText": "Pin at 40.0194, -105.0905",
+     "pinPlaced": true,
+     "markers": 1,
+     "noticeGone": true,
+     "listAfter": null,
+     "roadPanel": true,
+     "roadRequests": 1
+    },
+    "movedPinVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "address": {
+    "text": "E Colfax Ave & Pennsylvania St, Denver",
+    "geocodeRequests": 1,
+    "geocodeStatus": 200,
+    "geocodeMethod": "POST",
+    "pinPlaced": true,
+    "camera": {
+     "zoom": 16,
+     "lat": 39.73999,
+     "lng": -104.98112,
+     "moving": false,
+     "drawn": false
+    },
+    "barText": "Pin at 39.7400, -104.9811",
+    "listAfter": null,
+    "rows": [
+     "Pennsylvania Street at East Colfax Avenue",
+     "East Colfax Avenue at Pennsylvania Street"
+    ],
+    "lookupRetries": 0,
+    "dialogsAfterEscape": 0
+   },
+   "attrib": {
+    "asOpened": {
+     "mapWidth": 620.19,
+     "compact": true,
+     "expanded": false,
+     "container": {
+      "w": 24,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": false,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 24,
+       "h": 24,
+       "fromMapRight": 10,
+       "fromMapBottom": 10
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "none"
+      },
+      "probes": 1936,
+      "reachButton": 1936,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {}
+     }
+    },
+    "collapsed": {
+     "mapWidth": 620.19,
+     "compact": true,
+     "expanded": false,
+     "container": {
+      "w": 24,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": false,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 24,
+       "h": 24,
+       "fromMapRight": 10,
+       "fromMapBottom": 10
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "none"
+      },
+      "probes": 1936,
+      "reachButton": 1936,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {}
+     }
+    },
+    "clickOffCentre": {
+     "pxUpAndLeftOfCentre": 17,
+     "opensAttribution": true,
+     "barAfter": "No pin yet"
+    },
+    "expanded": {
+     "mapWidth": 620.19,
+     "compact": true,
+     "expanded": true,
+     "container": {
+      "w": 344.67,
+      "h": 24,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": true,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 54.88,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 96.89,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": false,
+       "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner"
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 99.36,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a.mapbox-improve-map"
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 45.52,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 24,
+       "h": 24,
+       "fromMapRight": 10,
+       "fromMapBottom": 10
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%, 0px 32px, 6px 32px, 6px 12px, 0px 12px)"
+      },
+      "probes": 1936,
+      "reachButton": 1816,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {
+       "div.mapboxgl-ctrl-attrib-inner": 30,
+       "a \"\u00a9 Maxar\"": 90
+      }
+     }
+    },
+    "clickOffCentreAgain": {
+     "pxDownAndLeftOfCentre": 17,
+     "closesAttribution": true,
+     "barAfter": "No pin yet"
+    },
+    "dialogsAfterEscape": 0
+   },
+   "axe": {
+    "w1NoPin": [],
+    "w1Notice": [],
+    "w1Pin": [],
+    "w2NoPin": [],
+    "w2Choice": [],
+    "w2Round": [],
+    "w3Square": [],
+    "w4Address": [],
+    "w5AttribClosed": [],
+    "w5AttribOpen": []
+   },
+   "axeRuns": 10,
+   "axeViolations": 0,
+   "controlsMeasured": 88,
+   "minControlW": 24,
+   "minControlH": 24,
+   "boxUnder44": [
+    "button \"Toggle attribution\" box 24x24: its 44x44 square reaches it at 1936/1936, a Mapbox mark at 0",
+    "button \"Toggle attribution\" box 24x24: its 44x44 square reaches it at 1816/1936, a Mapbox mark at 90"
+   ],
+   "under44": [],
+   "openLineNotch": [
+    "button \"Toggle attribution\" 24x24 (reaches it at 1816/1936, a Mapbox link at 90)"
+   ],
+   "mapboxExceptions": [
+    "a \"Mapbox homepage\" 88x23",
+    "a \"\u00a9 Mapbox\" 54.88x14",
+    "a \"\u00a9 OpenStreetMap\" 96.89x14",
+    "a \"Improve this map\" 99.36x14",
+    "a \"\u00a9 Maxar\" 45.52x14"
+   ],
+   "barBoxes": {
+    "w1NoPin": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w1Notice": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w1Pin": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w2NoPin": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w2Choice": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w2Round": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w3Square": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w4Address": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w5AttribClosed": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "w5AttribOpen": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    }
+   },
+   "barHeights": [
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44
+   ],
+   "barControls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "marks": {
+    "w1NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Notice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Pin": {
+     "barText": "Pin at 40.0194, -105.0905",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w2NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Choice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Round": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w3Square": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w4Address": {
+     "barText": "Pin at 39.7400, -104.9811",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w5AttribClosed": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w5AttribOpen": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    }
+   },
+   "requests": {
+    "geocode": 2,
+    "roads": 4
+   },
+   "nonGetByPath": {
+    "POST /api/geocode": 2,
+    "POST /api/road-bearing": 4,
+    "POST /api/render/corridor-geometry": 1
+   },
+   "i544": {
+    "choice": {
+     "text": "Did you mean 39.7401, -104.9811?",
+     "button": {
+      "w": 490.34,
+      "h": 44
+     },
+     "roomForText": 466.34,
+     "sentenceOnOneLine": 237.17,
+     "choiceLines": 1,
+     "pair": {
+      "text": "39.7401, -104.9811?",
+      "w": 144.13,
+      "h": 16,
+      "lines": 1,
+      "whiteSpace": "nowrap"
+     }
+    },
+    "choiceRequests": {
+     "geocode": 0,
+     "roads": 0
+    },
+    "movedChoiceVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "round": {
+     "typed": "(39.7401, -104.9811)",
+     "boxValue": "(39.7401, -104.9811)",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": true
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null
+    },
+    "square": {
+     "typed": "[39.7401, -104.9811]",
+     "boxValue": "[39.7401, -104.9811]",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": true
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null,
+     "barBefore": "No pin yet"
+    },
+    "movedRoundVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "i545": {
+    "noPinStates": 6,
+    "pinStates": 4,
+    "ringInEveryNoPinState": true,
+    "dotInEveryPinState": true,
+    "ring": {
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "dot": {
+     "box": {
+      "x": 21,
+      "y": 740,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "rgb(147, 160, 176)",
+     "dim": "rgb(255, 138, 46)"
+    },
+    "barNoPin": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barPin": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "barMovedPx": 0,
+    "markMovedPx": 0,
+    "barHeightsAll44": true
+   },
+   "verdict543": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "noticeShown": true,
+     "noticeInFloatingList": true,
+     "noticeLiesOverTheMap": true,
+     "map0px": true,
+     "searchRow0px": true,
+     "rightPanel0px": true,
+     "bar0px": true,
+     "tapPlacesPin": true,
+     "tapClearsNotice": true
+    }
+   },
+   "verdict544": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "roundPlacesPin": true,
+     "roundZeroGeocode": true,
+     "squarePlacesPin": true,
+     "squareZeroGeocode": true,
+     "addressControlOneGeocode": true,
+     "choiceText": true,
+     "numbersOnOneLine": true,
+     "choiceAtLeast44High": true,
+     "choiceZeroGeocode": true
+    }
+   },
+   "verdict545": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "ringWithNoPin": true,
+     "dotWithPin": true,
+     "bar44": true,
+     "barSameBoxBothStates": true,
+     "attributionShownWhenOpen": true,
+     "attributionReadsAsMapbox": true,
+     "toggleShownWhenClosed": true,
+     "tapAreaClosedFull44": true,
+     "tapAreaOpen": true,
+     "offCentreTapOpens": true,
+     "offCentreTapCloses": true,
+     "cancelCloses": true,
+     "closeButtonCloses": true,
+     "escapeCloses": true
+    }
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "failedByKind": {
+    "api.mapbox.com net::ERR_ABORTED": 93,
+    "o4511428711153664.ingest.us.sentry.io net::ERR_ABORTED": 4
+   },
+   "failedTotal": 97,
+   "http429": 0,
+   "verdictCommon": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "axeZero": true,
+     "noControlUnder44": true,
+     "noConsoleErrors": true,
+     "tokenNotInPage": true,
+     "servedChunksCarryTheBuild": true,
+     "onlyReadPosts": true
+    }
+   }
+  },
+  {
+   "size": "390x844",
+   "step": "done",
+   "console": [],
+   "chunkShas": [
+    "20f88a9824d3e13cad40c07e14528aa09905b1ec"
+   ],
+   "nonGet": [
+    {
+     "step": "W1 town search",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W1 tap the map",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "W2 round brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W3 square brackets",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "W4 address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "retries": [],
+   "tokenChecks": 5,
+   "tokenHits": 0,
+   "states": {
+    "w1NoPin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Notice": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 171.5,
+      "w": 260.16,
+      "h": 70.5,
+      "position": "absolute",
+      "role": "status",
+      "text": "That search found a town or area. Tap the map on the road where the work starts.",
+      "overMapPx": 58.5
+     },
+     "notice": {
+      "x": 22,
+      "y": 172.5,
+      "w": 258.16,
+      "h": 68.5,
+      "inList": true,
+      "shown": true,
+      "centreReachesNotice": true,
+      "font": "__Inter_176161 12.5px",
+      "color": "rgb(147, 160, 176)",
+      "lines": 3
+     },
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w1Pin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 269.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 761,
+     "scrollTop": 0,
+     "barText": "Pin at 40.0069, -105.0905",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Bass CircleTraffic both ways \u00b7 3 m from your pin\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2NoPin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Choice": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": {
+      "x": 21,
+      "y": 171.5,
+      "w": 260.16,
+      "h": 46,
+      "position": "absolute",
+      "role": "status",
+      "text": "Did you mean 39.7401, -104.9811?",
+      "overMapPx": 34
+     },
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 9,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Did you mean 39.7401, -104.9811?\"",
+       "w": 258.16,
+       "h": 44
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w2Round": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 341.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 833,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w3Square": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 341.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 833,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w4Address": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 341.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 833,
+     "scrollTop": 0,
+     "barText": "Pin at 39.7400, -104.9811",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "true",
+      "background": "rgb(255, 138, 46)",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "borderColor": "rgb(234, 240, 247)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": false,
+      "hasBorder": false,
+      "isRing": false,
+      "isDot": true,
+      "outlineContrast": null,
+      "fillContrast": 7.32
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 10,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Pennsylvania Street at East Colfax AvenueTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"East Colfax Avenue at Pennsylvania StreetTraffic both ways \u00b7\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w5AttribClosed": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "w5AttribOpen": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "w": 390,
+      "h": 844
+     },
+     "scrollHeight": 640,
+     "scrollTop": 0,
+     "barText": "No pin yet",
+     "barGround": "rgb(16, 28, 41)",
+     "barControls": 0,
+     "flow": [
+      "mw-search",
+      "picker-map",
+      "mw-cbar"
+     ],
+     "list": null,
+     "notice": null,
+     "mark": {
+      "box": {
+       "x": 17,
+       "y": 571.86,
+       "w": 10,
+       "h": 10
+      },
+      "dataPin": "false",
+      "background": "rgba(0, 0, 0, 0)",
+      "borderWidth": "2px",
+      "borderStyle": "solid",
+      "borderColor": "rgb(147, 160, 176)",
+      "radius": "50%",
+      "ariaHidden": "true",
+      "hollow": true,
+      "hasBorder": true,
+      "isRing": true,
+      "isDot": false,
+      "outlineContrast": 6.47,
+      "fillContrast": null
+     },
+     "tokens": {
+      "inkFaint": "rgb(147, 160, 176)",
+      "dim": "rgb(255, 138, 46)"
+     },
+     "countedControls": 8,
+     "controls": [
+      {
+       "what": "button \"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "button \"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "button \"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "smallBox": [],
+     "under44": [],
+     "mapboxExceptions": [
+      {
+       "what": "a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    }
+   },
+   "closes": [
+    {
+     "how": "Escape",
+     "barBeforeClose": "Pin at 40.0069, -105.0905",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [
+      "mapbox.eventData.uuid:",
+      "mapbox.eventData.uuidTimestamp:",
+      "mapbox.eventData:"
+     ],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Cancel",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    },
+    {
+     "how": "Close",
+     "barBeforeClose": "Pin at 39.7401, -104.9811",
+     "windowClosed": true,
+     "focusOn": "button \"Pick on map\"",
+     "focusIsOpener": true,
+     "scrollMovedPx": 0,
+     "docHeightChangePx": 0,
+     "openerMovedPx": 0,
+     "bandMovedPx": 0,
+     "mainMovedPx": 0,
+     "bandTextSame": true,
+     "localStorageKeysChanged": [],
+     "sessionStorageKeysChanged": [],
+     "whileOpen": {
+      "scrollY": 0,
+      "openerSame": true,
+      "dialogs": 1
+     },
+     "nonGetOnClose": [],
+     "nextWindowBar": "No pin yet",
+     "nextWindowMarkers": 0,
+     "dialogsAtEnd": 0
+    }
+   ],
+   "inter": true,
+   "i543": {
+    "search": "Lafayette, CO",
+    "noticeText": "That search found a town or area. Tap the map on the road where the work starts.",
+    "notice": {
+     "x": 22,
+     "y": 172.5,
+     "w": 258.16,
+     "h": 68.5,
+     "inList": true,
+     "shown": true,
+     "centreReachesNotice": true,
+     "font": "__Inter_176161 12.5px",
+     "color": "rgb(147, 160, 176)",
+     "lines": 3
+    },
+    "list": {
+     "x": 21,
+     "y": 171.5,
+     "w": 260.16,
+     "h": 70.5,
+     "position": "absolute",
+     "role": "status",
+     "text": "That search found a town or area. Tap the map on the road where the work starts.",
+     "overMapPx": 58.5
+    },
+    "movedNoticeVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "scrollHeightChange": 0,
+    "townCamera": {
+     "zoom": 12,
+     "lat": 39.99823,
+     "lng": -105.09046,
+     "moving": false,
+     "drawn": false
+    },
+    "townRequests": {
+     "geocode": 1,
+     "roads": 0
+    },
+    "tap": {
+     "pxBelowMapTop": 120,
+     "pxBelowNotice": 61.5,
+     "barText": "Pin at 40.0069, -105.0905",
+     "pinPlaced": true,
+     "markers": 1,
+     "noticeGone": true,
+     "listAfter": null,
+     "roadPanel": true,
+     "roadRequests": 1
+    },
+    "movedPinVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "address": {
+    "text": "E Colfax Ave & Pennsylvania St, Denver",
+    "geocodeRequests": 1,
+    "geocodeStatus": 200,
+    "geocodeMethod": "POST",
+    "pinPlaced": true,
+    "camera": {
+     "zoom": 16,
+     "lat": 39.73999,
+     "lng": -104.98112,
+     "moving": false,
+     "drawn": false
+    },
+    "barText": "Pin at 39.7400, -104.9811",
+    "listAfter": null,
+    "rows": [
+     "Pennsylvania Street at East Colfax Avenue",
+     "East Colfax Avenue at Pennsylvania Street"
+    ],
+    "lookupRetries": 0,
+    "dialogsAfterEscape": 0
+   },
+   "attrib": {
+    "asOpened": {
+     "mapWidth": 388,
+     "compact": true,
+     "expanded": false,
+     "container": {
+      "w": 44,
+      "h": 48,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": false,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 44,
+       "h": 44,
+       "fromMapRight": 10,
+       "fromMapBottom": 14
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "none"
+      },
+      "probes": 1936,
+      "reachButton": 1936,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {}
+     }
+    },
+    "collapsed": {
+     "mapWidth": 388,
+     "compact": true,
+     "expanded": false,
+     "container": {
+      "w": 44,
+      "h": 48,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": false,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 0,
+       "h": 0,
+       "centreReachesLink": null,
+       "rightEdgeReachesLink": null,
+       "rightEdgeReaches": null
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 44,
+       "h": 44,
+       "fromMapRight": 10,
+       "fromMapBottom": 14
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "none"
+      },
+      "probes": 1936,
+      "reachButton": 1936,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {}
+     }
+    },
+    "clickOffCentre": {
+     "pxUpAndLeftOfCentre": 0,
+     "opensAttribution": true,
+     "barAfter": "No pin yet"
+    },
+    "expanded": {
+     "mapWidth": 388,
+     "compact": true,
+     "expanded": true,
+     "container": {
+      "w": 360.67,
+      "h": 48,
+      "fromMapRight": 10,
+      "fromMapBottom": 10,
+      "insideMap": true,
+      "visibility": "visible",
+      "opacity": "1"
+     },
+     "innerShown": true,
+     "text": "\u00a9 Mapbox \u00a9 OpenStreetMap Improve this map \u00a9 Maxar",
+     "links": [
+      {
+       "text": "\u00a9 Mapbox",
+       "host": "www.mapbox.com",
+       "w": 54.88,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      },
+      {
+       "text": "\u00a9 OpenStreetMap",
+       "host": "www.openstreetmap.org",
+       "w": 96.89,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": false,
+       "rightEdgeReaches": "div.mapboxgl-ctrl-attrib-inner"
+      },
+      {
+       "text": "Improve this map",
+       "host": "apps.mapbox.com",
+       "w": 99.36,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a.mapbox-improve-map"
+      },
+      {
+       "text": "\u00a9 Maxar",
+       "host": "www.maxar.com",
+       "w": 45.52,
+       "h": 14,
+       "centreReachesLink": true,
+       "rightEdgeReachesLink": true,
+       "rightEdgeReaches": "a"
+      }
+     ],
+     "logo": {
+      "shown": true,
+      "w": 88,
+      "h": 23,
+      "label": "Mapbox homepage",
+      "host": "www.mapbox.com",
+      "centreReaches": "a.mapboxgl-ctrl-logo"
+     },
+     "button": {
+      "label": "Toggle attribution",
+      "box": {
+       "w": 44,
+       "h": 44,
+       "fromMapRight": 10,
+       "fromMapBottom": 14
+      },
+      "after": {
+       "content": "\"\"",
+       "position": "absolute",
+       "w": "44px",
+       "h": "44px",
+       "clipPath": "polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%, 0px 32px, 6px 32px, 6px 12px, 0px 12px)"
+      },
+      "probes": 1936,
+      "reachButton": 1936,
+      "reachBox": {
+       "w": 44,
+       "h": 44
+      },
+      "reachOther": {}
+     }
+    },
+    "clickOffCentreAgain": {
+     "pxDownAndLeftOfCentre": 0,
+     "closesAttribution": true,
+     "barAfter": "No pin yet"
+    },
+    "dialogsAfterEscape": 0
+   },
+   "axe": {
+    "w1NoPin": [],
+    "w1Notice": [],
+    "w1Pin": [],
+    "w2NoPin": [],
+    "w2Choice": [],
+    "w2Round": [],
+    "w3Square": [],
+    "w4Address": [],
+    "w5AttribClosed": [],
+    "w5AttribOpen": []
+   },
+   "axeRuns": 10,
+   "axeViolations": 0,
+   "controlsMeasured": 88,
+   "minControlW": 44,
+   "minControlH": 44,
+   "boxUnder44": [],
+   "under44": [],
+   "openLineNotch": [],
+   "mapboxExceptions": [
+    "a \"Mapbox homepage\" 88x23",
+    "a \"\u00a9 Mapbox\" 54.88x14",
+    "a \"\u00a9 OpenStreetMap\" 96.89x14",
+    "a \"Improve this map\" 99.36x14",
+    "a \"\u00a9 Maxar\" 45.52x14"
+   ],
+   "barBoxes": {
+    "w1NoPin": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w1Notice": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w1Pin": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w2NoPin": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w2Choice": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w2Round": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w3Square": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w4Address": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w5AttribClosed": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "w5AttribOpen": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    }
+   },
+   "barHeights": [
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44,
+    44
+   ],
+   "barControls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "marks": {
+    "w1NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Notice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w1Pin": {
+     "barText": "Pin at 40.0069, -105.0905",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w2NoPin": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Choice": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w2Round": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w3Square": {
+     "barText": "Pin at 39.7401, -104.9811",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w4Address": {
+     "barText": "Pin at 39.7400, -104.9811",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "w5AttribClosed": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "w5AttribOpen": {
+     "barText": "No pin yet",
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    }
+   },
+   "requests": {
+    "geocode": 2,
+    "roads": 4
+   },
+   "nonGetByPath": {
+    "POST /api/geocode": 2,
+    "POST /api/road-bearing": 4,
+    "POST /api/render/corridor-geometry": 1
+   },
+   "i544": {
+    "choice": {
+     "text": "Did you mean 39.7401, -104.9811?",
+     "button": {
+      "w": 258.16,
+      "h": 44
+     },
+     "roomForText": 234.16,
+     "sentenceOnOneLine": 237.17,
+     "choiceLines": 2,
+     "pair": {
+      "text": "39.7401, -104.9811?",
+      "w": 144.13,
+      "h": 16,
+      "lines": 1,
+      "whiteSpace": "nowrap"
+     }
+    },
+    "choiceRequests": {
+     "geocode": 0,
+     "roads": 0
+    },
+    "movedChoiceVsNone": {
+     "map": 0,
+     "search": 0,
+     "rail": 0,
+     "bar": 0,
+     "column": 0,
+     "dialog": 0
+    },
+    "round": {
+     "typed": "(39.7401, -104.9811)",
+     "boxValue": "(39.7401, -104.9811)",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": false
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null
+    },
+    "square": {
+     "typed": "[39.7401, -104.9811]",
+     "boxValue": "[39.7401, -104.9811]",
+     "pinPlaced": true,
+     "barText": "Pin at 39.7401, -104.9811",
+     "barIsPinText": true,
+     "camera": {
+      "zoom": 16,
+      "lat": 39.7401,
+      "lng": -104.9811,
+      "moving": false,
+      "drawn": false
+     },
+     "markersBefore": 0,
+     "markers": 1,
+     "geocodeRequests": 0,
+     "roadRequestsOnEnter": 1,
+     "lookupRetries": 0,
+     "rows": [
+      "Pennsylvania Street at East Colfax Avenue",
+      "East Colfax Avenue at Pennsylvania Street"
+     ],
+     "listAfter": null,
+     "barBefore": "No pin yet"
+    },
+    "movedRoundVsNone": {
+     "map": 0,
+     "search": 0,
+     "bar": 0
+    }
+   },
+   "i545": {
+    "noPinStates": 6,
+    "pinStates": 4,
+    "ringInEveryNoPinState": true,
+    "dotInEveryPinState": true,
+    "ring": {
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "false",
+     "background": "rgba(0, 0, 0, 0)",
+     "borderWidth": "2px",
+     "borderStyle": "solid",
+     "borderColor": "rgb(147, 160, 176)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": true,
+     "hasBorder": true,
+     "isRing": true,
+     "isDot": false,
+     "outlineContrast": 6.47,
+     "fillContrast": null
+    },
+    "dot": {
+     "box": {
+      "x": 17,
+      "y": 571.86,
+      "w": 10,
+      "h": 10
+     },
+     "dataPin": "true",
+     "background": "rgb(255, 138, 46)",
+     "borderWidth": "0px",
+     "borderStyle": "none",
+     "borderColor": "rgb(234, 240, 247)",
+     "radius": "50%",
+     "ariaHidden": "true",
+     "hollow": false,
+     "hasBorder": false,
+     "isRing": false,
+     "isDot": true,
+     "outlineContrast": null,
+     "fillContrast": 7.32
+    },
+    "tokens": {
+     "inkFaint": "rgb(147, 160, 176)",
+     "dim": "rgb(255, 138, 46)"
+    },
+    "barNoPin": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barPin": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "barMovedPx": 0,
+    "markMovedPx": 0,
+    "barHeightsAll44": true
+   },
+   "verdict543": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "noticeShown": true,
+     "noticeInFloatingList": true,
+     "noticeLiesOverTheMap": true,
+     "map0px": true,
+     "searchRow0px": true,
+     "rightPanel0px": true,
+     "bar0px": true,
+     "tapPlacesPin": true,
+     "tapClearsNotice": true
+    }
+   },
+   "verdict544": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "roundPlacesPin": true,
+     "roundZeroGeocode": true,
+     "squarePlacesPin": true,
+     "squareZeroGeocode": true,
+     "addressControlOneGeocode": true,
+     "choiceText": true,
+     "numbersOnOneLine": true,
+     "choiceAtLeast44High": true,
+     "choiceZeroGeocode": true
+    }
+   },
+   "verdict545": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "ringWithNoPin": true,
+     "dotWithPin": true,
+     "bar44": true,
+     "barSameBoxBothStates": true,
+     "attributionShownWhenOpen": true,
+     "attributionReadsAsMapbox": true,
+     "toggleShownWhenClosed": true,
+     "tapAreaClosedFull44": true,
+     "tapAreaOpen": true,
+     "offCentreTapOpens": true,
+     "offCentreTapCloses": true,
+     "cancelCloses": true,
+     "closeButtonCloses": true,
+     "escapeCloses": true
+    }
+   },
+   "consoleErrors": 0,
+   "consoleTelemetry": 0,
+   "failedByKind": {
+    "api.mapbox.com net::ERR_ABORTED": 39,
+    "o4511428711153664.ingest.us.sentry.io net::ERR_ABORTED": 4
+   },
+   "failedTotal": 43,
+   "http429": 0,
+   "verdictCommon": {
+    "pass": true,
+    "failed": [],
+    "checks": {
+     "axeZero": true,
+     "noControlUnder44": true,
+     "noConsoleErrors": true,
+     "tokenNotInPage": true,
+     "servedChunksCarryTheBuild": true,
+     "onlyReadPosts": true
+    }
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "20f88a9824d3e13cad40c07e14528aa09905b1ec",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "polls": 1,
+  "status": 200,
+  "sha": "20f88a9824d3e13cad40c07e14528aa09905b1ec",
+  "isHead": true,
+  "isFeat": false
+ },
+ "finishedAt": "2026-11-23T07:41:05.006Z"
+}
