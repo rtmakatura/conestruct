@@ -287,13 +287,18 @@ describe("#541 ruling 1: out of range or swapped", () => {
     expect(list().textContent).toBe("");
   });
 
-  it("degrees and minutes are refused with a line, not geocoded", async () => {
+  // #548 (gate round 4): this text got the line "Use decimal degrees, like
+  // 39.7401, -104.9811" before.  A full degrees-minutes-seconds pair with
+  // both letters is a pin now, and that line is gone.
+  it("#548: a full degrees, minutes and seconds pair places the pin, not geocoded", async () => {
     const user = userEvent.setup();
     mount();
+    await mapBuilt();
     await searchFor(user, "39°44'24\"N 104°59'W");
-    expect(list().textContent).toBe("Use decimal degrees, like 39.7401, -104.9811");
     expect(geocodes).toEqual([]);
-    expect(detects).toEqual([]);
+    expect(detects).toEqual([{ lat: 143064 / 3600, lng: -377940 / 3600 }]);
+    expect(bar().textContent).toBe("Pin at 39.7400, -104.9833");
+    expect(list().textContent).toBe("");
   });
 
   it("editing the box withdraws the line", async () => {
@@ -626,5 +631,95 @@ describe("#545 ruling 1: the bar's mark is a ring until a pin exists", () => {
     );
     // No other rule styles the mark.
     expect(css.match(/\.mw-cbar-dot[^{]*\{/g)).toHaveLength(2);
+  });
+});
+
+// #548, Ryan's ruling of 2026-11-23 (gate round 4; validation-artifacts/
+// committed/missions/coords-wrong-pin/issue-548/rulings.md): a pin only for
+// two numbers that each have a decimal point, or a full degrees-minutes
+// (-seconds) pair with a letter on both halves.  "Everything else goes to
+// the geocoder exactly as on main."  Each text below is sent to
+// /api/geocode as typed, at both senders, and places no pin by itself.
+describe("#548: half a coordinate goes to the geocoder and places no pin", () => {
+  const SEARCHED: [string, string][] = [
+    ["the bare form (a pin at 39, 44.4 before)", "39° 44.4"],
+    ["round brackets (a pin before)", "(39° 44.4)"],
+    ["square brackets (a pin before)", "[39° 44.4]"],
+    ["named in the ruling (a pin before)", "39 N, 44.4"],
+    ["named in the ruling (a pin before)", "105° W, 39.7401"],
+    ["#550 (a pin before)", "39°, 44.4"],
+    ["whole numbers with a comma (a pin before)", "39, -105"],
+    ["a lone number with a degree sign (the old line before)", "39.7401°"],
+    ["two latitudes (the old line before)", "39.7401 N, 40.1 N"],
+    ["#551", "E-470"],
+    ["#551", "W. 6"],
+    ["#551", "S-630-1"],
+    ["#552", "E 470 N"],
+    ["#552", "1437 N 14"],
+    ["#552", "500 N 200 W 84103"],
+  ];
+
+  it.each(SEARCHED)("%s: %s typed and Enter: one geocode request, no pin, no coordinates line", async (_name, text) => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await user.clear(box());
+    // user-event reads "[" as the start of a key name; "[[" types one "[".
+    await user.type(box(), text.replace("[", "[["));
+    expect(box().value).toBe(text);
+    await user.keyboard("{Enter}");
+    await waitFor(() => expect(geocodes).toHaveLength(1));
+    expect(geocodes[0].address).toBe(text);
+    expect(detects).toEqual([]);
+    expect(camera.flies).toEqual([]);
+    expect(bar().textContent).toBe("No pin yet");
+    expect(list().textContent).not.toContain("must be between");
+    expect(list().textContent).not.toContain("Did you mean");
+    expect(list().textContent).not.toContain("decimal degrees");
+  });
+
+  it.each(SEARCHED)("%s: %s as a saved address (the open-time sender) is geocoded, no pin", async (_name, address) => {
+    mount({ address });
+    await waitFor(() => expect(geocodes).toHaveLength(1));
+    expect(geocodes[0].address).toBe(address);
+    expect(detects).toEqual([]);
+    expect(bar().textContent).toBe("No pin yet");
+  });
+
+  it("the pin for such text is the geocoder's answer, never the typed numbers", async () => {
+    geocodeAnswer = { lat: 39.74, lng: -104.966, placeType: "address" };
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "39° 44.4");
+    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966 }]));
+    expect(geocodes).toEqual([{ address: "39° 44.4", jurisdiction_key: null }]);
+    expect(bar().textContent).toBe("Pin at 39.7400, -104.9660");
+  });
+
+  it("the ruling's full pair places the pin at both senders, with no geocode request", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "39° 44.406' N, 104° 58.866' W");
+    expect(geocodes).toEqual([]);
+    expect(detects).toHaveLength(1);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    cleanup();
+    detects = [];
+    mount({ address: "39° 44.406' N, 104° 58.866' W" });
+    await waitFor(() => expect(detects).toHaveLength(1));
+    expect(geocodes).toEqual([]);
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+  });
+
+  it("a full pair out of range keeps #541's range line and is not geocoded", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "91° 0' N, 104° 0' W");
+    expect(list().textContent).toBe("Latitude must be between -90 and 90");
+    expect(geocodes).toEqual([]);
+    expect(detects).toEqual([]);
   });
 });

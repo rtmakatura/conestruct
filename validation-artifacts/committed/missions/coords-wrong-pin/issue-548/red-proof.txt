@@ -1,0 +1,129 @@
+# #548 gate round 4: red proof
+
+The round-4 tests (lib/search-coords.test.ts, components/LocationPickerModal.coords-bar.test.tsx) run on the base code (216a03b: the parser and the map window as on main), 2026-11-23, before the parser was written. vitest 3.2.4, --reporter=verbose.
+
+ Test Files  2 failed (2)
+      Tests  99 failed | 198 passed (297)
+
+The bare form, on the base:
+
+ FAIL  lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > 39° 44.4
+ FAIL  lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > (39° 44.4)
+ FAIL  lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > [39° 44.4]
+ FAIL  lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > 39 N, 44.4
+AssertionError: expected { kind: 'point', lat: 39, lng: 44.4 } to deeply equal { kind: 'address' }
+
+- Expected
++ Received
+
+  {
+-   "kind": "address",
++   "kind": "point",
++   "lat": 39,
++   "lng": 44.4,
+  }
+
+ ❯ lib/search-coords.test.ts:202:36
+    200|     "105° W, 39.7401", // named in the ruling
+
+Every failing test (99):
+
+ × lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > 39° 44.4
+ × lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > (39° 44.4)
+ × lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > [39° 44.4]
+ × lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > 39 N, 44.4
+ × lib/search-coords.test.ts > #548: half a coordinate is an address, never a pin > 105° W, 39.7401
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39, -105
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39 -105
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39., -105.
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39.7401, -105
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39, -104.9811
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 90, 180
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39 44.4
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39°, 44.4
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39°, 44
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39° 44.4°
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39°, 44.4°
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39° N, 44.4
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39° N, 44.4 E
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39 N, 104 W
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 39° N, 104° W
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 104° W, 39
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 104°, 39
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 95 N, 104 W
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > one number has none, so it is an address: 91, 200
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 39.7401° is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 39.7401° N is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: (39.7401°) is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 39.7401 N, 40.1 N is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 104.9 W, 105.1 E is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: -39.7401 S, 104.9811 W is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 39.7401 N, -104.9811 W is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: N-39.7401, W-104.9811 is an address
+ × lib/search-coords.test.ts > #548 (a): a pair needs a decimal point in both numbers > no new refusal and no old one: 39.7401 N -104.9811 W is an address
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39° 44.406' N, 104° 58.866' W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39°44.406'N 104°58.866'W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > N 39° 44.406', W 104° 58.866' is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 104° 58.866' W, 39° 44.406' N is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39° 44.406′ N, 104° 58.866′ W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39° 44.406’ N, 104° 58.866’ W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39º 44.406' N, 104º 58.866' W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > (39° 44.406' N, 104° 58.866' W) is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > [39° 44.406' N, 104° 58.866' W] is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39° 44' 24.36" N, 104° 58' 51.96" W is 39.7401, -104.9811
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39°44'24"N 104°59'W is degrees + minutes/60 + seconds/3600, nothing rounded
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39°44’24”N 104°59’W is degrees + minutes/60 + seconds/3600, nothing rounded
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39°44′24″N 104°59′W is degrees + minutes/60 + seconds/3600, nothing rounded
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > 39°44'24''N 104°59'W is degrees + minutes/60 + seconds/3600, nothing rounded
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > southern and eastern letters carry their sign
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > out of range keeps #541's range line, with no swap (the letters name the axes)
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.406' N
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.406', 104° 58.866'
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.406' N, 104° 58.866'
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.406 N, 104° 58.866 W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 60' N, 104° 58' W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44' 60" N, 104° 58' 0" W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39.5° 30' N, 104° 0' W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.5' 24" N, 104° 58' 0" W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 24" N, 104° 58' W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: -39° 44' N, 104° 58' W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44' N, 40° 1' N
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° 44.406' N, 104.9811° W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39° N, 104° 58' W
+ × lib/search-coords.test.ts > #548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves > not a full pair, so an address: 39°44'24"N104°59'W
+ × lib/search-coords.test.ts > #550: every input it names > an address: 39°, 44.4
+ × lib/search-coords.test.ts > #550: every input it names > an address: 39° 44.4°
+ × lib/search-coords.test.ts > #551: road names always search > an address: E-470, N-25
+ × lib/search-coords.test.ts > #551: road names always search > an address: N-25 E-470
+ × lib/search-coords.test.ts > #551: road names always search > an address: N-39, W-104
+ × lib/search-coords.test.ts > #552: every input it names > an address: 105° W, 39.7401
+ × lib/search-coords.test.ts > #552: every input it names > an address: 104° W, 39
+ × lib/search-coords.test.ts > #552: every input it names > an address: 104°, 39
+ × lib/search-coords.test.ts > #552: every input it names > an address: 39° N, 44.4
+ × lib/search-coords.test.ts > #552: every input it names > an address: 39 N, 44.4
+ × lib/search-coords.test.ts > #552: every input it names > an address: E-470 39°
+ × lib/search-coords.test.ts > #552: every input it names > an address: 39 44.4 N
+ × lib/search-coords.test.ts > #552: every input it names > an address: 39° 44.4
+ × lib/search-coords.test.ts > #552: every input it names > finding 3: a 30,000-digit run is answered at once (4 s before)
+ × components/LocationPickerModal.coords-bar.test.tsx > #541 ruling 1: out of range or swapped > #548: a full degrees, minutes and seconds pair places the pin, not geocoded
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > the bare form (a pin at 39, 44.4 before): 39° 44.4 typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > round brackets (a pin before): (39° 44.4) typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > square brackets (a pin before): [39° 44.4] typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > named in the ruling (a pin before): 39 N, 44.4 typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > named in the ruling (a pin before): 105° W, 39.7401 typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > #550 (a pin before): 39°, 44.4 typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > whole numbers with a comma (a pin before): 39, -105 typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > a lone number with a degree sign (the old line before): 39.7401° typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > two latitudes (the old line before): 39.7401 N, 40.1 N typed and Enter: one geocode request, no pin, no coordinates line
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > the bare form (a pin at 39, 44.4 before): 39° 44.4 as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > round brackets (a pin before): (39° 44.4) as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > square brackets (a pin before): [39° 44.4] as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > named in the ruling (a pin before): 39 N, 44.4 as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > named in the ruling (a pin before): 105° W, 39.7401 as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > #550 (a pin before): 39°, 44.4 as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > whole numbers with a comma (a pin before): 39, -105 as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > a lone number with a degree sign (the old line before): 39.7401° as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > two latitudes (the old line before): 39.7401 N, 40.1 N as a saved address (the open-time sender) is geocoded, no pin
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > the pin for such text is the geocoder's answer, never the typed numbers
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > the ruling's full pair places the pin at both senders, with no geocode request
+ × components/LocationPickerModal.coords-bar.test.tsx > #548: half a coordinate goes to the geocoder and places no pin > a full pair out of range keeps #541's range line and is not geocoded

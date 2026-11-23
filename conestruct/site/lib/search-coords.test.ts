@@ -2,6 +2,11 @@
 // the formats you accept and test each one."  One case per accepted format
 // and per refusal; the mounted flow (no /api/geocode request) is
 // components/LocationPickerModal.coords-bar.test.tsx.
+//
+// #548 (Ryan, 2026-11-23, gate round 4): a pin only for two numbers that
+// each have a decimal point, or a full degrees-minutes(-seconds) pair with
+// a letter on both halves; everything else is an address.  The blocks at
+// the end hold every example in #548, #550, #551 and #552.
 
 import { describe, expect, it } from "vitest";
 import { readSearchCoords } from "./search-coords";
@@ -50,16 +55,13 @@ describe("readSearchCoords: accepted formats", () => {
     });
   });
 
-  it("whole numbers with a comma, and numbers with no leading or trailing digit", () => {
-    expect(readSearchCoords("39, -105")).toEqual({ kind: "point", lat: 39, lng: -105 });
+  it("numbers with no leading digit", () => {
     expect(readSearchCoords(".5, -.5")).toEqual({ kind: "point", lat: 0.5, lng: -0.5 });
-    expect(readSearchCoords("39., -105.")).toEqual({ kind: "point", lat: 39, lng: -105 });
-    expect(readSearchCoords("39 -105")).toEqual({ kind: "point", lat: 39, lng: -105 });
   });
 
   it("the limits themselves are in range", () => {
-    expect(readSearchCoords("90, 180")).toEqual({ kind: "point", lat: 90, lng: 180 });
-    expect(readSearchCoords("-90, -180")).toEqual({ kind: "point", lat: -90, lng: -180 });
+    expect(readSearchCoords("90.0, 180.0")).toEqual({ kind: "point", lat: 90, lng: 180 });
+    expect(readSearchCoords("-90.0, -180.0")).toEqual({ kind: "point", lat: -90, lng: -180 });
   });
 
   it("a pair with both numbers under 90 is taken as typed (nothing is swapped silently)", () => {
@@ -98,28 +100,13 @@ describe("readSearchCoords: out of range (never a clamped pin, Rule 10)", () => 
   });
 
   it("no swap is offered when letters already name the axes", () => {
-    expect(readSearchCoords("95 N, 104 W")).toEqual({ kind: "out-of-range", axis: "lat", swap: null });
+    expect(readSearchCoords("95.5 N, 104.5 W")).toEqual({ kind: "out-of-range", axis: "lat", swap: null });
     expect(readSearchCoords("39.7 N, 204.5 W")).toEqual({ kind: "out-of-range", axis: "lng", swap: null });
   });
 
   it("just past the limits", () => {
-    expect(readSearchCoords("90.0001, 0")).toMatchObject({ kind: "out-of-range", axis: "lat" });
-    expect(readSearchCoords("0, 180.0001")).toMatchObject({ kind: "out-of-range", axis: "lng" });
-  });
-});
-
-describe("readSearchCoords: looks like coordinates, can't be read", () => {
-  it.each([
-    "39°44'24\"N 104°59'W", // degrees, minutes, seconds
-    "39° 44.4' N, 104° 58.9' W", // degrees and decimal minutes
-    "39.7401°", // half a pair
-    "39.7401° N",
-    "39.7401 N, 40.1 N", // two latitudes
-    "104.9 W, 105.1 E", // two longitudes
-    "-39.7401 S, 104.9811 W", // a minus sign and a letter can disagree
-    "39.7401 N, -104.9811 W",
-  ])("%s", (text) => {
-    expect(readSearchCoords(text)).toEqual({ kind: "unreadable" });
+    expect(readSearchCoords("90.0001, 0.0")).toMatchObject({ kind: "out-of-range", axis: "lat" });
+    expect(readSearchCoords("0.0, 180.0001")).toMatchObject({ kind: "out-of-range", axis: "lng" });
   });
 });
 
@@ -168,14 +155,13 @@ describe("readSearchCoords: one pair of brackets round the whole text (#544)", (
     expect(readSearchCoords(text)).toEqual(POINT);
   });
 
-  it("brackets change nothing else: out of range, swapped and unreadable are still refused", () => {
+  it("brackets change nothing else: out of range and swapped are still refused", () => {
     expect(readSearchCoords("(139.7401, -104.9811)")).toEqual({ kind: "out-of-range", axis: "lat", swap: null });
     expect(readSearchCoords("[-104.9811, 39.7401]")).toEqual({
       kind: "out-of-range",
       axis: "lat",
       swap: { lat: 39.7401, lng: -104.9811 },
     });
-    expect(readSearchCoords("(39.7401°)")).toEqual({ kind: "unreadable" });
   });
 
   it.each([
@@ -193,5 +179,260 @@ describe("readSearchCoords: one pair of brackets round the whole text (#544)", (
     "[]",
   ])("still an address: %j", (text) => {
     expect(readSearchCoords(text)).toEqual({ kind: "address" });
+  });
+});
+
+// #548, Ryan's ruling of 2026-11-23 (gate round 4; validation-artifacts/
+// committed/missions/coords-wrong-pin/issue-548/rulings.md): "the
+// coordinate parser places a pin ONLY for (a) two numbers that both contain
+// a decimal point and are in lat/long range, optionally with brackets,
+// degree signs or N/S/E/W letters, or (b) a full degrees-minutes(-seconds)
+// pair with a hemisphere letter on both halves.  Everything else goes to
+// the geocoder exactly as on main."
+const ADDRESS = { kind: "address" };
+
+describe("#548: half a coordinate is an address, never a pin", () => {
+  it.each([
+    "39° 44.4", // the bare form: a pin at 39, 44.4 before
+    "(39° 44.4)",
+    "[39° 44.4]",
+    "39 N, 44.4", // named in the ruling
+    "105° W, 39.7401", // named in the ruling
+  ])("%s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+});
+
+describe("#548 (a): a pair needs a decimal point in both numbers", () => {
+  it.each([
+    "39, -105",
+    "39 -105",
+    "39., -105.", // a full stop with no digit after it is not a decimal
+    "39.7401, -105",
+    "39, -104.9811",
+    "90, 180",
+    "39 44.4",
+    "39°, 44.4",
+    "39°, 44",
+    "39° 44.4°",
+    "39°, 44.4°",
+    "39° N, 44.4",
+    "39° N, 44.4 E",
+    "39 N, 104 W",
+    "39° N, 104° W",
+    "104° W, 39",
+    "104°, 39", // the range line with a swap offer before
+    "95 N, 104 W", // the range line before
+    "91, 200",
+  ])("one number has none, so it is an address: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+
+  it.each([
+    "39.7401°, -104.9811",
+    "39.7401, -104.9811°",
+    "39.7401° -104.9811",
+    "39.7401° -104.9811°",
+    "39.7401 N -104.9811",
+    "39.7401 N, -104.9811",
+    "(39.7401 N 104.9811 W)",
+  ])("both have one, so it is the pin it was: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(POINT);
+  });
+
+  it.each([
+    "39.7401°", // each of these got the "Use decimal degrees" line before
+    "39.7401° N",
+    "(39.7401°)",
+    "39.7401 N, 40.1 N", // two latitudes
+    "104.9 W, 105.1 E", // two longitudes
+    "-39.7401 S, 104.9811 W", // a minus sign and a letter
+    "39.7401 N, -104.9811 W",
+    "N-39.7401, W-104.9811",
+    "39.7401 N -104.9811 W",
+  ])("no new refusal and no old one: %s is an address", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+});
+
+describe("#548 (b): a full degrees-minutes(-seconds) pair with a letter on both halves", () => {
+  it.each([
+    "39° 44.406' N, 104° 58.866' W", // the ruling's example
+    "39°44.406'N 104°58.866'W",
+    "N 39° 44.406', W 104° 58.866'", // the letters in front
+    "104° 58.866' W, 39° 44.406' N", // either order
+    "39° 44.406′ N, 104° 58.866′ W", // the prime
+    "39° 44.406’ N, 104° 58.866’ W", // a curly apostrophe
+    "39º 44.406' N, 104º 58.866' W", // the ordinal sign
+    "(39° 44.406' N, 104° 58.866' W)",
+    "[39° 44.406' N, 104° 58.866' W]",
+    "39° 44' 24.36\" N, 104° 58' 51.96\" W", // seconds
+  ])("%s is 39.7401, -104.9811", (text) => {
+    const read = readSearchCoords(text);
+    expect(read.kind).toBe("point");
+    if (read.kind !== "point") return;
+    expect(read.lat).toBeCloseTo(39.7401, 9);
+    expect(read.lng).toBeCloseTo(-104.9811, 9);
+  });
+
+  it.each([
+    "39°44'24\"N 104°59'W",
+    "39°44’24”N 104°59’W", // curly quotes
+    "39°44′24″N 104°59′W", // prime and double prime
+    "39°44'24''N 104°59'W", // two apostrophes for seconds
+  ])("%s is degrees + minutes/60 + seconds/3600, nothing rounded", (text) => {
+    expect(readSearchCoords(text)).toEqual({ kind: "point", lat: 143064 / 3600, lng: -377940 / 3600 });
+  });
+
+  it("southern and eastern letters carry their sign", () => {
+    expect(readSearchCoords("33° 52' 7.5\" S, 151° 12' 30\" E")).toEqual({
+      kind: "point",
+      lat: -(33 * 3600 + 52 * 60 + 7.5) / 3600,
+      lng: (151 * 3600 + 12 * 60 + 30) / 3600,
+    });
+  });
+
+  it("out of range keeps #541's range line, with no swap (the letters name the axes)", () => {
+    expect(readSearchCoords("91° 0' N, 104° 0' W")).toEqual({ kind: "out-of-range", axis: "lat", swap: null });
+    expect(readSearchCoords("39° 0' N, 181° 0' W")).toEqual({ kind: "out-of-range", axis: "lng", swap: null });
+  });
+
+  it.each([
+    "39° 44.406' N", // half a pair
+    "39° 44.406', 104° 58.866'", // no letters
+    "39° 44.406' N, 104° 58.866'", // a letter on one half only
+    "39 44.406' N, 104 58.866' W", // no degree signs
+    "39° 44.406 N, 104° 58.866 W", // no minutes marks
+    "39° 60' N, 104° 58' W", // 60 minutes
+    "39° 44' 60\" N, 104° 58' 0\" W", // 60 seconds
+    "39.5° 30' N, 104° 0' W", // a fraction in the degrees
+    "39° 44.5' 24\" N, 104° 58' 0\" W", // a fraction in the minutes, with seconds
+    "39° 24\" N, 104° 58' W", // seconds without minutes
+    "-39° 44' N, 104° 58' W", // a sign
+    "39° 44' N, 40° 1' N", // two latitudes
+    "39° 44.406' N, 104.9811° W", // one half in degrees and minutes, one in decimals
+    "39° N, 104° 58' W",
+    "39°44'24\"N104°59'W", // nothing between the halves
+    "39 44 24 N 104 58 51 W",
+    "39 44 N 104 58 W",
+  ])("not a full pair, so an address: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+});
+
+describe("#550: every input it names", () => {
+  it.each([
+    // Finding 1: a letter between digits, two letters together, another character.
+    "39.7401N104.9811W",
+    "N39.7401W104.9811",
+    "39N104W",
+    "39.7401 NE",
+    "39.7401 N; 104.9811 W",
+    "39.7401 N/104.9811 W",
+    "39:44:24 N",
+    "39.7401 N;",
+    "(39.7401 N",
+    // Finding 2.
+    "39°, 44.4",
+    "39° 44.4°",
+    // Finding 3: lookalike degree marks.
+    "39˚ 44.4",
+    "39* 44.4",
+    "39d 44.4",
+    "39˚ 44.4' N",
+    "39˚ 44.406' N, 104˚ 58.866' W",
+  ])("an address: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+
+  it.each(["39.7401°, -104.9811", "39.7401, -104.9811°", "39.7401° -104.9811°"])(
+    "still the pin: %s",
+    (text) => {
+      expect(readSearchCoords(text)).toEqual(POINT);
+    },
+  );
+});
+
+describe("#551: road names always search", () => {
+  it.each([
+    "E-470",
+    "E-470 N",
+    "W-470",
+    "N-25",
+    "W. 6",
+    "N. 39",
+    "S-630-1",
+    "E 470",
+    "E470",
+    "C-470",
+    "I-70 E",
+    "E-470 & Parker",
+    "-104.98 W",
+    "E-470, N-25",
+    "N-25 E-470",
+    "N-39, W-104",
+    "100 N.",
+  ])("an address: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+});
+
+describe("#552: every input it names", () => {
+  it.each([
+    // Finding 1: E-470 with a direction, with or without its hyphen.
+    "E 470 N",
+    "E470 N",
+    "E 470 S",
+    "N E470",
+    "E 470 W 6",
+    "E470 120",
+    "N 287 S",
+    "S 85 N",
+    "E 36 W",
+    "E 470.",
+    "W 6.",
+    // Finding 2: a grid address with a ZIP; a house number, a direction and a numbered street.
+    "500 N 200 W 84103",
+    "500 N 200 W, 84103",
+    "100 S 200 E 84111",
+    "1437 N 14",
+    "120 W 14",
+    "200 E 9",
+    "W 6 80204",
+    "500 N 200 W",
+    "120 W 14th",
+    // Finding 3.
+    "105° W, 39.7401",
+    "104° W, 39",
+    "104°, 39",
+    "39° N, 44.4",
+    "39 N, 44.4",
+    "E -470",
+    "E- 470",
+    "E.-470",
+    "E-470.5",
+    "E-470 6'",
+    "E-470 39°",
+    // The proposed solution's examples.
+    "39 44 24 N 104 58 51 W",
+    "39 44 N",
+    "39.7401 N",
+    "39 44.4 N",
+    "39° 44.4",
+    // Grid shapes kept since #541.
+    "39 N",
+    "N 39",
+    "39N 104W",
+    "39 N 104 W",
+    "39 N 104",
+  ])("an address: %s", (text) => {
+    expect(readSearchCoords(text)).toEqual(ADDRESS);
+  });
+
+  it("finding 3: a 30,000-digit run is answered at once (4 s before)", () => {
+    const started = performance.now();
+    expect(readSearchCoords("9".repeat(30000))).toEqual(ADDRESS);
+    expect(readSearchCoords("9".repeat(30000) + " N")).toEqual(ADDRESS);
+    expect(performance.now() - started).toBeLessThan(1000);
   });
 });

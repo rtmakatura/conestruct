@@ -374,26 +374,24 @@ export const COORDS_PIN_AT = "Pin at";
  *  wrap. */
 export const COORDS_DID_YOU_MEAN = "Did you mean";
 export const coordsPair = (lat: number, lng: number) => `${fmt4(lat)}, ${fmt4(lng)}`;
-/** #541 R145: coordinates the box can't read (degrees and minutes, half a
- *  pair).  #537's "Use numbers in decimal degrees, like 39.7401", with a
- *  pair as the example now that one box takes both. */
-export const COORDS_UNREADABLE = "Use decimal degrees, like 39.7401, -104.9811";
-/** #537: the old boxes' range errors, kept word for word. */
+/** #537: the old boxes' range errors, kept word for word.  #548 (Ryan,
+ *  2026-11-23): these two and the "Did you mean" choice are the only
+ *  coordinate lines; #541's "Use decimal degrees" line is gone, and text
+ *  that is not a full pair goes to the geocoder. */
 export const COORDS_LAT_RANGE = "Latitude must be between -90 and 90";
 /** #537: the old boxes' range errors, kept word for word. */
 export const COORDS_LNG_RANGE = "Longitude must be between -180 and 180";
 /** #541 R145: with no map, the search box is where coordinates go. */
 export const MAP_OFF_LINE = "Type the coordinates in the search box instead.";
 
-/** The search's line for text that looks like coordinates but is not a
- *  point (#541 ruling 1): never a pin, never a geocoder request. */
+/** The search's line for a coordinate pair with a number out of range
+ *  (#541 ruling 1): never a pin, never a geocoder request. */
 type CoordsRefusal = {
   state: "coords";
   line: string;
   swap: { lat: number; lng: number } | null;
 };
 function coordsRefusal(read: Exclude<SearchCoords, { kind: "address" | "point" }>): CoordsRefusal {
-  if (read.kind === "unreadable") return { state: "coords", line: COORDS_UNREADABLE, swap: null };
   return {
     state: "coords",
     line: read.axis === "lat" ? COORDS_LAT_RANGE : COORDS_LNG_RANGE,
