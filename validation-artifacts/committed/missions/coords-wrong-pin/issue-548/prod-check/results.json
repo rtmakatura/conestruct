@@ -1,0 +1,762 @@
+{
+ "ranAt": "2026-11-23T21:27:44.960Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "284cc8ecd7e8728c651a99cc338b559c9c204788",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "done",
+   "console": [
+    {
+     "step": "searched half-coord",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "searched e-470-n",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "284cc8ecd7e8728c651a99cc338b559c9c204788",
+    "284cc8e"
+   ],
+   "nonGet": [
+    {
+     "step": "searched half-coord",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched e-470-n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "pinned dms-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "tokenChecks": 7,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "searched",
+     "name": "half-coord",
+     "typed": "39\u00b0 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.4",
+     "geocodeStatus": 422,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Plans cover Colorado roads only.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "letter-one-half",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 38.0534, -102.1227",
+     "pin": [
+      38.0534,
+      -102.1227
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "lng-letter-first",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 37.2948, -102.0419",
+     "pin": [
+      37.2948,
+      -102.0419
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "e-470-n",
+     "typed": "E 470 N",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "E 470 N",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "dms-pair",
+     "typed": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "choice",
+     "name": "swapped",
+     "typed": "-104.9811, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "-104.9811, 39.7401",
+     "geocodeRequests": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Did you mean 39.7401, -104.9811?",
+     "failLine": false,
+     "choiceShown": true,
+     "axe": [],
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 4,
+    "roads": 4
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "useDecimal": 0,
+    "didYouMean": 1
+   },
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 89
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "searchedTextsSentOneGeocodeEach": true,
+    "noPinAtTheOldWrongPlace": true,
+    "noParserLineForSearchedTexts": true,
+    "pairsPinnedWithNoGeocode": true,
+    "swappedPairOffersTheChoice": true,
+    "deletedLineInNoScript": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "1198x930",
+   "step": "done",
+   "console": [
+    {
+     "step": "searched half-coord",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "searched e-470-n",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "284cc8ecd7e8728c651a99cc338b559c9c204788",
+    "284cc8e"
+   ],
+   "nonGet": [
+    {
+     "step": "searched half-coord",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched e-470-n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "pinned dms-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "tokenChecks": 7,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "searched",
+     "name": "half-coord",
+     "typed": "39\u00b0 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.4",
+     "geocodeStatus": 422,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Plans cover Colorado roads only.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "letter-one-half",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 38.0534, -102.1227",
+     "pin": [
+      38.0534,
+      -102.1227
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "lng-letter-first",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 37.2948, -102.0419",
+     "pin": [
+      37.2948,
+      -102.0419
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "e-470-n",
+     "typed": "E 470 N",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "E 470 N",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "dms-pair",
+     "typed": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "choice",
+     "name": "swapped",
+     "typed": "-104.9811, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "-104.9811, 39.7401",
+     "geocodeRequests": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Did you mean 39.7401, -104.9811?",
+     "failLine": false,
+     "choiceShown": true,
+     "axe": [],
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 4,
+    "roads": 4
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "useDecimal": 0,
+    "didYouMean": 1
+   },
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 120
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "searchedTextsSentOneGeocodeEach": true,
+    "noPinAtTheOldWrongPlace": true,
+    "noParserLineForSearchedTexts": true,
+    "pairsPinnedWithNoGeocode": true,
+    "swappedPairOffersTheChoice": true,
+    "deletedLineInNoScript": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "390x844",
+   "step": "done",
+   "console": [
+    {
+     "step": "searched half-coord",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "searched e-470-n",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "284cc8ecd7e8728c651a99cc338b559c9c204788",
+    "284cc8e"
+   ],
+   "nonGet": [
+    {
+     "step": "searched half-coord",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched letter-one-half",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "searched lng-letter-first",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "searched e-470-n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "pinned dms-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    }
+   ],
+   "tokenChecks": 7,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "searched",
+     "name": "half-coord",
+     "typed": "39\u00b0 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.4",
+     "geocodeStatus": 422,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Plans cover Colorado roads only.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "letter-one-half",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 38.0534, -102.1227",
+     "pin": [
+      38.0534,
+      -102.1227
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "lng-letter-first",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "barText": "Pin at 37.2948, -102.0419",
+     "pin": [
+      37.2948,
+      -102.0419
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "searched",
+     "name": "e-470-n",
+     "typed": "E 470 N",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "E 470 N",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "dms-pair",
+     "typed": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.406' N, 104\u00b0 58.866' W",
+     "geocodeRequests": 0,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "choice",
+     "name": "swapped",
+     "typed": "-104.9811, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "-104.9811, 39.7401",
+     "geocodeRequests": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Did you mean 39.7401, -104.9811?",
+     "failLine": false,
+     "choiceShown": true,
+     "axe": [],
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 4,
+    "roads": 4
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "useDecimal": 0,
+    "didYouMean": 1
+   },
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 52
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "searchedTextsSentOneGeocodeEach": true,
+    "noPinAtTheOldWrongPlace": true,
+    "noParserLineForSearchedTexts": true,
+    "pairsPinnedWithNoGeocode": true,
+    "swappedPairOffersTheChoice": true,
+    "deletedLineInNoScript": true,
+    "controlStringFound": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "284cc8ecd7e8728c651a99cc338b559c9c204788",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "polls": 1,
+  "status": 200,
+  "sha": "284cc8ecd7e8728c651a99cc338b559c9c204788",
+  "isHead": true
+ },
+ "finishedAt": "2026-11-23T21:30:18.906Z",
+ "pass": true
+}

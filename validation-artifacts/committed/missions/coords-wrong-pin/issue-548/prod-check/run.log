@@ -1,0 +1,36 @@
+healthz sha 284cc8e equals head: true
+served /api/version sha 284cc8e after 1 poll(s): head true
+1440x900: ok | every check passed
+  searched [39° 44.4]: geocode 1 (HTTP 422) | bar "No pin yet" markers 0 | list "Plans cover Colorado roads only." | choice false fail line true | axe 0 | ok
+  searched [39 N, 44.4]: geocode 1 (HTTP 200) | bar "Pin at 38.0534, -102.1227" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [105° W, 39.7401]: geocode 1 (HTTP 200) | bar "Pin at 37.2948, -102.0419" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [E 470 N]: geocode 1 (HTTP 404) | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39° 44.406' N, 104° 58.866' W]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  choice [-104.9811, 39.7401]: geocode 0 | bar "No pin yet" markers 0 | list "Did you mean 39.7401, -104.9811?" | choice true fail line false | axe 0 | ok
+  scripts {"loaded":14,"read":14,"useDecimal":0,"didYouMean":1} chunk shas 284cc8e,284cc8e | posts {"geocode":4,"roads":4} nonGet 8 | console errors 2 (mapbox telemetry 0, geocoder 404/422 answers 2) | failed {"api.mapbox.com net::ERR_ABORTED":89} | token checks 7 hits 0
+    console [searched half-coord] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+    console [searched e-470-n] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+1198x930: ok | every check passed
+  searched [39° 44.4]: geocode 1 (HTTP 422) | bar "No pin yet" markers 0 | list "Plans cover Colorado roads only." | choice false fail line true | axe 0 | ok
+  searched [39 N, 44.4]: geocode 1 (HTTP 200) | bar "Pin at 38.0534, -102.1227" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [105° W, 39.7401]: geocode 1 (HTTP 200) | bar "Pin at 37.2948, -102.0419" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [E 470 N]: geocode 1 (HTTP 404) | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39° 44.406' N, 104° 58.866' W]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  choice [-104.9811, 39.7401]: geocode 0 | bar "No pin yet" markers 0 | list "Did you mean 39.7401, -104.9811?" | choice true fail line false | axe 0 | ok
+  scripts {"loaded":14,"read":14,"useDecimal":0,"didYouMean":1} chunk shas 284cc8e,284cc8e | posts {"geocode":4,"roads":4} nonGet 8 | console errors 2 (mapbox telemetry 0, geocoder 404/422 answers 2) | failed {"api.mapbox.com net::ERR_ABORTED":120} | token checks 7 hits 0
+    console [searched half-coord] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+    console [searched e-470-n] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+390x844: ok | every check passed
+  searched [39° 44.4]: geocode 1 (HTTP 422) | bar "No pin yet" markers 0 | list "Plans cover Colorado roads only." | choice false fail line true | axe 0 | ok
+  searched [39 N, 44.4]: geocode 1 (HTTP 200) | bar "Pin at 38.0534, -102.1227" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [105° W, 39.7401]: geocode 1 (HTTP 200) | bar "Pin at 37.2948, -102.0419" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  searched [E 470 N]: geocode 1 (HTTP 404) | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39° 44.406' N, 104° 58.866' W]: geocode 0 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  choice [-104.9811, 39.7401]: geocode 0 | bar "No pin yet" markers 0 | list "Did you mean 39.7401, -104.9811?" | choice true fail line false | axe 0 | ok
+  scripts {"loaded":14,"read":14,"useDecimal":0,"didYouMean":1} chunk shas 284cc8e,284cc8e | posts {"geocode":4,"roads":4} nonGet 8 | console errors 2 (mapbox telemetry 0, geocoder 404/422 answers 2) | failed {"api.mapbox.com net::ERR_ABORTED":52} | token checks 7 hits 0
+    console [searched half-coord] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+    console [searched e-470-n] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+overall: PASS
