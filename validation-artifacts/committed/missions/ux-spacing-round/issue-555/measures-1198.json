@@ -1,0 +1,2575 @@
+{
+ "site": "http://localhost:3555",
+ "viewport": [
+  1198,
+  930
+ ],
+ "errors": [],
+ "states": {
+  "555-night": {
+   "day": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 16,
+      "y": 57.56,
+      "w": 494,
+      "h": 28
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 1.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 124.62,
+       "y": 85.56,
+       "w": 29.77,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 248.06,
+       "y": 85.56,
+       "w": 29.88,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 359.93,
+       "y": 85.56,
+       "w": 53.14,
+       "h": 18,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 495.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [
+      {
+       "text": "8:30 am",
+       "x": 42.58,
+       "y": 39.56,
+       "w": 49.78,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "3:30 pm",
+       "x": 186.34,
+       "y": 39.56,
+       "w": 50.34,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "8 pm",
+       "x": 289.03,
+       "y": 39.56,
+       "w": 30.22,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "5 am",
+       "x": 474.77,
+       "y": 39.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "midnight": [
+      {
+       "x": 386.5,
+       "y": 58.56,
+       "w": 1,
+       "h": 26,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": {
+      "bands": [
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 67.47,
+        "y": 58.56,
+        "w": 144.09,
+        "h": 26
+       },
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 304.14,
+        "y": 58.56,
+        "w": 185.25,
+        "h": 26
+       }
+      ],
+      "yours": [
+       {
+        "cls": "whd-yours",
+        "bg": "rgb(234, 240, 247)",
+        "border": "solid",
+        "x": 304.14,
+        "y": 69.56,
+        "w": 185.25,
+        "h": 6
+       }
+      ]
+     },
+     "week": [],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": "✓Your hours fit on weekdays.",
+     "sub": "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am.",
+     "legend": "Allowed Your hours Outside what's allowed"
+    },
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 64,
+      "y": 34,
+      "w": 62.56,
+      "h": 240
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 24.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 26.23,
+       "y": 84.63,
+       "w": 29.77,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 26.13,
+       "y": 144.63,
+       "w": 29.88,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 2.86,
+       "y": 204.63,
+       "w": 53.14,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 264.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [],
+     "midnight": [
+      {
+       "x": 65,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 131.56,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 198.14,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 264.7,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 331.28,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 397.84,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 464.42,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": null,
+     "week": [
+      {
+       "name": "Mon 7",
+       "cls": "whd-day",
+       "col": {
+        "x": 64,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Tue 8",
+       "cls": "whd-day",
+       "col": {
+        "x": 130.56,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Wed 9",
+       "cls": "whd-day",
+       "col": {
+        "x": 197.14,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Thu 10",
+       "cls": "whd-day",
+       "col": {
+        "x": 263.7,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Fri 11",
+       "cls": "whd-day",
+       "col": {
+        "x": 330.28,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Sat 12",
+       "cls": "whd-day is-none",
+       "col": {
+        "x": 396.84,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [
+        {
+         "cls": "whd-yours is-v is-unchecked",
+         "bg": "rgba(0, 0, 0, 0)",
+         "border": "dashed",
+         "x": 425.13,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "No hours on record."
+      },
+      {
+       "name": "Sun 13",
+       "cls": "whd-day is-none",
+       "col": {
+        "x": 463.42,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [
+        {
+         "cls": "whd-yours is-v is-unchecked",
+         "bg": "rgba(0, 0, 0, 0)",
+         "border": "dashed",
+         "x": 491.7,
+         "y": 173.81,
+         "w": 6,
+         "h": 89.25
+        }
+       ],
+       "sr": "No hours on record."
+      }
+     ],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": null,
+     "sub": "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am.",
+     "legend": "Allowed Your hours Outside what's allowed No record"
+    },
+    "axe": [],
+    "under44": []
+   }
+  },
+  "555-day": {
+   "day": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 16,
+      "y": 57.56,
+      "w": 494,
+      "h": 28
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 1.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 124.62,
+       "y": 85.56,
+       "w": 29.77,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 248.06,
+       "y": 85.56,
+       "w": 29.88,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 359.93,
+       "y": 85.56,
+       "w": 53.14,
+       "h": 18,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 495.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [
+      {
+       "text": "8:30 am",
+       "x": 42.58,
+       "y": 39.56,
+       "w": 49.78,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "3:30 pm",
+       "x": 186.34,
+       "y": 39.56,
+       "w": 50.34,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "8 pm",
+       "x": 289.03,
+       "y": 39.56,
+       "w": 30.22,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "5 am",
+       "x": 474.77,
+       "y": 39.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "midnight": [
+      {
+       "x": 386.5,
+       "y": 58.56,
+       "w": 1,
+       "h": 26,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": {
+      "bands": [
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 67.47,
+        "y": 58.56,
+        "w": 144.09,
+        "h": 26
+       },
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 304.14,
+        "y": 58.56,
+        "w": 185.25,
+        "h": 26
+       }
+      ],
+      "yours": [
+       {
+        "cls": "whd-yours",
+        "bg": "rgb(234, 240, 247)",
+        "border": "solid",
+        "x": 77.75,
+        "y": 69.56,
+        "w": 123.5,
+        "h": 6
+       }
+      ]
+     },
+     "week": [],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": "✓Your hours fit on weekdays.",
+     "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+     "legend": "Allowed Your hours Outside what's allowed"
+    },
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 64,
+      "y": 34,
+      "w": 62.56,
+      "h": 240
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 24.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 26.23,
+       "y": 84.63,
+       "w": 29.77,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 26.13,
+       "y": 144.63,
+       "w": 29.88,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 2.86,
+       "y": 204.63,
+       "w": 53.14,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 264.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [],
+     "midnight": [
+      {
+       "x": 65,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 131.56,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 198.14,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 264.7,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 331.28,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 397.84,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 464.42,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": null,
+     "week": [
+      {
+       "name": "Mon 7",
+       "cls": "whd-day",
+       "col": {
+        "x": 64,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 64.75,
+         "w": 6,
+         "h": 59.5
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Tue 8",
+       "cls": "whd-day",
+       "col": {
+        "x": 130.56,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 64.75,
+         "w": 6,
+         "h": 59.5
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Wed 9",
+       "cls": "whd-day",
+       "col": {
+        "x": 197.14,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 64.75,
+         "w": 6,
+         "h": 59.5
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Thu 10",
+       "cls": "whd-day",
+       "col": {
+        "x": 263.7,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 64.75,
+         "w": 6,
+         "h": 59.5
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Fri 11",
+       "cls": "whd-day",
+       "col": {
+        "x": 330.28,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 64.75,
+         "w": 6,
+         "h": 59.5
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight."
+      },
+      {
+       "name": "Sat 12",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 396.84,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      },
+      {
+       "name": "Sun 13",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 463.42,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      }
+     ],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": null,
+     "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+     "legend": "Allowed Your hours Outside what's allowed No record"
+    },
+    "axe": [],
+    "under44": []
+   }
+  },
+  "555-outside": {
+   "day": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 16,
+      "y": 57.56,
+      "w": 494,
+      "h": 28
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 1.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 124.62,
+       "y": 85.56,
+       "w": 29.77,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 248.06,
+       "y": 85.56,
+       "w": 29.88,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 359.93,
+       "y": 85.56,
+       "w": 53.14,
+       "h": 18,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 495.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [
+      {
+       "text": "8:30 am",
+       "x": 42.58,
+       "y": 39.56,
+       "w": 49.78,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "3:30 pm",
+       "x": 186.34,
+       "y": 39.56,
+       "w": 50.34,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "8 pm",
+       "x": 289.03,
+       "y": 39.56,
+       "w": 30.22,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "5 am",
+       "x": 474.77,
+       "y": 39.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "midnight": [
+      {
+       "x": 386.5,
+       "y": 58.56,
+       "w": 1,
+       "h": 26,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": {
+      "bands": [
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 67.47,
+        "y": 58.56,
+        "w": 144.09,
+        "h": 26
+       },
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 304.14,
+        "y": 58.56,
+        "w": 185.25,
+        "h": 26
+       }
+      ],
+      "yours": [
+       {
+        "cls": "whd-yours",
+        "bg": "rgb(234, 240, 247)",
+        "border": "solid",
+        "x": 36.59,
+        "y": 69.56,
+        "w": 205.84,
+        "h": 6
+       },
+       {
+        "cls": "whd-yours is-out",
+        "bg": "rgb(255, 138, 46)",
+        "border": "solid",
+        "x": 36.59,
+        "y": 69.56,
+        "w": 30.88,
+        "h": 6
+       },
+       {
+        "cls": "whd-yours is-out",
+        "bg": "rgb(255, 138, 46)",
+        "border": "solid",
+        "x": 211.52,
+        "y": 69.56,
+        "w": 30.88,
+        "h": 6
+       }
+      ]
+     },
+     "week": [],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": "Your hours go outside what Denver allows on weekdays.",
+     "sub": "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm.",
+     "legend": "Allowed Your hours Outside what's allowed"
+    },
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 64,
+      "y": 34,
+      "w": 62.56,
+      "h": 240
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 24.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 26.23,
+       "y": 84.63,
+       "w": 29.77,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 26.13,
+       "y": 144.63,
+       "w": 29.88,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 2.86,
+       "y": 204.63,
+       "w": 53.14,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 264.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [],
+     "midnight": [
+      {
+       "x": 65,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 131.56,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 198.14,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 264.7,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 331.28,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 397.84,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 464.42,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": null,
+     "week": [
+      {
+       "name": "Mon 7",
+       "cls": "whd-day",
+       "col": {
+        "x": 64,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 44.92,
+         "w": 6,
+         "h": 99.17
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 44.92,
+         "w": 6,
+         "h": 14.88
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 129.19,
+         "w": 6,
+         "h": 14.88
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm."
+      },
+      {
+       "name": "Tue 8",
+       "cls": "whd-day",
+       "col": {
+        "x": 130.56,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 44.92,
+         "w": 6,
+         "h": 99.17
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 44.92,
+         "w": 6,
+         "h": 14.88
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 129.19,
+         "w": 6,
+         "h": 14.88
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm."
+      },
+      {
+       "name": "Wed 9",
+       "cls": "whd-day",
+       "col": {
+        "x": 197.14,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 44.92,
+         "w": 6,
+         "h": 99.17
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 44.92,
+         "w": 6,
+         "h": 14.88
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 129.19,
+         "w": 6,
+         "h": 14.88
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm."
+      },
+      {
+       "name": "Thu 10",
+       "cls": "whd-day",
+       "col": {
+        "x": 263.7,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 44.92,
+         "w": 6,
+         "h": 99.17
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 44.92,
+         "w": 6,
+         "h": 14.88
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 129.19,
+         "w": 6,
+         "h": 14.88
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm."
+      },
+      {
+       "name": "Fri 11",
+       "cls": "whd-day",
+       "col": {
+        "x": 330.28,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 44.92,
+         "w": 6,
+         "h": 99.17
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 44.92,
+         "w": 6,
+         "h": 14.88
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 129.19,
+         "w": 6,
+         "h": 14.88
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm."
+      },
+      {
+       "name": "Sat 12",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 396.84,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      },
+      {
+       "name": "Sun 13",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 463.42,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      }
+     ],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": null,
+     "sub": "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm.",
+     "legend": "Allowed Your hours Outside what's allowed No record"
+    },
+    "axe": [],
+    "under44": []
+   }
+  },
+  "555-early-start": {
+   "day": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 16,
+      "y": 57.56,
+      "w": 494,
+      "h": 28
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 1.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 124.62,
+       "y": 85.56,
+       "w": 29.77,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 248.06,
+       "y": 85.56,
+       "w": 29.88,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 359.93,
+       "y": 85.56,
+       "w": 53.14,
+       "h": 18,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 495.38,
+       "y": 85.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [
+      {
+       "text": "8:30 am",
+       "x": 42.58,
+       "y": 39.56,
+       "w": 49.78,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "3:30 pm",
+       "x": 186.34,
+       "y": 39.56,
+       "w": 50.34,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "8 pm",
+       "x": 289.03,
+       "y": 39.56,
+       "w": 30.22,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "5 am",
+       "x": 474.77,
+       "y": 39.56,
+       "w": 29.25,
+       "h": 18,
+       "within": true,
+       "color": "rgb(52, 169, 232)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "midnight": [
+      {
+       "x": 386.5,
+       "y": 58.56,
+       "w": 1,
+       "h": 26,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": {
+      "bands": [
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 67.47,
+        "y": 58.56,
+        "w": 144.09,
+        "h": 26
+       },
+       {
+        "cls": "whd-band",
+        "bg": "rgb(29, 44, 60)",
+        "border": "solid",
+        "x": 304.14,
+        "y": 58.56,
+        "w": 185.25,
+        "h": 26
+       }
+      ],
+      "yours": [
+       {
+        "cls": "whd-yours",
+        "bg": "rgb(234, 240, 247)",
+        "border": "solid",
+        "x": 16,
+        "y": 69.56,
+        "w": 164.64,
+        "h": 6
+       },
+       {
+        "cls": "whd-yours",
+        "bg": "rgb(234, 240, 247)",
+        "border": "solid",
+        "x": 468.84,
+        "y": 69.56,
+        "w": 41.14,
+        "h": 6
+       },
+       {
+        "cls": "whd-yours is-out",
+        "bg": "rgb(255, 138, 46)",
+        "border": "solid",
+        "x": 16,
+        "y": 69.56,
+        "w": 51.47,
+        "h": 6
+       },
+       {
+        "cls": "whd-yours is-out",
+        "bg": "rgb(255, 138, 46)",
+        "border": "solid",
+        "x": 489.39,
+        "y": 69.56,
+        "w": 20.59,
+        "h": 6
+       }
+      ]
+     },
+     "week": [],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": "Your hours go outside what Denver allows on weekdays.",
+     "sub": "When you can close a lane on an arterial street. Your hours: 4 am to 2 pm.",
+     "legend": "Allowed Your hours Outside what's allowed"
+    },
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "chart": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "scrollWidth": 526,
+      "clientWidth": 526,
+      "scrollHeight": 384,
+      "clientHeight": 384
+     },
+     "scale": {
+      "x": 64,
+      "y": 34,
+      "w": 62.56,
+      "h": 240
+     },
+     "ticks": [
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 24.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "noon",
+       "x": 26.23,
+       "y": 84.63,
+       "w": 29.77,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 pm",
+       "x": 26.13,
+       "y": 144.63,
+       "w": 29.88,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "midnight",
+       "x": 2.86,
+       "y": 204.63,
+       "w": 53.14,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(200, 209, 221)",
+       "weight": "600",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      },
+      {
+       "text": "6 am",
+       "x": 26.75,
+       "y": 264.63,
+       "w": 29.25,
+       "h": 18.75,
+       "within": true,
+       "color": "rgb(147, 160, 176)",
+       "weight": "400",
+       "size": "12.5px",
+       "family": "__Inter_176161"
+      }
+     ],
+     "caps": [],
+     "midnight": [
+      {
+       "x": 65,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 131.56,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 198.14,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 264.7,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 331.28,
+       "y": 213.5,
+       "w": 60.56,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 397.84,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      },
+      {
+       "x": 464.42,
+       "y": 213.5,
+       "w": 60.58,
+       "h": 1,
+       "line": "1px dashed rgb(147, 160, 176)"
+      }
+     ],
+     "clipMarks": 0,
+     "ruler": null,
+     "week": [
+      {
+       "name": "Mon 7",
+       "cls": "whd-day",
+       "col": {
+        "x": 64,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 65,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 35,
+         "w": 6,
+         "h": 79.31
+        },
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 253.17,
+         "w": 6,
+         "h": 19.81
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 35,
+         "w": 6,
+         "h": 24.8
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 92.28,
+         "y": 263.06,
+         "w": 6,
+         "h": 9.92
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 5 am to 8:30 am."
+      },
+      {
+       "name": "Tue 8",
+       "cls": "whd-day",
+       "col": {
+        "x": 130.56,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 131.56,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 35,
+         "w": 6,
+         "h": 79.31
+        },
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 253.17,
+         "w": 6,
+         "h": 19.81
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 35,
+         "w": 6,
+         "h": 24.8
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 158.84,
+         "y": 263.06,
+         "w": 6,
+         "h": 9.92
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 5 am to 8:30 am."
+      },
+      {
+       "name": "Wed 9",
+       "cls": "whd-day",
+       "col": {
+        "x": 197.14,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 198.14,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 35,
+         "w": 6,
+         "h": 79.31
+        },
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 253.17,
+         "w": 6,
+         "h": 19.81
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 35,
+         "w": 6,
+         "h": 24.8
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 225.42,
+         "y": 263.06,
+         "w": 6,
+         "h": 9.92
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 5 am to 8:30 am."
+      },
+      {
+       "name": "Thu 10",
+       "cls": "whd-day",
+       "col": {
+        "x": 263.7,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 59.8,
+         "w": 60.58,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 264.7,
+         "y": 173.81,
+         "w": 60.58,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 35,
+         "w": 6,
+         "h": 79.31
+        },
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 253.17,
+         "w": 6,
+         "h": 19.81
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 35,
+         "w": 6,
+         "h": 24.8
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 291.98,
+         "y": 263.06,
+         "w": 6,
+         "h": 9.92
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 5 am to 8:30 am."
+      },
+      {
+       "name": "Fri 11",
+       "cls": "whd-day",
+       "col": {
+        "x": 330.28,
+        "y": 34,
+        "w": 62.56,
+        "h": 240
+       },
+       "bands": [
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 59.8,
+         "w": 60.56,
+         "h": 69.42
+        },
+        {
+         "cls": "whd-band is-v",
+         "bg": "rgb(29, 44, 60)",
+         "border": "solid",
+         "x": 331.28,
+         "y": 173.81,
+         "w": 60.56,
+         "h": 89.25
+        }
+       ],
+       "yours": [
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 35,
+         "w": 6,
+         "h": 79.31
+        },
+        {
+         "cls": "whd-yours is-v",
+         "bg": "rgb(234, 240, 247)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 253.17,
+         "w": 6,
+         "h": 19.81
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 35,
+         "w": 6,
+         "h": 24.8
+        },
+        {
+         "cls": "whd-yours is-v is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "solid",
+         "x": 358.56,
+         "y": 263.06,
+         "w": 6,
+         "h": 9.92
+        }
+       ],
+       "sr": "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 5 am to 8:30 am."
+      },
+      {
+       "name": "Sat 12",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 396.84,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      },
+      {
+       "name": "Sun 13",
+       "cls": "whd-day is-dim is-none",
+       "col": {
+        "x": 463.42,
+        "y": 34,
+        "w": 62.58,
+        "h": 240
+       },
+       "bands": [],
+       "yours": [],
+       "sr": "No hours on record."
+      }
+     ],
+     "families": [
+      "__Inter_176161"
+     ],
+     "verdict": null,
+     "sub": "When you can close a lane on an arterial street. Your hours: 4 am to 2 pm.",
+     "legend": "Allowed Your hours Outside what's allowed No record"
+    },
+    "axe": [],
+    "under44": []
+   }
+  }
+ },
+ "jurisdictionByHand": false,
+ "bandHeightClosed": 1061.5,
+ "bandHeightAfterClose": 1061.5
+}

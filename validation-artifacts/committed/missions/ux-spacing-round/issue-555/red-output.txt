@@ -1,0 +1,17 @@
+ × components/WorkHoursDialog.test.tsx > #526 ruling 4: a weekday > night work past midnight: nothing is clipped on the 6 am to 6 am ruler, so no arrows (#555 S9, was S6)
+ × components/WorkHoursDialog.test.tsx > #526 round 2 (finding 7), after #555: hours that used to be clipped draw in full, with no arrows > the ruler: hours past both ends, both outside
+ × components/WorkHoursDialog.test.tsx > #526 round 2 (finding 7), after #555: hours that used to be clipped draw in full, with no arrows > the ruler: night work that fits draws whole, with no arrows and nothing in --dim
+ × components/WorkHoursDialog.test.tsx > #526 round 2 (finding 7), after #555: hours that used to be clipped draw in full, with no arrows > the whole week: no day carries an arrow
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the ruler: five ticks at 6 am, noon, 6 pm, midnight, 6 am; midnight is marked and has its line
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the whole week: the same five ticks, and a midnight line in every day
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the ruler, 8 pm to 5 am: one unbroken bar, and Denver's night window is one band with both ends labelled
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the whole week, 8 pm to 5 am: one unbroken bar on every day in the job, one night band on every weekday
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > a day shift, 9 am to 3 pm: one bar in both views
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the inside/outside split is the backend's, unchanged: 7 am to 5 pm against 8:30 to 3:30
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > an outside span that crosses midnight is one --dim piece (the backend's 22-24 and 0-2)
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the 6 am edge (S2): 8 pm to 6 am is one bar to the last tick; 4 am to 2 pm is cut at 6 am, both pieces on its own day
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > S4: an end made by the 6 am cut takes no label (an all-day window, and one that starts before 6 am)
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > S11: a start label less than 4 hours after the window before it is set from its start; Denver's don't move
+ × components/WorkHoursDialog.test.tsx > #555: both views run 6 am to 6 am > the sizes hold: a 28 px track and 240 px columns (globals.css)
+ Test Files  1 failed (1)
+      Tests  15 failed | 31 passed (46)

@@ -1,0 +1,136 @@
+{
+ "390": {
+  "errors": [],
+  "lakewood": {
+   "title": "Lakewood's work hours",
+   "caps": [
+    {
+     "text": "7 am",
+     "left": 13.77,
+     "right": 42.57
+    },
+    {
+     "text": "9 am",
+     "left": 52.5,
+     "right": 82.08
+    },
+    {
+     "text": "3:30 pm",
+     "left": 106.39,
+     "right": 156.73
+    },
+    {
+     "text": "6 pm",
+     "left": 162,
+     "right": 192.2
+    }
+   ],
+   "gaps": [
+    "7 am | 9 am: 9.93 px",
+    "9 am | 3:30 pm: 24.31 px",
+    "3:30 pm | 6 pm: 5.27 px"
+   ],
+   "insideBody": true,
+   "sideScroll": 0
+  },
+  "centennial": {
+   "title": "Centennial's work hours",
+   "caps": [
+    {
+     "text": "8:30 am",
+     "left": 21.53,
+     "right": 71.31
+    },
+    {
+     "text": "3:30 pm",
+     "left": 106.39,
+     "right": 156.73
+    },
+    {
+     "text": "7 pm",
+     "left": 174.17,
+     "right": 203.59
+    },
+    {
+     "text": "5 am",
+     "left": 281.19,
+     "right": 310.44
+    }
+   ],
+   "gaps": [
+    "8:30 am | 3:30 pm: 35.08 px",
+    "3:30 pm | 7 pm: 17.44 px",
+    "7 pm | 5 am: 77.6 px"
+   ],
+   "insideBody": true,
+   "sideScroll": 0
+  }
+ },
+ "1440": {
+  "errors": [],
+  "lakewood": {
+   "title": "Lakewood's work hours",
+   "caps": [
+    {
+     "text": "7 am",
+     "left": 22.2,
+     "right": 50.99
+    },
+    {
+     "text": "9 am",
+     "left": 77.75,
+     "right": 107.33
+    },
+    {
+     "text": "3:30 pm",
+     "left": 186.34,
+     "right": 236.69
+    },
+    {
+     "text": "6 pm",
+     "left": 263,
+     "right": 293.2
+    }
+   ],
+   "gaps": [
+    "7 am | 9 am: 26.76 px",
+    "9 am | 3:30 pm: 79.01 px",
+    "3:30 pm | 6 pm: 26.31 px"
+   ],
+   "insideBody": true,
+   "sideScroll": 0
+  },
+  "centennial": {
+   "title": "Centennial's work hours",
+   "caps": [
+    {
+     "text": "8:30 am",
+     "left": 42.58,
+     "right": 92.36
+    },
+    {
+     "text": "3:30 pm",
+     "left": 186.34,
+     "right": 236.69
+    },
+    {
+     "text": "7 pm",
+     "left": 283.59,
+     "right": 313.02
+    },
+    {
+     "text": "5 am",
+     "left": 474.77,
+     "right": 504.02
+    }
+   ],
+   "gaps": [
+    "8:30 am | 3:30 pm: 93.98 px",
+    "3:30 pm | 7 pm: 46.9 px",
+    "7 pm | 5 am: 161.75 px"
+   ],
+   "insideBody": true,
+   "sideScroll": 0
+  }
+ }
+}

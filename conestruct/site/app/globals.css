@@ -6381,9 +6381,12 @@ input[type="number"] {
   gap: 6px;
   color: var(--ink);
 }
+/* #555: the scale runs 6 am to 6 am, so a tick sits on each end of the
+   track.  CHOSEN: 16 px each side (was 6), half of "6 am" at this size, so
+   an end tick or end label stays inside the scrolling body. */
 .workbench .whd-ruler {
   position: relative;
-  margin: 8px 6px 0;
+  margin: 8px 16px 0;
 }
 .workbench .whd-labels,
 .workbench .whd-ticks {
@@ -6402,8 +6405,36 @@ input[type="number"] {
   color: var(--act);
   font-weight: 600;
 }
+/* #555 (S11): a start label close after the window before it is set from
+   its start, not centred on it, so the two labels don't overlap at 390. */
+.workbench .whd-cap.is-near {
+  transform: none;
+}
 .workbench .whd-tick {
   color: var(--ink-faint);
+}
+/* #555 (Ryan, 2026-11-24): "'Midnight' is set slightly stronger, with a
+   faint dashed line across each day."  CHOSEN (S6): --ink-on-dark at 600,
+   the same size; the line is 1 px dashed --ink-faint, over the band and under
+   your hours. */
+.workbench .whd-tick.is-midnight,
+.workbench .whd-vticks span.is-midnight {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .whd-midnight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed var(--ink-faint);
+  pointer-events: none;
+}
+.workbench .whd-midnight.is-v {
+  left: 0;
+  right: 0;
+  bottom: auto;
+  border-left: 0;
+  border-top: 1px dashed var(--ink-faint);
 }
 .workbench .whd-track {
   position: relative;
@@ -6479,7 +6510,9 @@ input[type="number"] {
 .workbench .whd-week {
   position: relative;
   display: grid;
-  grid-template-columns: 44px repeat(7, minmax(0, 1fr));
+  /* #555: CHOSEN 60 px (was 44): "midnight" at weight 600 measures
+     53.14 px, plus the 4 px gap to the columns. */
+  grid-template-columns: 60px repeat(7, minmax(0, 1fr));
   /* Round 3 (#531, S23): a caption row under the columns, reserved in
      every week (two 15 px lines), so "No record" appears and goes without
      moving anything. */

@@ -1,0 +1,38 @@
+
+== 1440x900  errors: 0  WHAT band height, window closed, before/after: 1061.5/1061.5
+555-night day: yours [58.3+37.5]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-night week: yours [58.3+37.2]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-day day: yours [12.5+25.0]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-day week: yours [12.8+24.8]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-outside day: yours [4.2+41.7; 4.2+6.3 out; 39.6+6.3 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-outside week: yours [4.6+41.3; 4.6+6.2 out; 39.7+6.2 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-early-start day: yours [0.0+33.3; 91.7+8.3; 0.0+10.4 out; 95.8+4.2 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-early-start week: yours [0.4+33.0; 91.3+8.3; 0.4+10.3 out; 95.4+4.1 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+535-no-closures week: yours [12.8+24.8]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: not measured  all checks ok
+535-class-unset day: yours [12.5+20.8]  bands []  caps []  body 410/410  track 494x28  axe 0  under 44: 0  all checks ok
+535-class-unset week: yours [12.8+20.7]  bands []  caps []  body 410/410  column 62.56x240  axe 0  under 44: 0  all checks ok
+
+== 1198x930  errors: 0  WHAT band height, window closed, before/after: 1061.5/1061.5
+555-night day: yours [58.3+37.5]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-night week: yours [58.3+37.2]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-day day: yours [12.5+25.0]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-day week: yours [12.8+24.8]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-outside day: yours [4.2+41.7; 4.2+6.3 out; 39.6+6.3 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-outside week: yours [4.6+41.3; 4.6+6.2 out; 39.7+6.2 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+555-early-start day: yours [0.0+33.3; 91.7+8.3; 0.0+10.4 out; 95.8+4.2 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 384/384  track 494x28  axe 0  under 44: 0  all checks ok
+555-early-start week: yours [0.4+33.0; 91.3+8.3; 0.4+10.3 out; 95.4+4.1 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 384/384  column 62.56x240  axe 0  under 44: 0  all checks ok
+
+== 390x844  errors: 0  WHAT band height, window closed, before/after: 1917.25/1917.25
+555-night day: yours [58.3+37.5]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 342/342  track 292x28  axe 0  under 44: 0  all checks ok
+555-night week: yours [58.3+37.2]  bands [10.7+28.9; 58.3+37.2]  caps []  body 342/342  column 33.7x240  axe 0  under 44: 0  all checks ok
+555-day day: yours [12.5+25.0]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 342/342  track 292x28  axe 0  under 44: 0  all checks ok
+555-day week: yours [12.8+24.8]  bands [10.7+28.9; 58.3+37.2]  caps []  body 357/342  column 33.7x240  axe 0  under 44: 0  all checks ok
+555-outside day: yours [4.2+41.7; 4.2+6.3 out; 39.6+6.3 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 342/342  track 292x28  axe 0  under 44: 0  all checks ok
+555-outside week: yours [4.6+41.3; 4.6+6.2 out; 39.7+6.2 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 357/342  column 33.7x240  axe 0  under 44: 0  all checks ok
+555-early-start day: yours [0.0+33.3; 91.7+8.3; 0.0+10.4 out; 95.8+4.2 out]  bands [10.4+29.2; 58.3+37.5]  caps [8:30 am, 3:30 pm, 8 pm, 5 am]  body 342/342  track 292x28  axe 0  under 44: 0  all checks ok
+555-early-start week: yours [0.4+33.0; 91.3+8.3; 0.4+10.3 out; 95.4+4.1 out]  bands [10.7+28.9; 58.3+37.2]  caps []  body 357/342  column 33.7x240  axe 0  under 44: 0  all checks ok
+535-no-closures week: yours [12.8+24.8]  bands [10.7+28.9; 58.3+37.2]  caps []  body 342/342  column 33.7x240  axe 0  under 44: not measured  all checks ok
+535-class-unset day: yours [12.5+20.8]  bands []  caps []  body 368/368  track 292x28  axe 0  under 44: 0  all checks ok
+535-class-unset week: yours [12.8+20.7]  bands []  caps []  body 368/368  column 33.7x240  axe 0  under 44: 0  all checks ok
+
+30 readings (28 with the 44 px measure); failed checks: none

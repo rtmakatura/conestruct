@@ -51,6 +51,10 @@ function open(
   return { onFix, onUndo, onClose, dialog: screen.getByTestId("hours-dialog") };
 }
 
+/** The drawn spans under `root`: each one's inline start and length. */
+const spans = (root: Element, selector: string, at: "left" | "top", size: "width" | "height") =>
+  [...root.querySelectorAll<HTMLElement>(selector)].map((e) => [e.style[at], e.style[size]]);
+
 const focusables = (d: HTMLElement) =>
   Array.from(d.querySelectorAll<HTMLElement>("button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])"));
 
@@ -122,12 +126,11 @@ describe("#526 ruling 4: a weekday", () => {
     expect(screen.queryByTestId("hours-fix")).toBeNull();
   });
 
-  it("night work past midnight (S6): clipped at both ends of the 5 am to 9 pm ruler, with arrows", () => {
+  it("night work past midnight: nothing is clipped on the 6 am to 6 am ruler, so no arrows (#555 S9, was S6)", () => {
     open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
     expect(screen.getByTestId("hours-dialog-sub").textContent).toContain("Your hours: 8\u00a0pm to 5\u00a0am.");
     const ruler = screen.getByTestId("hours-ruler");
-    expect(ruler.querySelector(".whd-clip.is-left")).not.toBeNull();
-    expect(ruler.querySelector(".whd-clip.is-right")).not.toBeNull();
+    expect(ruler.querySelector(".whd-clip")).toBeNull();
   });
 
   it("weekends: S8's absence, never a permission", () => {
@@ -316,7 +319,9 @@ describe("#526 round 2 (R145 S10, Rule 10): no window on record is drawn as abse
   });
 });
 
-describe("#526 round 2 (finding 7): clipped ends are --dim only when the clipped part is outside", () => {
+// #555 (S9): the scale holds all 24 hours, so the states that used to clip
+// (finding 7) now draw in full and no arrow renders.
+describe("#526 round 2 (finding 7), after #555: hours that used to be clipped draw in full, with no arrows", () => {
   const outsideBlock = (outside: [number, number][]) => {
     const d = denverDays("outside");
     return denverBlock({ ...d, kinds: { ...d.kinds, weekday: { ...d.kinds.weekday, outside } } });
@@ -330,23 +335,33 @@ describe("#526 round 2 (finding 7): clipped ends are --dim only when the clipped
       start: 4,
       end: 22,
     });
-    expect(screen.getByTestId("hours-clip-left").classList.contains("is-out")).toBe(true);
-    expect(screen.getByTestId("hours-clip-right").classList.contains("is-out")).toBe(true);
+    expect(screen.queryByTestId("hours-clip-left")).toBeNull();
+    expect(screen.queryByTestId("hours-clip-right")).toBeNull();
+    // Both outside spans are on the ruler whole: 3:30 to 10 pm, and 4 to
+    // 8:30 am cut at 6 am (6 to 8:30 at the start, 4 to 6 at the end).
+    expect(spans(screen.getByTestId("hours-ruler"), ".whd-yours.is-out", "left", "width")).toEqual([
+      ["0.00%", "10.42%"],
+      ["39.58%", "27.08%"],
+      ["91.67%", "8.33%"],
+    ]);
   });
-  it("the ruler: night work that fits is clipped in --ink-faint, never --dim", () => {
+  it("the ruler: night work that fits draws whole, with no arrows and nothing in --dim", () => {
     open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
-    expect(screen.getByTestId("hours-clip-left").classList.contains("is-out")).toBe(false);
-    expect(screen.getByTestId("hours-clip-right").classList.contains("is-out")).toBe(false);
+    const ruler = screen.getByTestId("hours-ruler");
+    expect(ruler.querySelector(".whd-clip")).toBeNull();
+    expect(ruler.querySelector(".whd-yours.is-out")).toBeNull();
   });
-  it("the whole week: in-job days mark both clipped ends the same way", async () => {
+  it("the whole week: no day carries an arrow", async () => {
     open({ block: outsideBlock([[4, 8.5]]), start: 4, end: 22 });
     await userEvent.setup().click(screen.getByTestId("hours-view-week"));
-    const mon = screen.getAllByTestId("hours-week-day")[0];
-    expect(mon.querySelector(".whd-clip.is-top")?.classList.contains("is-out")).toBe(true);
-    expect(mon.querySelector(".whd-clip.is-bottom")?.classList.contains("is-out")).toBe(false);
-    // A day outside the job carries no hours, so no marks.
-    const sat = screen.getAllByTestId("hours-week-day")[5];
-    expect(sat.querySelector(".whd-clip")).toBeNull();
+    for (const d of screen.getAllByTestId("hours-week-day")) expect(d.querySelector(".whd-clip")).toBeNull();
+    // The outside span is the backend's, on the in-job days only.
+    const days = screen.getAllByTestId("hours-week-day");
+    expect(spans(days[0], ".whd-yours.is-out", "top", "height")).toEqual([
+      ["0.00%", "10.42%"],
+      ["91.67%", "8.33%"],
+    ]);
+    expect(days[5].querySelector(".whd-yours")).toBeNull();
   });
 });
 
@@ -615,3 +630,215 @@ describe("#535 (Ryan, 2026-11-12): the fix and the record together in the window
   });
 });
 
+// --- #555: the 6 am to 6 am day -----------------------------------------------
+
+// Ryan, 2026-11-24 (docs/prompts/cc-prompt-ux-spacing-round.md, item 1):
+// "Both the week view and the weekday ruler always run from 6 am to 6 am the
+// next morning (24 hours), for every job.  Ticks at 6 am, noon, 6 pm,
+// midnight and 6 am. 'Midnight' is set slightly stronger, with a faint
+// dashed line across each day.  Allowed windows and your hours that cross
+// midnight draw as one continuous band or bar.  The colors, states and the
+// inside/outside split stay exactly as #526 and #535 left them."
+// Positions are a share of the 24 hours from 6 am: 8 pm is 14/24 = 58.33%,
+// midnight 18/24 = 75%, 5 am 23/24 = 95.83%.
+describe("#555: both views run 6 am to 6 am", () => {
+  const kinds = (weekday: Partial<ReturnType<typeof denverDays>["kinds"]["weekday"]>, state: "inside" | "outside" = "inside") => {
+    const d = denverDays(state);
+    return denverBlock({ ...d, kinds: { ...d.kinds, weekday: { ...d.kinds.weekday, ...weekday } } });
+  };
+  const week = async () => {
+    await userEvent.setup().click(screen.getByTestId("hours-view-week"));
+    return screen.getAllByTestId("hours-week-day");
+  };
+
+  it("the ruler: five ticks at 6 am, noon, 6 pm, midnight, 6 am; midnight is marked and has its line", () => {
+    open({ block: denverBlock(denverDays("inside")), start: 9, end: 15 });
+    const ruler = screen.getByTestId("hours-ruler");
+    const ticks = [...ruler.querySelectorAll<HTMLElement>(".whd-tick")];
+    expect(ticks.map((t) => [t.textContent, t.style.left])).toEqual([
+      ["6\u00a0am", "0.00%"],
+      ["noon", "25.00%"],
+      ["6\u00a0pm", "50.00%"],
+      ["midnight", "75.00%"],
+      ["6\u00a0am", "100.00%"],
+    ]);
+    expect(ticks.map((t) => t.classList.contains("is-midnight"))).toEqual([false, false, false, true, false]);
+    expect(spans(ruler, ".whd-track .whd-midnight", "left", "width")).toEqual([["75.00%", ""]]);
+  });
+
+  it("the whole week: the same five ticks, and a midnight line in every day", async () => {
+    open({ block: denverBlock(denverDays("inside")), start: 9, end: 15 });
+    const days = await week();
+    const ticks = [...screen.getByTestId("hours-week").querySelectorAll<HTMLElement>(".whd-vticks span")];
+    expect(ticks.map((t) => [t.textContent, t.style.top])).toEqual([
+      ["6\u00a0am", "0.00%"],
+      ["noon", "25.00%"],
+      ["6\u00a0pm", "50.00%"],
+      ["midnight", "75.00%"],
+      ["6\u00a0am", "100.00%"],
+    ]);
+    expect(ticks.map((t) => t.classList.contains("is-midnight"))).toEqual([false, false, false, true, false]);
+    for (const d of days) expect(spans(d, ".whd-col .whd-midnight.is-v", "top", "height")).toEqual([["75.00%", ""]]);
+  });
+
+  it("the ruler, 8 pm to 5 am: one unbroken bar, and Denver's night window is one band with both ends labelled", () => {
+    open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
+    const ruler = screen.getByTestId("hours-ruler");
+    expect(spans(ruler, ".whd-yours", "left", "width")).toEqual([["58.33%", "37.50%"]]);
+    // The backend's allowed spans are 0-5, 8:30-15:30 and 20-24: two bands.
+    expect(spans(ruler, ".whd-band", "left", "width")).toEqual([
+      ["10.42%", "29.17%"],
+      ["58.33%", "37.50%"],
+    ]);
+    expect([...ruler.querySelectorAll(".whd-cap")].map((c) => c.textContent)).toEqual([
+      "8:30\u00a0am",
+      "3:30\u00a0pm",
+      "8\u00a0pm",
+      "5\u00a0am",
+    ]);
+  });
+
+  it("the whole week, 8 pm to 5 am: one unbroken bar on every day in the job, one night band on every weekday", async () => {
+    open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
+    const days = await week();
+    for (const d of days.slice(0, 5)) {
+      expect(spans(d, ".whd-yours", "top", "height")).toEqual([["58.33%", "37.50%"]]);
+      expect(spans(d, ".whd-band", "top", "height")).toEqual([
+        ["10.42%", "29.17%"],
+        ["58.33%", "37.50%"],
+      ]);
+    }
+    // Sat and Sun are outside these dates: no hours drawn.
+    for (const d of days.slice(5)) expect(d.querySelector(".whd-yours")).toBeNull();
+  });
+
+  it("a day shift, 9 am to 3 pm: one bar in both views", async () => {
+    open({ block: denverBlock(denverDays("inside")), start: 9, end: 15 });
+    expect(spans(screen.getByTestId("hours-ruler"), ".whd-yours", "left", "width")).toEqual([["12.50%", "25.00%"]]);
+    const days = await week();
+    expect(spans(days[0], ".whd-yours", "top", "height")).toEqual([["12.50%", "25.00%"]]);
+  });
+
+  it("the inside/outside split is the backend's, unchanged: 7 am to 5 pm against 8:30 to 3:30", async () => {
+    open();
+    const want = {
+      yours: [["4.17%", "41.67%"]],
+      out: [
+        ["4.17%", "6.25%"],
+        ["39.58%", "6.25%"],
+      ],
+    };
+    const ruler = screen.getByTestId("hours-ruler");
+    expect(spans(ruler, ".whd-yours:not(.is-out)", "left", "width")).toEqual(want.yours);
+    expect(spans(ruler, ".whd-yours.is-out", "left", "width")).toEqual(want.out);
+    const days = await week();
+    expect(spans(days[0], ".whd-yours:not(.is-out)", "top", "height")).toEqual(want.yours);
+    expect(spans(days[0], ".whd-yours.is-out", "top", "height")).toEqual(want.out);
+  });
+
+  it("an outside span that crosses midnight is one --dim piece (the backend's 22-24 and 0-2)", () => {
+    open({
+      block: kinds(
+        {
+          allowed: [[8.5, 15.5]],
+          outside: [
+            [0, 2],
+            [22, 24],
+          ],
+        },
+        "outside",
+      ),
+      start: 22,
+      end: 2,
+    });
+    const ruler = screen.getByTestId("hours-ruler");
+    expect(spans(ruler, ".whd-yours:not(.is-out)", "left", "width")).toEqual([["66.67%", "16.67%"]]);
+    expect(spans(ruler, ".whd-yours.is-out", "left", "width")).toEqual([["66.67%", "16.67%"]]);
+  });
+
+  it("the 6 am edge (S2): 8 pm to 6 am is one bar to the last tick; 4 am to 2 pm is cut at 6 am, both pieces on its own day", async () => {
+    open({ block: denverBlock(denverDays("inside")), start: 20, end: 6 });
+    expect(spans(screen.getByTestId("hours-ruler"), ".whd-yours", "left", "width")).toEqual([["58.33%", "41.67%"]]);
+    cleanup();
+    open({ block: denverBlock(denverDays("inside")), start: 4, end: 14 });
+    expect(spans(screen.getByTestId("hours-ruler"), ".whd-yours", "left", "width")).toEqual([
+      ["0.00%", "33.33%"],
+      ["91.67%", "8.33%"],
+    ]);
+    const days = await week();
+    // Monday's column carries both pieces; no other day gains one.
+    expect(days.map((d) => d.querySelectorAll(".whd-yours").length)).toEqual([2, 2, 2, 2, 2, 0, 0]);
+  });
+
+  it("S4: an end made by the 6 am cut takes no label (an all-day window, and one that starts before 6 am)", () => {
+    open({ block: kinds({ allowed: [[0, 24]] }), start: 9, end: 15 });
+    const ruler = screen.getByTestId("hours-ruler");
+    expect(spans(ruler, ".whd-band", "left", "width")).toEqual([["0.00%", "100.00%"]]);
+    expect(ruler.querySelector(".whd-cap")).toBeNull();
+    cleanup();
+    // Lakewood's shape: bans 7-9 and 15:30-18 leave 0-7, 9-15:30 and 18-24.
+    open({
+      block: kinds({
+        allowed: [
+          [0, 7],
+          [9, 15.5],
+          [18, 24],
+        ],
+      }),
+      start: 9,
+      end: 15,
+    });
+    const r2 = screen.getByTestId("hours-ruler");
+    expect(spans(r2, ".whd-band", "left", "width")).toEqual([
+      ["0.00%", "4.17%"],
+      ["12.50%", "27.08%"],
+      ["50.00%", "50.00%"],
+    ]);
+    expect([...r2.querySelectorAll(".whd-cap")].map((c) => c.textContent)).toEqual([
+      "7\u00a0am",
+      "9\u00a0am",
+      "3:30\u00a0pm",
+      "6\u00a0pm",
+    ]);
+  });
+
+  it("S11: a start label less than 4 hours after the window before it is set from its start; Denver's don't move", () => {
+    const near = () =>
+      [...screen.getByTestId("hours-ruler").querySelectorAll(".whd-cap")].map((c) => [
+        c.textContent,
+        c.classList.contains("is-near"),
+      ]);
+    // Lakewood's shape: 7 am to 9 am is 2 hours, 3:30 pm to 6 pm is 2.5.
+    open({
+      block: kinds({
+        allowed: [
+          [0, 7],
+          [9, 15.5],
+          [18, 24],
+        ],
+      }),
+      start: 9,
+      end: 15,
+    });
+    expect(near()).toEqual([
+      ["7 am", false],
+      ["9 am", true],
+      ["3:30 pm", false],
+      ["6 pm", true],
+    ]);
+    cleanup();
+    // Denver: 3:30 pm to 8 pm is 4.5 hours.
+    open({ block: denverBlock(denverDays("inside")), start: 9, end: 15 });
+    expect(near().map(([, n]) => n)).toEqual([false, false, false, false]);
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toMatch(/\.workbench \.whd-cap\.is-near \{\s*transform: none;/);
+  });
+
+  it("the sizes hold: a 28 px track and 240 px columns (globals.css)", () => {
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+    expect(css).toMatch(/\.workbench \.whd-track \{[^}]*height: 28px;/);
+    expect(css).toMatch(/\.workbench \.whd-day \{[^}]*grid-template-rows: 34px 240px;/);
+    expect(css).toMatch(/\.workbench \.whd-vticks \{[^}]*height: 240px;/);
+    expect(css).toMatch(/\.workbench \.whd-midnight \{[^}]*border-left: 1px dashed var\(--ink-faint\);/);
+  });
+});
