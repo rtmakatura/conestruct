@@ -1,0 +1,678 @@
+{
+ "ranAt": "2026-11-24T04:12:39.017Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "done",
+   "console": [
+    {
+     "step": "notpair minutes-no-digit",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+    "5d89bb5"
+   ],
+   "nonGet": [
+    {
+     "step": "weak weak-39n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "weak weak-105w",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "town town",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "notpair minutes-no-digit",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "weak",
+     "name": "weak-39n",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "weak",
+     "name": "weak-105w",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "town",
+     "name": "town",
+     "typed": "Lafayette, CO",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "Lafayette, CO",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "That search found a town or area. Tap the map on the road where the work starts.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "address",
+     "name": "address",
+     "typed": "1437 Bannock St, Denver",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "1437 Bannock St, Denver",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7392, -104.9910",
+     "pin": [
+      39.7392,
+      -104.991
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "notpair",
+     "name": "minutes-no-digit",
+     "typed": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "closestMatch": 1,
+    "didYouMean": 1
+   },
+   "consoleErrors": 1,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 1,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 101
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "weakMatchesGetTheNoticeAndNothingMoves": true,
+    "townKeepsTheTownNoticeAndNoPin": true,
+    "streetAddressPinsWithNoNotice": true,
+    "pairPinnedWithNoGeocode": true,
+    "minutesWithNoDigitAreSearched": true,
+    "noticeWordsInAScript": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "1198x930",
+   "step": "done",
+   "console": [
+    {
+     "step": "notpair minutes-no-digit",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+    "5d89bb5"
+   ],
+   "nonGet": [
+    {
+     "step": "weak weak-39n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "weak weak-105w",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "town town",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "notpair minutes-no-digit",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "weak",
+     "name": "weak-39n",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "weak",
+     "name": "weak-105w",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "town",
+     "name": "town",
+     "typed": "Lafayette, CO",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "Lafayette, CO",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "That search found a town or area. Tap the map on the road where the work starts.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "address",
+     "name": "address",
+     "typed": "1437 Bannock St, Denver",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "1437 Bannock St, Denver",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7392, -104.9910",
+     "pin": [
+      39.7392,
+      -104.991
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "notpair",
+     "name": "minutes-no-digit",
+     "typed": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "closestMatch": 1,
+    "didYouMean": 1
+   },
+   "consoleErrors": 1,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 1,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 44
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "weakMatchesGetTheNoticeAndNothingMoves": true,
+    "townKeepsTheTownNoticeAndNoPin": true,
+    "streetAddressPinsWithNoNotice": true,
+    "pairPinnedWithNoGeocode": true,
+    "minutesWithNoDigitAreSearched": true,
+    "noticeWordsInAScript": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "390x844",
+   "step": "done",
+   "console": [
+    {
+     "step": "notpair minutes-no-digit",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+    "5d89bb5"
+   ],
+   "nonGet": [
+    {
+     "step": "weak weak-39n",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "weak weak-105w",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "town town",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/geocode"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "address address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry"
+    },
+    {
+     "step": "pinned decimal-pair",
+     "method": "POST",
+     "path": "/api/road-bearing"
+    },
+    {
+     "step": "notpair minutes-no-digit",
+     "method": "POST",
+     "path": "/api/geocode"
+    }
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "texts": [
+    {
+     "kind": "weak",
+     "name": "weak-39n",
+     "typed": "39 N, 44.4",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39 N, 44.4",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "weak",
+     "name": "weak-105w",
+     "typed": "105\u00b0 W, 39.7401",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "105\u00b0 W, 39.7401",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "town",
+     "name": "town",
+     "typed": "Lafayette, CO",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "Lafayette, CO",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "That search found a town or area. Tap the map on the road where the work starts.",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "address",
+     "name": "address",
+     "typed": "1437 Bannock St, Denver",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "1437 Bannock St, Denver",
+     "geocodeStatus": 200,
+     "geocodeRequests": 1,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7392, -104.9910",
+     "pin": [
+      39.7392,
+      -104.991
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "pinned",
+     "name": "decimal-pair",
+     "typed": "39.7401, -104.9811",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39.7401, -104.9811",
+     "geocodeRequests": 0,
+     "roadLookups": 1,
+     "barText": "Pin at 39.7401, -104.9811",
+     "pin": [
+      39.7401,
+      -104.9811
+     ],
+     "markers": 1,
+     "listText": "",
+     "failLine": false,
+     "choiceShown": false,
+     "axe": [],
+     "ok": true
+    },
+    {
+     "kind": "notpair",
+     "name": "minutes-no-digit",
+     "typed": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "barBefore": "No pin yet",
+     "markersBefore": 0,
+     "boxValue": "39\u00b0 44.' N, 104\u00b0 58.' W",
+     "geocodeStatus": 404,
+     "geocodeRequests": 1,
+     "roadLookups": 0,
+     "barText": "No pin yet",
+     "pin": null,
+     "markers": 0,
+     "listText": "No match in Colorado for that address. Check the spelling.",
+     "failLine": true,
+     "choiceShown": false,
+     "axe": [],
+     "pinAtWrongPlace": false,
+     "parserLine": false,
+     "ok": true
+    }
+   ],
+   "landedOn": "/sandbox",
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 13,
+    "read": 13,
+    "closestMatch": 1,
+    "didYouMean": 1
+   },
+   "consoleErrors": 1,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 1,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 33
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "everyWindowOpenedWithNoPin": true,
+    "weakMatchesGetTheNoticeAndNothingMoves": true,
+    "townKeepsTheTownNoticeAndNoPin": true,
+    "streetAddressPinsWithNoNotice": true,
+    "pairPinnedWithNoGeocode": true,
+    "minutesWithNoDigitAreSearched": true,
+    "noticeWordsInAScript": true,
+    "axeZero": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "geocodePostsEqualSearchedTexts": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "polls": 1,
+  "status": 200,
+  "sha": "5d89bb5e1a3fe4354dacefefcacdd2516ccfdb49",
+  "isHead": true
+ },
+ "finishedAt": "2026-11-24T04:14:42.841Z",
+ "pass": true
+}

@@ -1,0 +1,30 @@
+healthz sha 5d89bb5 equals head: true
+served /api/version sha 5d89bb5 after 1 poll(s): head true
+1440x900: ok | every check passed
+  weak [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  weak [105° W, 39.7401]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "That search found a town or area. Tap the map on the road where the work starts." | choice false fail line false | axe 0 | ok
+  address [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 roads 1 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  notpair [39° 44.' N, 104° 58.' W]: geocode 1 (HTTP 404) roads 0 | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  scripts {"loaded":14,"read":14,"closestMatch":1,"didYouMean":1} chunk shas 5d89bb5,5d89bb5 | posts {"geocode":5,"roads":2} nonGet 8 | console errors 1 (mapbox telemetry 0, geocoder 404/422 answers 1) | failed {"api.mapbox.com net::ERR_ABORTED":101} | token checks 6 hits 0
+    console [notpair minutes-no-digit] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+1198x930: ok | every check passed
+  weak [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  weak [105° W, 39.7401]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "That search found a town or area. Tap the map on the road where the work starts." | choice false fail line false | axe 0 | ok
+  address [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 roads 1 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  notpair [39° 44.' N, 104° 58.' W]: geocode 1 (HTTP 404) roads 0 | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  scripts {"loaded":14,"read":14,"closestMatch":1,"didYouMean":1} chunk shas 5d89bb5,5d89bb5 | posts {"geocode":5,"roads":2} nonGet 8 | console errors 1 (mapbox telemetry 0, geocoder 404/422 answers 1) | failed {"api.mapbox.com net::ERR_ABORTED":44} | token checks 6 hits 0
+    console [notpair minutes-no-digit] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+390x844: ok | every check passed
+  weak [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  weak [105° W, 39.7401]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on." | choice false fail line false | axe 0 | ok
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 | list "That search found a town or area. Tap the map on the road where the work starts." | choice false fail line false | axe 0 | ok
+  address [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  pinned [39.7401, -104.9811]: geocode 0 roads 1 | bar "Pin at 39.7401, -104.9811" markers 1 | list "" | choice false fail line false | axe 0 | ok
+  notpair [39° 44.' N, 104° 58.' W]: geocode 1 (HTTP 404) roads 0 | bar "No pin yet" markers 0 | list "No match in Colorado for that address. Check the spelling." | choice false fail line true | axe 0 | ok
+  scripts {"loaded":13,"read":13,"closestMatch":1,"didYouMean":1} chunk shas 5d89bb5,5d89bb5 | posts {"geocode":5,"roads":2} nonGet 8 | console errors 1 (mapbox telemetry 0, geocoder 404/422 answers 1) | failed {"api.mapbox.com net::ERR_ABORTED":33} | token checks 6 hits 0
+    console [notpair minutes-no-digit] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+overall: PASS
