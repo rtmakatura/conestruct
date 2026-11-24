@@ -1,0 +1,23 @@
+{
+ "ranAt": "2026-11-24T22:40:15.003Z",
+ "folders": [
+  {
+   "folder": "folder 1: prod-check",
+   "files": 38,
+   "png": 30,
+   "tokenHits": 0,
+   "headerNameHits": 0
+  },
+  {
+   "folder": "folder 2: prod-check",
+   "files": 82,
+   "png": 82,
+   "tokenHits": 0,
+   "headerNameHits": 0
+  }
+ ],
+ "filesScanned": 120,
+ "tokenHits": 0,
+ "headerNameHits": 0,
+ "filesWithHits": []
+}

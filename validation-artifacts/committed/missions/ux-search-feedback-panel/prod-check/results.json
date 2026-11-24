@@ -1,0 +1,4836 @@
+{
+ "ranAt": "2026-11-24T22:37:48.404Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "fb235053e9cd73761f340174553fbcf08a4bfcae",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "done",
+   "console": [
+    {
+     "step": "no-match",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "outside-colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "fb235053e9cd73761f340174553fbcf08a4bfcae",
+    "fb23505"
+   ],
+   "nonGet": [
+    {
+     "step": "town",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry",
+     "stubbed": false
+    },
+    {
+     "step": "pin",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    }
+   ],
+   "geocodeAnswers": [
+    {
+     "step": "town",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "status": 404,
+     "reason": "check address",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "status": 422,
+     "reason": "outside colorado",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "status": 200,
+     "stubbed": false
+    }
+   ],
+   "roadAnswers": [
+    {
+     "step": "pin-address",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 0
+    },
+    {
+     "step": "pin",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 2
+    }
+   ],
+   "tokenChecks": 9,
+   "tokenHits": 0,
+   "states": {
+    "no-pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "town": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "That search found a town or area, not a street.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       },
+       {
+        "text": "Tap the map on the road where the work starts. The roads near your tap show up here.",
+        "tag": "p",
+        "w": 375,
+        "h": 40.5
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: That search found a town or area, not a ",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "Lafayette, CO",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "weak-match": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Closest match: 39 North Main Street, Holly, Colorado 81047.",
+        "tag": "p",
+        "w": 375,
+        "h": 40.5
+       },
+       {
+        "text": "Check the pin before you go on.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Closest match: 39 North Main Street, Hol",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "39 N, 44.4",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "out-of-range": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Latitude must be between -90 and 90",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Latitude must be between -90 and 90",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "95.5, -104.9811",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "did-you-mean": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 68,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Did you mean 39.7401, -104.9811?",
+        "tag": "button",
+        "w": 375,
+        "h": 44
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Did you mean 39.7401, -104.9811?",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Did you mean 39.7401, -104.9811?\"",
+       "w": 375,
+       "h": 44
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "-104.9811, 39.7401",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true,
+     "choiceButton": {
+      "w": 375,
+      "h": 44
+     }
+    },
+    "no-match": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 68.5,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "No match in Colorado for that address.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       },
+       {
+        "text": "Check the spelling.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: No match in Colorado for that address.Ch",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "zzqxv 99999 nowhere st",
+     "stubbed": false,
+     "geocode": {
+      "status": 404,
+      "reason": "check address"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "outside-colorado": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 848,
+      "y": 137.25,
+      "w": 407,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Plans cover Colorado roads only.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Plans cover Colorado roads only.",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1600 Pennsylvania Ave, Washington, DC",
+     "stubbed": false,
+     "geocode": {
+      "status": 422,
+      "reason": "outside colorado"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "pin-address": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "Pin at 39.7392, -104.9910",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "road-lookup-status",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "div.mw-status: We didn't find a road at your pin.No map",
+      "fieldset.mw-fieldset: Which way does the road run?East\u2013westNor"
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"East\u2013west\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"North\u2013south\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Northeast\u2013southwest\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Northwest\u2013southeast\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1437 Bannock St, Denver",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 1
+    },
+    "pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 822,
+      "h": 532.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 696,
+      "w": 822,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 740,
+      "w": 1278,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1278,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 823,
+      "y": 86.75,
+      "w": 456,
+      "h": 653.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 822,
+      "h": 653.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 810
+     },
+     "barText": "Pin at 39.7401, -104.9811",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.road-pick-panel: Pennsylvania Street at East Colfax Avenu"
+     ],
+     "roadPanel": 1,
+     "roadRows": 2,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 694.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Pennsylvania Street at East Colfax Avenu\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "\"East Colfax Avenue at Pennsylvania Stree\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"\u00a9 Mapbox\"",
+       "w": 54.88,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 OpenStreetMap\"",
+       "w": 96.89,
+       "h": 14
+      },
+      {
+       "what": "map a \"Improve this map\"",
+       "w": 99.36,
+       "h": 14
+      },
+      {
+       "what": "map a \"\u00a9 Maxar\"",
+       "w": 45.52,
+       "h": 14
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "-104.9811, 39.7401, then the choice pressed",
+     "stubbed": false,
+     "geocodePosts": 0,
+     "roadLookups": 1
+    }
+   },
+   "landedOn": "/sandbox",
+   "scriptsAtOpen": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "choiceTaken": {
+    "barBefore": "Pin at 39.7392, -104.9910",
+    "boxBefore": [
+     "Did you mean 39.7401, -104.9811?"
+    ],
+    "barText": "Pin at 39.7401, -104.9811",
+    "pinAtThePair": true,
+    "boxGone": true,
+    "markers": 1,
+    "geocodePosts": 0,
+    "roadPanel": 1
+   },
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "movedPx": {
+    "map": 0,
+    "search": 0,
+    "bar": 0,
+    "foot": 0,
+    "head": 0,
+    "column": 0,
+    "dialog": 0,
+    "rail": 0
+   },
+   "boxes": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 822,
+     "h": 532.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 822,
+     "h": 76.5
+    },
+    "bar": {
+     "x": 1,
+     "y": 696,
+     "w": 822,
+     "h": 44
+    },
+    "foot": {
+     "x": 1,
+     "y": 740,
+     "w": 1278,
+     "h": 69
+    }
+   },
+   "under44": [],
+   "minControl": {
+    "w": 44,
+    "h": 44
+   },
+   "controlsMeasured": 52,
+   "mapControls": [
+    {
+     "what": "map button \"Zoom in\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map button \"Zoom out\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map a \"\u00a9 Mapbox\"",
+     "w": 54.88,
+     "h": 14
+    },
+    {
+     "what": "map a \"\u00a9 OpenStreetMap\"",
+     "w": 96.89,
+     "h": 14
+    },
+    {
+     "what": "map a \"Improve this map\"",
+     "w": 99.36,
+     "h": 14
+    },
+    {
+     "what": "map a \"\u00a9 Maxar\"",
+     "w": 45.52,
+     "h": 14
+    },
+    {
+     "what": "map a \"Mapbox homepage\"",
+     "w": 88,
+     "h": 23
+    }
+   ],
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 39
+   },
+   "stubbedStates": [],
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedScriptHasFeedbackAndNoOldList": true,
+    "windowOpensWithNoPinAndNoBox": true,
+    "townText": true,
+    "weakMatchTextAndNoPin": true,
+    "outOfRangeTextAndNoGeocode": true,
+    "didYouMeanButton44": true,
+    "noMatchText": true,
+    "outsideColoradoText": true,
+    "addressPinBoxGone": true,
+    "pinBoxGoneRoadsListed": true,
+    "choicePressedPinsThePairAndBoxGone": true,
+    "mapSearchBarFooterMoved0": true,
+    "headColumnDialogMoved0": true,
+    "noMessageOverTheMap": true,
+    "boxInRightPanelUnderQuestion": true,
+    "boxAboveTapTheMapLine": true,
+    "axeZero": true,
+    "everyControl44": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   },
+   "checksRun": 25,
+   "checksFailed": []
+  },
+  {
+   "size": "1198x930",
+   "step": "done",
+   "console": [
+    {
+     "step": "no-match",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "outside-colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "fb235053e9cd73761f340174553fbcf08a4bfcae",
+    "fb23505"
+   ],
+   "nonGet": [
+    {
+     "step": "town",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry",
+     "stubbed": false
+    },
+    {
+     "step": "pin",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    }
+   ],
+   "geocodeAnswers": [
+    {
+     "step": "town",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "status": 404,
+     "reason": "check address",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "status": 422,
+     "reason": "outside colorado",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "status": 200,
+     "stubbed": false
+    }
+   ],
+   "roadAnswers": [
+    {
+     "step": "pin-address",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 0
+    },
+    {
+     "step": "pin",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 2
+    }
+   ],
+   "tokenChecks": 9,
+   "tokenHits": 0,
+   "states": {
+    "no-pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "town": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "That search found a town or area, not a street.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       },
+       {
+        "text": "Tap the map on the road where the work starts. The roads near your tap show up here.",
+        "tag": "p",
+        "w": 375,
+        "h": 40.5
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: That search found a town or area, not a ",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "Lafayette, CO",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "weak-match": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Closest match: 39 North Main Street, Holly, Colorado 81047.",
+        "tag": "p",
+        "w": 375,
+        "h": 40.5
+       },
+       {
+        "text": "Check the pin before you go on.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Closest match: 39 North Main Street, Hol",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "39 N, 44.4",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "out-of-range": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Latitude must be between -90 and 90",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Latitude must be between -90 and 90",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "95.5, -104.9811",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "did-you-mean": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 68,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Did you mean 39.7401, -104.9811?",
+        "tag": "button",
+        "w": 375,
+        "h": 44
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Did you mean 39.7401, -104.9811?",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Did you mean 39.7401, -104.9811?\"",
+       "w": 375,
+       "h": 44
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "-104.9811, 39.7401",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true,
+     "choiceButton": {
+      "w": 375,
+      "h": 44
+     }
+    },
+    "no-match": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 68.5,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "No match in Colorado for that address.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       },
+       {
+        "text": "Check the spelling.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: No match in Colorado for that address.Ch",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "zzqxv 99999 nowhere st",
+     "stubbed": false,
+     "geocode": {
+      "status": 404,
+      "reason": "check address"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "outside-colorado": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 646.19,
+      "y": 137.25,
+      "w": 407,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Plans cover Colorado roads only.",
+        "tag": "p",
+        "w": 375,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Plans cover Colorado roads only.",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1600 Pennsylvania Ave, Washington, DC",
+     "stubbed": false,
+     "geocode": {
+      "status": 422,
+      "reason": "outside colorado"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "pin-address": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "Pin at 39.7392, -104.9910",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "road-lookup-status",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "div.mw-status: We didn't find a road at your pin.No map",
+      "fieldset.mw-fieldset: Which way does the road run?East\u2013westNor"
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"East\u2013west\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"North\u2013south\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Northeast\u2013southwest\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Northwest\u2013southeast\"",
+       "w": 199.5,
+       "h": 56
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1437 Bannock St, Denver",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 1
+    },
+    "pin": {
+     "map": {
+      "x": 1,
+      "y": 163.25,
+      "w": 620.19,
+      "h": 559.75
+     },
+     "search": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 723,
+      "w": 620.19,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 767,
+      "w": 1076.19,
+      "h": 69
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 1076.19,
+      "h": 85.75
+     },
+     "rail": {
+      "x": 621.19,
+      "y": 86.75,
+      "w": 456,
+      "h": 680.25
+     },
+     "column": {
+      "x": 1,
+      "y": 86.75,
+      "w": 620.19,
+      "h": 680.25
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 1078.19,
+      "h": 837
+     },
+     "barText": "Pin at 39.7401, -104.9811",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.road-pick-panel: Pennsylvania Street at East Colfax Avenu"
+     ],
+     "roadPanel": 1,
+     "roadRows": 2,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 492.34,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Pennsylvania Street at East Colfax Avenu\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "\"East Colfax Avenue at Pennsylvania Stree\"",
+       "w": 407,
+       "h": 64
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 24,
+       "h": 24
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "39.7401, -104.9811",
+     "stubbed": false,
+     "geocodePosts": 0,
+     "roadLookups": 1
+    }
+   },
+   "landedOn": "/sandbox",
+   "scriptsAtOpen": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "movedPx": {
+    "map": 0,
+    "search": 0,
+    "bar": 0,
+    "foot": 0,
+    "head": 0,
+    "column": 0,
+    "dialog": 0,
+    "rail": 0
+   },
+   "boxes": {
+    "map": {
+     "x": 1,
+     "y": 163.25,
+     "w": 620.19,
+     "h": 559.75
+    },
+    "search": {
+     "x": 1,
+     "y": 86.75,
+     "w": 620.19,
+     "h": 76.5
+    },
+    "bar": {
+     "x": 1,
+     "y": 723,
+     "w": 620.19,
+     "h": 44
+    },
+    "foot": {
+     "x": 1,
+     "y": 767,
+     "w": 1076.19,
+     "h": 69
+    }
+   },
+   "under44": [],
+   "minControl": {
+    "w": 44,
+    "h": 44
+   },
+   "controlsMeasured": 52,
+   "mapControls": [
+    {
+     "what": "map button \"Zoom in\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map button \"Zoom out\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map button \"Toggle attribution\"",
+     "w": 24,
+     "h": 24
+    },
+    {
+     "what": "map a \"Mapbox homepage\"",
+     "w": 88,
+     "h": 23
+    }
+   ],
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 31
+   },
+   "stubbedStates": [],
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedScriptHasFeedbackAndNoOldList": true,
+    "windowOpensWithNoPinAndNoBox": true,
+    "townText": true,
+    "weakMatchTextAndNoPin": true,
+    "outOfRangeTextAndNoGeocode": true,
+    "didYouMeanButton44": true,
+    "noMatchText": true,
+    "outsideColoradoText": true,
+    "addressPinBoxGone": true,
+    "pinBoxGoneRoadsListed": true,
+    "mapSearchBarFooterMoved0": true,
+    "headColumnDialogMoved0": true,
+    "noMessageOverTheMap": true,
+    "boxInRightPanelUnderQuestion": true,
+    "boxAboveTapTheMapLine": true,
+    "axeZero": true,
+    "everyControl44": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   },
+   "checksRun": 24,
+   "checksFailed": []
+  },
+  {
+   "size": "390x844",
+   "step": "done",
+   "console": [
+    {
+     "step": "no-match",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+     "url": "https://www.conestruct.com/api/geocode"
+    },
+    {
+     "step": "outside-colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+     "url": "https://www.conestruct.com/api/geocode"
+    }
+   ],
+   "chunkShas": [
+    "fb235053e9cd73761f340174553fbcf08a4bfcae",
+    "fb23505"
+   ],
+   "nonGet": [
+    {
+     "step": "town",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/geocode",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "method": "POST",
+     "path": "/api/render/corridor-geometry",
+     "stubbed": false
+    },
+    {
+     "step": "pin",
+     "method": "POST",
+     "path": "/api/road-bearing",
+     "stubbed": false
+    }
+   ],
+   "geocodeAnswers": [
+    {
+     "step": "town",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "weak-match",
+     "status": 200,
+     "stubbed": false
+    },
+    {
+     "step": "no-match",
+     "status": 404,
+     "reason": "check address",
+     "stubbed": false
+    },
+    {
+     "step": "outside-colorado",
+     "status": 422,
+     "reason": "outside colorado",
+     "stubbed": false
+    },
+    {
+     "step": "pin-address",
+     "status": 200,
+     "stubbed": false
+    }
+   ],
+   "roadAnswers": [
+    {
+     "step": "pin-address",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 0
+    },
+    {
+     "step": "pin",
+     "status": 200,
+     "scan_status": "ok",
+     "candidates": 2
+    }
+   ],
+   "tokenChecks": 9,
+   "tokenHits": 0,
+   "states": {
+    "no-pin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 125.25
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": []
+    },
+    "town": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 308.75
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "That search found a town or area, not a street.",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       },
+       {
+        "text": "Tap the map on the road where the work starts. The roads near your tap show up here.",
+        "tag": "p",
+        "w": 308,
+        "h": 40.5
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: That search found a town or area, not a ",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "Lafayette, CO",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "weak-match": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 308.75
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 88.75,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Closest match: 39 North Main Street, Holly, Colorado 81047.",
+        "tag": "p",
+        "w": 308,
+        "h": 40.5
+       },
+       {
+        "text": "Check the pin before you go on.",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Closest match: 39 North Main Street, Hol",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "39 N, 44.4",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "out-of-range": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 264.25
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Latitude must be between -90 and 90",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Latitude must be between -90 and 90",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "95.5, -104.9811",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "did-you-mean": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 288
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 68,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Did you mean 39.7401, -104.9811?",
+        "tag": "button",
+        "w": 308,
+        "h": 44
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Did you mean 39.7401, -104.9811?",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Did you mean 39.7401, -104.9811?\"",
+       "w": 308,
+       "h": 44
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "-104.9811, 39.7401",
+     "stubbed": false,
+     "geocode": null,
+     "geocodePosts": 0,
+     "roadLookups": 0,
+     "textOk": true,
+     "choiceButton": {
+      "w": 308,
+      "h": 44
+     }
+    },
+    "no-match": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 288.5
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 68.5,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "No match in Colorado for that address.",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       },
+       {
+        "text": "Check the spelling.",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: No match in Colorado for that address.Ch",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "zzqxv 99999 nowhere st",
+     "stubbed": false,
+     "geocode": {
+      "status": 404,
+      "reason": "check address"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "outside-colorado": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 264.25
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "No pin yet",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "search-feedback",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": {
+      "x": 25,
+      "y": 650.36,
+      "w": 340,
+      "h": 44.25,
+      "role": "status",
+      "inRail": true,
+      "insideRailBox": true,
+      "questionText": "Which road is the work on?",
+      "underQuestionPx": 8,
+      "nextText": "Tap the map to find the roads.",
+      "nextClass": "mw-line",
+      "aboveNextPx": 20,
+      "overlapsMapPx2": 0,
+      "lines": [
+       {
+        "text": "Plans cover Colorado roads only.",
+        "tag": "p",
+        "w": 308,
+        "h": 20.25
+       }
+      ]
+     },
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.mw-feedback: Plans cover Colorado roads only.",
+      "p.mw-line: Tap the map to find the roads."
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 0,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1600 Pennsylvania Ave, Washington, DC",
+     "stubbed": false,
+     "geocode": {
+      "status": 422,
+      "reason": "outside colorado"
+     },
+     "geocodePosts": 1,
+     "roadLookups": 0,
+     "textOk": true
+    },
+    "pin-address": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 480
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "Pin at 39.7392, -104.9910",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [
+      {
+       "what": "road-lookup-status",
+       "inMap": false,
+       "px2": 0
+      }
+     ],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "div.mw-status: We didn't find a road at your pin.No map",
+      "fieldset.mw-fieldset: Which way does the road run?East\u2013westNor"
+     ],
+     "roadPanel": 0,
+     "roadRows": 0,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"East\u2013west\"",
+       "w": 166,
+       "h": 56
+      },
+      {
+       "what": "\"North\u2013south\"",
+       "w": 166,
+       "h": 56
+      },
+      {
+       "what": "\"Northeast\u2013southwest\"",
+       "w": 166,
+       "h": 56
+      },
+      {
+       "what": "\"Northwest\u2013southeast\"",
+       "w": 166,
+       "h": 56
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "1437 Bannock St, Denver",
+     "stubbed": false,
+     "geocode": {
+      "status": 200
+     },
+     "geocodePosts": 1,
+     "roadLookups": 1
+    },
+    "pin": {
+     "map": {
+      "x": 1,
+      "y": 183.5,
+      "w": 388,
+      "h": 371.36
+     },
+     "search": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 76.5
+     },
+     "bar": {
+      "x": 1,
+      "y": 554.86,
+      "w": 388,
+      "h": 44
+     },
+     "foot": {
+      "x": 1,
+      "y": 747.25,
+      "w": 388,
+      "h": 95.75
+     },
+     "head": {
+      "x": 1,
+      "y": 1,
+      "w": 388,
+      "h": 106
+     },
+     "rail": {
+      "x": 1,
+      "y": 598.86,
+      "w": 388,
+      "h": 341.25
+     },
+     "column": {
+      "x": 1,
+      "y": 107,
+      "w": 388,
+      "h": 491.86
+     },
+     "dialog": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844
+     },
+     "barText": "Pin at 39.7401, -104.9811",
+     "statusInColumn": 0,
+     "oldList": 0,
+     "overMap": [],
+     "messageOverlap": [],
+     "feedbackMounted": true,
+     "feedback": null,
+     "section": [
+      "h3.mw-sub: Which road is the work on?",
+      "div.road-pick-panel: Pennsylvania Street at East Colfax Avenu"
+     ],
+     "roadPanel": 1,
+     "roadRows": 2,
+     "markers": 1,
+     "controls": [
+      {
+       "what": "\"Close\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "search box",
+       "w": 260.16,
+       "h": 44.5
+      },
+      {
+       "what": "\"Search\"",
+       "w": 79.84,
+       "h": 44.5
+      },
+      {
+       "what": "\"Pennsylvania Street at East Colfax Avenu\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "\"East Colfax Avenue at Pennsylvania Stree\"",
+       "w": 340,
+       "h": 64
+      },
+      {
+       "what": "\"Cancel\"",
+       "w": 79.34,
+       "h": 44
+      },
+      {
+       "what": "\"Save and close\"",
+       "w": 146.23,
+       "h": 44
+      }
+     ],
+     "mapControls": [
+      {
+       "what": "map button \"Zoom in\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Zoom out\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map button \"Toggle attribution\"",
+       "w": 44,
+       "h": 44
+      },
+      {
+       "what": "map a \"Mapbox homepage\"",
+       "w": 88,
+       "h": 23
+      }
+     ],
+     "axe": [],
+     "typed": "39.7401, -104.9811",
+     "stubbed": false,
+     "geocodePosts": 0,
+     "roadLookups": 1
+    }
+   },
+   "landedOn": "/sandbox",
+   "scriptsAtOpen": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "posts": {
+    "geocode": 5,
+    "roads": 2
+   },
+   "scripts": {
+    "loaded": 14,
+    "read": 14,
+    "withFeedback": 1,
+    "withOldList": 0
+   },
+   "movedPx": {
+    "map": 0,
+    "search": 0,
+    "bar": 0,
+    "foot": 0,
+    "head": 0,
+    "column": 0,
+    "dialog": 0,
+    "rail": 354.75
+   },
+   "boxes": {
+    "map": {
+     "x": 1,
+     "y": 183.5,
+     "w": 388,
+     "h": 371.36
+    },
+    "search": {
+     "x": 1,
+     "y": 107,
+     "w": 388,
+     "h": 76.5
+    },
+    "bar": {
+     "x": 1,
+     "y": 554.86,
+     "w": 388,
+     "h": 44
+    },
+    "foot": {
+     "x": 1,
+     "y": 747.25,
+     "w": 388,
+     "h": 95.75
+    }
+   },
+   "under44": [],
+   "minControl": {
+    "w": 44,
+    "h": 44
+   },
+   "controlsMeasured": 52,
+   "mapControls": [
+    {
+     "what": "map button \"Zoom in\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map button \"Zoom out\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map button \"Toggle attribution\"",
+     "w": 44,
+     "h": 44
+    },
+    {
+     "what": "map a \"Mapbox homepage\"",
+     "w": 88,
+     "h": 23
+    }
+   ],
+   "consoleErrors": 2,
+   "consoleTelemetry": 0,
+   "consoleGeocodeAnswers": 2,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 22
+   },
+   "stubbedStates": [],
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedScriptHasFeedbackAndNoOldList": true,
+    "windowOpensWithNoPinAndNoBox": true,
+    "townText": true,
+    "weakMatchTextAndNoPin": true,
+    "outOfRangeTextAndNoGeocode": true,
+    "didYouMeanButton44": true,
+    "noMatchText": true,
+    "outsideColoradoText": true,
+    "addressPinBoxGone": true,
+    "pinBoxGoneRoadsListed": true,
+    "mapSearchBarFooterMoved0": true,
+    "headColumnDialogMoved0": true,
+    "noMessageOverTheMap": true,
+    "boxInRightPanelUnderQuestion": true,
+    "boxAboveTapTheMapLine": true,
+    "axeZero": true,
+    "everyControl44": true,
+    "noConsoleErrorsBesidesGeocoderAnswers": true,
+    "geocoderAnswerErrorsMatchStatuses": true,
+    "no429": true,
+    "onlyReadPosts": true,
+    "tokenNotInPage": true
+   },
+   "checksRun": 24,
+   "checksFailed": []
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "fb235053e9cd73761f340174553fbcf08a4bfcae",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "status": 200,
+  "sha": "fb235053e9cd73761f340174553fbcf08a4bfcae",
+  "isHead": true
+ },
+ "finishedAt": "2026-11-24T22:39:25.835Z",
+ "pass": true
+}

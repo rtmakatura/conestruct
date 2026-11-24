@@ -1,0 +1,49 @@
+healthz sha fb23505 equals head: true
+served /api/version HTTP 200 sha fb23505: head true
+1440x900: ok | checks 24, failed 1 (pinBoxGoneRoadsListed)
+  moved px across 8 states: map 0 search 0 bar 0 foot 0 head 0 column 0 dialog 0 rail 0
+  no-pin: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box none | over map 0 | axe 0
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x88.75 under question 8 above next 20 map overlap 0 ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."] | over map 0 | axe 0 | text ok
+  weak-match [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x88.75 under question 8 above next 20 map overlap 0 ["Closest match: 39 North Main Street, Holly, Colorado 81047.","Check the pin before you go on."] | over map 0 | axe 0 | text ok
+  out-of-range [95.5, -104.9811]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["Latitude must be between -90 and 90"] | over map 0 | axe 0 | text ok
+  did-you-mean [-104.9811, 39.7401]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x68 under question 8 above next 20 map overlap 0 ["Did you mean 39.7401, -104.9811?"] | over map 0 | axe 0 | text ok | choice 375x44
+  no-match [zzqxv 99999 nowhere st]: geocode 2 (HTTP 404 "no match") STUBBED roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["No match for that address"] | over map 0 | axe 0 | text ok | live gave {"answer":{"status":404,"reason":"check address"},"lines":["No match in Colorado for that address.","Check the spelling."],"barText":"No pin yet"}
+  outside-colorado [1600 Pennsylvania Ave, Washington, DC]: geocode 1 (HTTP 422 "outside colorado") roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["Plans cover Colorado roads only."] | over map 0 | axe 0 | text ok
+  pin [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 road rows 0 | box none | over map 0 | axe 0
+  choice taken: {"barBefore":"Pin at 39.7392, -104.9910","boxBefore":["Did you mean 39.7401, -104.9811?"],"barText":"Pin at 39.7401, -104.9811","pinAtThePair":true,"boxGone":true,"markers":1,"geocodePosts":0,"roadPanel":1}
+  controls 45 measured, under 44: none, smallest {"w":44,"h":44} | map's own: map button "Zoom in" 44x44, map button "Zoom out" 44x44, map a "© Mapbox" 54.88x14, map a "© OpenStreetMap" 96.89x14, map a "Improve this map" 99.36x14, map a "© Maxar" 45.52x14, map a "Mapbox homepage" 88x23
+  scripts {"loaded":14,"read":14,"withFeedback":1,"withOldList":0} chunk shas fb23505,fb23505 | posts {"geocode":6,"roads":2} nonGet 9 | console errors 3 (mapbox telemetry 0, geocoder 404/422 answers 3) | failed {"api.mapbox.com net::ERR_ABORTED":50} | token checks 8 hits 0
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [outside-colorado] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+1198x930: ok | checks 23, failed 1 (pinBoxGoneRoadsListed)
+  moved px across 8 states: map 0 search 0 bar 0 foot 0 head 0 column 0 dialog 0 rail 0
+  no-pin: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box none | over map 0 | axe 0
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x88.75 under question 8 above next 20 map overlap 0 ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."] | over map 0 | axe 0 | text ok
+  weak-match [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x88.75 under question 8 above next 20 map overlap 0 ["Closest match: 39 North Main Street, Holly, Colorado 81047.","Check the pin before you go on."] | over map 0 | axe 0 | text ok
+  out-of-range [95.5, -104.9811]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["Latitude must be between -90 and 90"] | over map 0 | axe 0 | text ok
+  did-you-mean [-104.9811, 39.7401]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x68 under question 8 above next 20 map overlap 0 ["Did you mean 39.7401, -104.9811?"] | over map 0 | axe 0 | text ok | choice 375x44
+  no-match [zzqxv 99999 nowhere st]: geocode 2 (HTTP 404 "no match") STUBBED roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["No match for that address"] | over map 0 | axe 0 | text ok | live gave {"answer":{"status":404,"reason":"check address"},"lines":["No match in Colorado for that address.","Check the spelling."],"barText":"No pin yet"}
+  outside-colorado [1600 Pennsylvania Ave, Washington, DC]: geocode 1 (HTTP 422 "outside colorado") roads 0 | bar "No pin yet" markers 0 road rows 0 | box 407x44.25 under question 8 above next 20 map overlap 0 ["Plans cover Colorado roads only."] | over map 0 | axe 0 | text ok
+  pin [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 road rows 0 | box none | over map 0 | axe 0
+  controls 45 measured, under 44: none, smallest {"w":44,"h":44} | map's own: map button "Zoom in" 44x44, map button "Zoom out" 44x44, map button "Toggle attribution" 24x24, map a "Mapbox homepage" 88x23
+  scripts {"loaded":14,"read":14,"withFeedback":1,"withOldList":0} chunk shas fb23505,fb23505 | posts {"geocode":6,"roads":1} nonGet 8 | console errors 3 (mapbox telemetry 0, geocoder 404/422 answers 3) | failed {"api.mapbox.com net::ERR_ABORTED":39} | token checks 8 hits 0
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [outside-colorado] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+390x844: ok | checks 23, failed 1 (pinBoxGoneRoadsListed)
+  moved px across 8 states: map 0 search 0 bar 0 foot 0 head 0 column 0 dialog 0 rail 354.75
+  no-pin: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box none | over map 0 | axe 0
+  town [Lafayette, CO]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x88.75 under question 8 above next 20 map overlap 0 ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."] | over map 0 | axe 0 | text ok
+  weak-match [39 N, 44.4]: geocode 1 (HTTP 200) roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x88.75 under question 8 above next 20 map overlap 0 ["Closest match: 39 North Main Street, Holly, Colorado 81047.","Check the pin before you go on."] | over map 0 | axe 0 | text ok
+  out-of-range [95.5, -104.9811]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x44.25 under question 8 above next 20 map overlap 0 ["Latitude must be between -90 and 90"] | over map 0 | axe 0 | text ok
+  did-you-mean [-104.9811, 39.7401]: geocode 0 roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x68 under question 8 above next 20 map overlap 0 ["Did you mean 39.7401, -104.9811?"] | over map 0 | axe 0 | text ok | choice 308x44
+  no-match [zzqxv 99999 nowhere st]: geocode 2 (HTTP 404 "no match") STUBBED roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x44.25 under question 8 above next 20 map overlap 0 ["No match for that address"] | over map 0 | axe 0 | text ok | live gave {"answer":{"status":404,"reason":"check address"},"lines":["No match in Colorado for that address.","Check the spelling."],"barText":"No pin yet"}
+  outside-colorado [1600 Pennsylvania Ave, Washington, DC]: geocode 1 (HTTP 422 "outside colorado") roads 0 | bar "No pin yet" markers 0 road rows 0 | box 340x44.25 under question 8 above next 20 map overlap 0 ["Plans cover Colorado roads only."] | over map 0 | axe 0 | text ok
+  pin [1437 Bannock St, Denver]: geocode 1 (HTTP 200) roads 1 | bar "Pin at 39.7392, -104.9910" markers 1 road rows 0 | box none | over map 0 | axe 0
+  controls 45 measured, under 44: none, smallest {"w":44,"h":44} | map's own: map button "Zoom in" 44x44, map button "Zoom out" 44x44, map button "Toggle attribution" 44x44, map a "Mapbox homepage" 88x23
+  scripts {"loaded":13,"read":13,"withFeedback":1,"withOldList":0} chunk shas fb23505,fb23505 | posts {"geocode":6,"roads":1} nonGet 8 | console errors 3 (mapbox telemetry 0, geocoder 404/422 answers 3) | failed {"api.mapbox.com net::ERR_ABORTED":24} | token checks 8 hits 0
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [no-match] Failed to load resource: the server responded with a status of 404 (Not Found) https://www.conestruct.com/api/geocode
+    console [outside-colorado] Failed to load resource: the server responded with a status of 422 (Unprocessable Entity) https://www.conestruct.com/api/geocode
+overall: FAIL
