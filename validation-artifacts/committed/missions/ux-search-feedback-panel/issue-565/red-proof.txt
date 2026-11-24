@@ -1,0 +1,47 @@
+# #565 red proof
+
+The new test file conestruct/site/components/LocationPickerModal.search-feedback.test.tsx, run on the base sources (git archive e3646e0b conestruct/site into a scratch folder, the worktree's node_modules linked in), 2026-11-24:
+  npx vitest run --reporter=verbose components/LocationPickerModal.search-feedback.test.tsx
+
+35 of 36 fail on the base. The one that passes is a control: the 'Did you mean' button was 44 px before and still is.
+On the branch the same file passes 36 of 36.
+
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > before any search: the search box holds its input only, and the column has no live region
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > a town: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > a weak match: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > no match: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > outside Colorado: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > out of range: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 1: nothing of the search is in the map column > did you mean: the message is in the right panel's box, and the map column holds none of it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a town: the question, the box's two lines, then 'Tap the map to find the roads.'
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > the open-time lookup of a saved town (the other sender) fills the same box
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a weak match: the place on the first line, the next step on the second; a full stop in the name doesn't split it
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, no match for the city: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, no match for the address: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, outside Colorado: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, no match, no reason: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, cross streets with no city: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, the search isn't set up: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, the search failed: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > a failed search, no answer at all: the box's lines
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > out of range: the one line, no button, no request
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > 'Did you mean' is a real button inside the box; taking it places the pin and the box goes
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > with a pin and its roads: the box sits between the question and the road list, and the list is still named by the question
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > a town, then a tap on the map: the pin is placed and the box is gone
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > a failed search, then a tap on the map: the pin is placed and the box is gone
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > out of range, then a tap on the map: the pin is placed and the box is gone
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > did you mean, then a tap on the map: the pin is placed and the box is gone
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > a town, then a new search: the box is gone while it runs
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > a failed search, then a new search: the box is gone while it runs
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box goes away when a pin is placed or a new search starts > out of range, then a new search: the box is gone while it runs
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 3: a live region stays, and the panel with no message is as it was > the box is one role=status element, mounted before any message and the same element after
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 3: a live region stays, and the panel with no message is as it was > no pin, no message: the road section is marked empty and shows no question and no tap line
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 3: a live region stays, and the panel with no message is as it was > a message marks the section not empty
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 3: a live region stays, and the panel with no message is as it was > the lookup running: the question once, then the running line
+ × components/LocationPickerModal.search-feedback.test.tsx > #565: globals.css draws the box from existing tokens and nothing floats > the box is on --pri-off, in the flow, and not displayed while empty
+ × components/LocationPickerModal.search-feedback.test.tsx > #565: globals.css draws the box from existing tokens and nothing floats > the first line is 600 --ink and sets no size of its own (it is a .mw-line, 13.5)
+ × components/LocationPickerModal.search-feedback.test.tsx > #565: globals.css draws the box from existing tokens and nothing floats > the floating list's rules are gone, and the search box is not a positioning parent
+ ✓ components/LocationPickerModal.search-feedback.test.tsx > #565: globals.css draws the box from existing tokens and nothing floats > the 'Did you mean' button keeps its 44 px
+⎯⎯⎯⎯⎯⎯ Failed Tests 35 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  35 failed | 1 passed (36)

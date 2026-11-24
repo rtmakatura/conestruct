@@ -69,11 +69,14 @@ describe("R138 tap targets", () => {
     // The phone query changes the side padding only.
     const phone = css.slice(css.indexOf("@media (max-width: 479px) {\n  .map-window .mw-cbar {"));
     expect(phone).toMatch(/^@media \(max-width: 479px\) \{\n {2}\.map-window \.mw-cbar \{\n {4}padding: 0 16px;\n {2}\}\n\}/);
-    // The one new control: the swap choice in the search's floating list.
+    // The one new control: the swap choice (#565: in the right panel's box).
     expect(picker).toContain('className="mw-link mw-search-pick"');
     expect(css).toMatch(/\n\.map-window \.mw-search-pick \{\n {2}display: block;\n {2}width: 100%;\n {2}min-height: 44px;\n/);
-    // The list floats: it is out of the flow, so no line in it resizes the page.
-    expect(css).toMatch(/\n\.map-window \.mw-search-list \{\n {2}position: absolute;\n/);
+    // #565: the choice is inside the box in the right panel, and nothing
+    // of the search floats over the map any more.
+    const feedback = picker.slice(picker.indexOf('<div className="mw-feedback" role="status" data-testid="search-feedback">'));
+    expect(feedback.slice(0, feedback.indexOf("</div>"))).toContain('className="mw-link mw-search-pick"');
+    expect(css).not.toContain(".mw-search-list");
   });
 
   it("R140: the form chip rows are 44 at every width, outside any media query", () => {

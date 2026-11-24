@@ -393,8 +393,8 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".map-window .mw-link", size: "var(--fs-body-value)" },
       { selector: ".map-window .mw-foot-line", size: "var(--fs-field-label)" },
       // #541 (it replaces #537's S2 bar): the read-only coordinates line.
-      // The search's floating lines reuse .mw-note / .mw-link.  No size
-      // joins the census.
+      // The search's messages (#565: the right panel's box) reuse
+      // .mw-line / .mw-link.  No size joins the census.
       { selector: ".map-window .mw-cbar", size: "var(--fs-body-value)" },
     ],
     tsx: [],

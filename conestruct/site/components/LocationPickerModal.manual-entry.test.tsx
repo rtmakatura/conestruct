@@ -59,8 +59,9 @@ function mount() {
 }
 const box = () =>
   screen.getByLabelText("Address, intersection or coordinates search") as HTMLInputElement;
+// #565: the search's messages are the lines of the right panel's box.
 const errors = () =>
-  Array.from(document.querySelectorAll(".mw-note-fail")).map((e) => e.textContent);
+  Array.from(document.querySelectorAll('[data-testid="search-feedback"] > *')).map((e) => e.textContent);
 const PAIR = { lat: 39.7113, lng: -105.0815 };
 
 describe("#230 typed entry, keystroke by keystroke", () => {

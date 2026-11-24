@@ -9,6 +9,9 @@
 //      A string that reads as coordinates never goes to the geocoder.  Out
 //      of range: one line in the search's floating list; a pair typed the
 //      wrong way round is offered back as "Did you mean <lat>, <long>?".
+//      (#565, Ryan 2026-11-24: the list no longer floats over the map; its
+//      messages are a box at the top of the right panel, `search-feedback`.
+//      `list()` below reads that box.)
 //   2. The bar under the map only reads: "No pin yet", or "Pin at" and the
 //      numbers.  No boxes, no Go, no Cancel, no button, no hint.
 //
@@ -129,7 +132,8 @@ function mount(initial: { lat?: number; lng?: number; address?: string } = {}) {
 const bar = () => screen.getByTestId("coords-bar");
 const box = () =>
   screen.getByLabelText("Address, intersection or coordinates search") as HTMLInputElement;
-const list = () => screen.getByTestId("search-list");
+// #565: the search's messages, in the right panel's box.
+const list = () => screen.getByTestId("search-feedback");
 // The map is built once mapbox-gl's dynamic import resolves.
 const mapBuilt = () => waitFor(() => expect(camera.built).toBeGreaterThan(0));
 
@@ -234,12 +238,13 @@ describe("#541 ruling 1: the search box takes coordinates", () => {
     expect(detects).toEqual([]);
   });
 
-  it("a failed address search says so in the floating list, not in the page's flow", async () => {
+  it("a failed address search says so in the right panel's box (#565), not in the map column", async () => {
     const user = userEvent.setup();
     mount();
     await searchFor(user, "nowhere at all");
     await waitFor(() => expect(list().textContent).not.toBe(""));
-    expect(list().closest(".mw-search-box")).not.toBeNull();
+    expect(list().closest(".mw-rail")).not.toBeNull();
+    expect(list().closest(".mw-map-col")).toBeNull();
     expect(bar().textContent).toBe("No pin yet");
   });
 });
@@ -441,21 +446,23 @@ describe("#541 without a map (no Mapbox token)", () => {
   });
 });
 
-// #543 (mission ux-map-window-tidy, ruling 2): the coarse-match notice is a
-// line in the search's floating list, not a paragraph in the map column's
-// flow, so it can't resize the map or move the right panel.  (#547 deleted
+// #543 (mission ux-map-window-tidy, ruling 2): the coarse-match notice is
+// not a paragraph in the map column's flow, so it can't resize the map.
+// #565 (Ryan, 2026-11-24) moved it again, from #543's floating list over
+// the map into the right panel's box, as two lines.  (#547 deleted
 // the bearing note, the ruling's other line: nothing had set it since
 // #507.)  The sizes are measured in a browser (the walk in
 // validation-artifacts/committed/missions/ux-map-window-tidy/issue-543/);
 // here the mounted window is asked where the line is.
-describe("#543: the notices float in the search's list", () => {
-  const COARSE = "That search found a town or area. Tap the map on the road where the work starts.";
+describe("#543 and #565: the town notice is out of the map column's flow, in the right panel's box", () => {
+  const COARSE = "That search found a town or area, not a street.";
+  const COARSE_NEXT = "Tap the map on the road where the work starts. The roads near your tap show up here.";
   const column = () => document.querySelector(".mw-map-col") as HTMLElement;
   /** Every element in the map column's flow: its own children. */
   const inFlow = () => Array.from(column().children).map((e) => e.className.split(" ")[0]);
   const FLOW = ["mw-search", "picker-map", "mw-cbar"];
 
-  it("a search that finds a town: the notice is a line in the list, and the column's flow is unchanged", async () => {
+  it("a search that finds a town: the notice is the box's two lines, and the column's flow is unchanged", async () => {
     const user = userEvent.setup();
     mount();
     await mapBuilt();
@@ -464,8 +471,9 @@ describe("#543: the notices float in the search's list", () => {
     await searchFor(user, "Lafayette, CO");
     const line = await screen.findByText(COARSE);
     expect(list().contains(line)).toBe(true);
-    expect(line.className).toBe("mw-note mw-search-line");
-    expect(list().textContent).toBe(COARSE);
+    expect(line.className).toBe("mw-line mw-feedback-what");
+    expect(list().textContent).toBe(COARSE + COARSE_NEXT);
+    expect(column().contains(list())).toBe(false);
     expect(inFlow()).toEqual(FLOW);
     // What the notice goes with is as before: no pin, no road lookup.
     expect(bar().textContent).toBe("No pin yet");
@@ -493,7 +501,7 @@ describe("#543: the notices float in the search's list", () => {
     expect(inFlow()).toEqual(FLOW);
   });
 
-  it("no token: the notice floats the same way over the map-off panel", async () => {
+  it("no token: the notice is in the same box, and the map-off column's flow is unchanged", async () => {
     delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     const user = userEvent.setup();
     mount();
@@ -729,10 +737,12 @@ describe("#548: half a coordinate goes to the geocoder and places no pin", () =>
 // #554, Ryan's ruling of 2026-11-23 (validation-artifacts/committed/
 // issue-554-weak-match-notice/rulings.md): a weak geocoder match "shows the
 // floating "weak match" notice like the town one ("Closest match: <place>.
-// Check the pin before you go on.") and nothing moves."  The answers are
+// Check the pin before you go on.") and nothing moves."  #565: the notice
+// is in the right panel's box, its two sentences on two lines.  The answers are
 // the ones /api/geocode gives for the ruling's two texts (lib/geocode.ts
 // marks them; lib/geocode.test.ts).
-describe("#554: a weak match is named in the list and nothing moves", () => {
+describe("#554: a weak match is named in the box and nothing moves", () => {
+  const NEXT = "Check the pin before you go on.";
   const HOLLY = {
     lat: 38.053441,
     lng: -102.122704,
@@ -748,8 +758,8 @@ describe("#554: a weak match is named in the list and nothing moves", () => {
     placeName: "W Boulevard, Walsh, Kansas 81090",
   };
   const CASES: [string, typeof HOLLY, string][] = [
-    ["39 N, 44.4", HOLLY, "Closest match: 39 North Main Street, Holly, Colorado 81047. Check the pin before you go on."],
-    ["105° W, 39.7401", WALSH, "Closest match: W Boulevard, Walsh, Kansas 81090. Check the pin before you go on."],
+    ["39 N, 44.4", HOLLY, "Closest match: 39 North Main Street, Holly, Colorado 81047."],
+    ["105° W, 39.7401", WALSH, "Closest match: W Boulevard, Walsh, Kansas 81090."],
   ];
 
   it.each(CASES)("%s typed and Enter: the notice, no pin, no fly, no road lookup", async (text, answer, notice) => {
@@ -760,8 +770,8 @@ describe("#554: a weak match is named in the list and nothing moves", () => {
     await searchFor(user, text);
     const line = await screen.findByText(notice);
     expect(list().contains(line)).toBe(true);
-    expect(line.className).toBe("mw-note mw-search-line");
-    expect(list().textContent).toBe(notice);
+    expect(line.className).toBe("mw-line mw-feedback-what");
+    expect(list().textContent).toBe(notice + NEXT);
     expect(geocodes).toEqual([{ address: text, jurisdiction_key: null }]);
     expect(bar().textContent).toBe("No pin yet");
     expect(detects).toEqual([]);
@@ -814,7 +824,8 @@ describe("#554: a weak match is named in the list and nothing moves", () => {
     await mapBuilt();
     geocodeAnswer = { lat: 39.7559, lng: -104.9942, placeType: "poi", weak: true, placeName: "Coors Field, Denver, Colorado 80205" };
     await searchFor(user, "Coors Field");
-    await screen.findByText("Closest match: Coors Field, Denver, Colorado 80205. Check the pin before you go on.");
+    await screen.findByText("Closest match: Coors Field, Denver, Colorado 80205.");
+    expect(list().textContent).toBe("Closest match: Coors Field, Denver, Colorado 80205." + NEXT);
     expect(camera.flies).toEqual([]);
     expect(bar().textContent).toBe("No pin yet");
   });

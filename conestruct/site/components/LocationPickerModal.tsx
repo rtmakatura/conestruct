@@ -16,7 +16,14 @@ import type {
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
-import { geocodeFailureMessage, isPreciseGeocode, weakMatchNotice } from "@/lib/geocode-precision";
+import {
+  SEARCH_NO_ANSWER,
+  geocodeFailureMessage,
+  isPreciseGeocode,
+  searchMessageLines,
+  weakMatchNotice,
+  type SearchMessage,
+} from "@/lib/geocode-precision";
 import { readSearchCoords, type SearchCoords } from "@/lib/search-coords";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import type { CrossStreetCandidate } from "@/lib/road-detection/cross-street";
@@ -323,6 +330,9 @@ export const MAP_WINDOW_LINE =
   "Search an address or tap the map where the work starts, then pick the road.";
 /** Ruling 1. */
 export const ROAD_QUESTION = "Which road is the work on?";
+/** #565 ruling 2: under the search's box while there is no pin, where the
+ *  road list will be. */
+export const ROADS_NO_PIN = "Tap the map to find the roads.";
 /** W1 board. */
 export const SIDE_NEXT_LINE = "You'll pick the side of the road next, on the page.";
 /** Ruling 1. */
@@ -486,7 +496,9 @@ export function LocationPickerModal({
   );
   // Guidance line for an area-level geocode match ("Lafayette, CO"):
   // the map recentred but no pin was placed and no detection fired.
-  const [coarseNotice, setCoarseNotice] = useState<string | null>(null);
+  // #565: it is the right panel's box now, as its two lines; a weak match
+  // (#554) is held here too.
+  const [coarseNotice, setCoarseNotice] = useState<SearchMessage | null>(null);
 
   // ---- Road-property classification --------------------------------------
   const [classify, setClassify] = useState<ClassifyStatus>(
@@ -969,7 +981,10 @@ export function LocationPickerModal({
       setLng(newLng);
       // #541: a refused-coordinates line answers the pin that was not
       // placed; any pin clears it (as #537's bar error was cleared).
-      setSearchStatus((s) => (s.state === "coords" ? { state: "idle" } : s));
+      // #565 ruling 2: "The box goes away when a pin is placed", so a
+      // failed search's line goes too (before, it stayed until the next
+      // search).
+      setSearchStatus((s) => (s.state === "coords" || s.state === "error" ? { state: "idle" } : s));
 
       ensureMarker(newLat, newLng, markerTravelRef.current);
 
@@ -1192,7 +1207,9 @@ export function LocationPickerModal({
               setSearchStatus({ state: "idle" });
               if (j.weak) {
                 // #554: a weak match is named and nothing moves.
-                setCoarseNotice(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`));
+                setCoarseNotice(
+                  searchMessageLines(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`)),
+                );
               } else if (!isPreciseGeocode(j.placeType ?? null)) {
                 // Area-level match (town/region centroid) — recenter
                 // only.  No pin, no detection: a road detected at a
@@ -1215,12 +1232,10 @@ export function LocationPickerModal({
               if (cancelled) return;
               setSearchStatus({ state: "error", message });
             }
-          } catch (err) {
+          } catch {
             if (!cancelled) {
-              setSearchStatus({
-                state: "error",
-                message: (err as Error).message,
-              });
+              // #565 ruling 4: a fixed line, not the raw error text.
+              setSearchStatus({ state: "error", message: SEARCH_NO_ANSWER });
             }
           }
         }
@@ -1342,10 +1357,12 @@ export function LocationPickerModal({
         };
         setSearchStatus({ state: "idle" });
         if (j.weak) {
-          // #554 (Ryan, 2026-11-23): a weak match is named in the
-          // floating list and nothing moves: no pin, no fly, no road
+          // #554 (Ryan, 2026-11-23): a weak match is named (#565: in the
+          // right panel's box) and nothing moves: no pin, no fly, no road
           // lookup, and the text is not saved as the address.
-          setCoarseNotice(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`));
+          setCoarseNotice(
+            searchMessageLines(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`)),
+          );
           return;
         }
         if (!isPreciseGeocode(j.placeType ?? null)) {
@@ -1367,8 +1384,9 @@ export function LocationPickerModal({
           fly: true,
           targetZoom: PIN_ZOOM,
         });
-      } catch (err) {
-        setSearchStatus({ state: "error", message: (err as Error).message });
+      } catch {
+        // #565 ruling 4: a fixed line, not the raw error text.
+        setSearchStatus({ state: "error", message: SEARCH_NO_ANSWER });
       }
     },
     [searchQuery, applyPinPosition, placeSearchCoords, initial.jurisdictionKey],
@@ -1382,7 +1400,8 @@ export function LocationPickerModal({
   };
 
   // Editing the box withdraws a refused-coordinates line (it answered the
-  // old text); a geocoder error stays until the next search, as before.
+  // old text); a geocoder error stays until the next search or the next
+  // pin (#565).
   const onSearchChange = (text: string) => {
     setSearchQuery(text);
     setSearchStatus((s) => (s.state === "coords" ? { state: "idle" } : s));
@@ -1483,6 +1502,27 @@ export function LocationPickerModal({
   // lookup runs; that has its own line).
   const saveBlocked = !canSave && classify.state !== "resolving";
 
+  // #565 (rulings 1 and 2): the search's one message, for the right
+  // panel's box.  A swapped pair is the "Did you mean" button alone (#541);
+  // otherwise two lines, what happened and what to do next.
+  const searchSwap = searchStatus.state === "coords" ? searchStatus.swap : null;
+  const searchMessage: SearchMessage | null =
+    searchStatus.state === "error"
+      ? searchMessageLines(searchStatus.message)
+      : searchStatus.state === "coords"
+        ? searchStatus.swap
+          ? null
+          : { happened: searchStatus.line, next: null }
+        : coarseNotice;
+  // The road question's answer shows once a pin has one; its heading shows
+  // with the list, with the lookup running, and over the box.
+  const roadShown = hasPin && classify.state !== "idle";
+  const roadHeading =
+    searchMessage !== null ||
+    searchSwap !== null ||
+    (roadShown &&
+      (classify.state === "resolving" || (classify.state !== "error" && bearingCandidates.length > 0)));
+
   return (
     <div
       className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-6"
@@ -1538,33 +1578,9 @@ export function LocationPickerModal({
                   placeholder={SEARCH_PLACEHOLDER}
                   className="tap-44 field-input mw-search-input"
                 />
-                {/* #541 ruling 1: the search's lines float under the box,
-                    over the top of the map, so none of them resizes the
-                    map or moves the rail (P1).  Always mounted, so a line
-                    that arrives is announced.
-                    #543 (ruling 2): the coarse-match notice is a line here
-                    too, not in the column's flow. */}
-                <div className="mw-search-list" role="status" data-testid="search-list">
-                  {coarseNotice && <p className="mw-note mw-search-line">{coarseNotice}</p>}
-                  {searchStatus.state === "error" && (
-                    <p className="mw-note mw-note-fail mw-search-line">{searchStatus.message}</p>
-                  )}
-                  {searchStatus.state === "coords" &&
-                    (searchStatus.swap ? (
-                      <button
-                        type="button"
-                        onClick={() => onTakeSwap(searchStatus.swap!)}
-                        className="mw-link mw-search-pick"
-                      >
-                        {COORDS_DID_YOU_MEAN}{" "}
-                        <span className="mw-search-pair">
-                          {coordsPair(searchStatus.swap.lat, searchStatus.swap.lng)}?
-                        </span>
-                      </button>
-                    ) : (
-                      <p className="mw-note mw-note-fail mw-search-line">{searchStatus.line}</p>
-                    ))}
-                </div>
+                {/* #565 (Ryan, 2026-11-24, ruling 1): nothing floats over
+                    the map.  The search's messages are in the right
+                    panel's box (below, `search-feedback`). */}
               </div>
               <button
                 type="submit"
@@ -1609,18 +1625,55 @@ export function LocationPickerModal({
 
           <div className="mw-rail flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
             <div className="mw-rail-body md:flex-1 md:min-h-0 md:overflow-y-auto">
-              {hasPin && classify.state !== "idle" && (
-                <RoadQuestion
-                  key={bearingCandidates.map((c) => c.way_id).join("|")}
-                  classify={classify}
-                  candidates={bearingCandidates}
-                  selectedIdx={selectedCandidateIdx}
-                  onPick={applyCandidate}
-                  roadAxis={roadAxis}
-                  onAxis={setRoadAxis}
-                  onTryAgain={onRedetect}
-                />
-              )}
+              {/* #565 (Ryan, 2026-11-24, rulings 1 to 3): the road section.
+                  The search's messages are a box here, under the question
+                  and above the road list, never over the map.  The box's
+                  element is a live region and always mounted, so a message
+                  that arrives is announced; empty, it is not displayed,
+                  and with no road answer either the whole section is not
+                  (so the panel with no message is as it was). */}
+              <section
+                className="mw-section"
+                data-testid="road-section"
+                data-empty={!roadShown && !searchMessage && !searchSwap ? "true" : "false"}
+              >
+                {roadHeading && (
+                  <h3 id="mw-road-h" className="mw-sub">
+                    {ROAD_QUESTION}
+                  </h3>
+                )}
+                <div className="mw-feedback" role="status" data-testid="search-feedback">
+                  {searchSwap ? (
+                    <button
+                      type="button"
+                      onClick={() => onTakeSwap(searchSwap)}
+                      className="mw-link mw-search-pick"
+                    >
+                      {COORDS_DID_YOU_MEAN}{" "}
+                      <span className="mw-search-pair">{coordsPair(searchSwap.lat, searchSwap.lng)}?</span>
+                    </button>
+                  ) : searchMessage ? (
+                    <>
+                      <p className="mw-line mw-feedback-what">{searchMessage.happened}</p>
+                      {searchMessage.next && <p className="mw-line">{searchMessage.next}</p>}
+                    </>
+                  ) : null}
+                </div>
+                {roadShown ? (
+                  <RoadQuestion
+                    key={bearingCandidates.map((c) => c.way_id).join("|")}
+                    classify={classify}
+                    candidates={bearingCandidates}
+                    selectedIdx={selectedCandidateIdx}
+                    onPick={applyCandidate}
+                    roadAxis={roadAxis}
+                    onAxis={setRoadAxis}
+                    onTryAgain={onRedetect}
+                  />
+                ) : (
+                  (searchMessage || searchSwap) && <p className="mw-line">{ROADS_NO_PIN}</p>
+                )}
+              </section>
               {isNearIntersectionKind && (
                 <CrossStreetPanel
                   hasPin={hasPin}
@@ -1791,7 +1844,9 @@ function CrossStreetPanel({
   );
 }
 
-// #507 (W1, F1): the rail's road question.  One of: the lookup running,
+// #507 (W1, F1): the rail's road question.  #565: its section and its
+// heading are the caller's (the search's box sits between the heading and
+// this answer).  One of: the lookup running,
 // the roads found as one radio list (ruling 2: a grouped street is one
 // row), or the lookup failed / found nothing, with Try again and the
 // four-direction question (ruling 4).  Every word is in the constants
@@ -1815,18 +1870,17 @@ function RoadQuestion({
 }) {
   if (classify.state === "resolving") {
     return (
-      <section className="mw-section" aria-busy="true">
-        <h3 className="mw-sub">{ROAD_QUESTION}</h3>
+      <div className="mw-section" aria-busy="true">
         <p className="mw-line" role="status">
           {LOOKUP_RUNNING}
         </p>
-      </section>
+      </div>
     );
   }
   if (classify.state === "error" || candidates.length === 0) {
     const failed = classify.state === "error" && classify.reason === "failed";
     return (
-      <section className="mw-section">
+      <>
         <div className="mw-status" role="status" data-testid="road-lookup-status">
           <p className="mw-sub">{failed ? LOOKUP_FAILED_TITLE : LOOKUP_NONE_TITLE}</p>
           <p className="mw-line">{failed ? LOOKUP_FAILED_LINE : LOOKUP_NONE_LINE}</p>
@@ -1870,46 +1924,41 @@ function RoadQuestion({
           </div>
           <p className="mw-hint">{AXIS_HINT}</p>
         </fieldset>
-      </section>
+      </>
     );
   }
   return (
-    <section className="mw-section">
-      <div className="road-pick-panel mw-roads" data-testid="road-pick-panel">
-        <h3 id="mw-road-h" className="mw-sub">
-          {ROAD_QUESTION}
-        </h3>
-        <div role="radiogroup" aria-labelledby="mw-road-h" className="mw-road-rows">
-          {candidates.map((c, idx) => {
-            const picked = idx === selectedIdx;
-            return (
-              <button
-                key={`${c.way_id}-${idx}`}
-                type="button"
-                role="radio"
-                aria-checked={picked}
-                onClick={() => onPick(idx)}
-                className={`road-pick-row${picked ? " is-picked" : ""}`}
-              >
-                <span className="road-pick-mark" aria-hidden="true" />
-                <span className="road-pick-label">
-                  {/* #536 (Ryan, 2026-11-12, N2): the corner is in the
-                      title, "<street> at <cross street>", the cross street
-                      in 400 --ink-mute on the same line.  The row's
-                      accessible name is its text, so it carries the corner. */}
-                  <span className="road-pick-name">
-                    {candidateLabel(c).primary}
-                    {c.cross_street ? <span className="road-pick-at">{` at ${c.cross_street}`}</span> : null}
-                  </span>
-                  <span className="road-pick-sub">{roadRowLine(c)}</span>
+    <div className="road-pick-panel mw-roads" data-testid="road-pick-panel">
+      <div role="radiogroup" aria-labelledby="mw-road-h" className="mw-road-rows">
+        {candidates.map((c, idx) => {
+          const picked = idx === selectedIdx;
+          return (
+            <button
+              key={`${c.way_id}-${idx}`}
+              type="button"
+              role="radio"
+              aria-checked={picked}
+              onClick={() => onPick(idx)}
+              className={`road-pick-row${picked ? " is-picked" : ""}`}
+            >
+              <span className="road-pick-mark" aria-hidden="true" />
+              <span className="road-pick-label">
+                {/* #536 (Ryan, 2026-11-12, N2): the corner is in the
+                    title, "<street> at <cross street>", the cross street
+                    in 400 --ink-mute on the same line.  The row's
+                    accessible name is its text, so it carries the corner. */}
+                <span className="road-pick-name">
+                  {candidateLabel(c).primary}
+                  {c.cross_street ? <span className="road-pick-at">{` at ${c.cross_street}`}</span> : null}
                 </span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mw-hint">{SIDE_NEXT_LINE}</p>
+                <span className="road-pick-sub">{roadRowLine(c)}</span>
+              </span>
+            </button>
+          );
+        })}
       </div>
-    </section>
+      <p className="mw-hint">{SIDE_NEXT_LINE}</p>
+    </div>
   );
 }
 
@@ -1956,8 +2005,12 @@ type PreviewStatus =
   | "refused";
 
 /** #513 (ruling 1/4, R145-9): the search found a town or area, not a
- *  street, so no pin is set and no roads are looked up. */
-const COARSE_NOTICE = "That search found a town or area. Tap the map on the road where the work starts.";
+ *  street, so no pin is set and no roads are looked up.  #565 (ruling 2,
+ *  R145-2): the box's two lines; the second is the ruling's. */
+const COARSE_NOTICE: SearchMessage = {
+  happened: "That search found a town or area, not a street.",
+  next: "Tap the map on the road where the work starts. The roads near your tap show up here.",
+};
 
 /** #507 ruling 4 (R145-9): the preview's failures in plain words. */
 const PREVIEW_FAILED =

@@ -5456,9 +5456,6 @@ input[type="number"] {
   line-height: 1.4;
   color: var(--ink-faint);
 }
-.map-window .mw-note-fail {
-  color: var(--fail);
-}
 .map-window .mw-close {
   width: 44px;
   height: 44px;
@@ -5483,37 +5480,50 @@ input[type="number"] {
   font-family: var(--font-sans);
   font-size: var(--fs-refusal);
 }
-/* #541 (ruling 1): the search's lines (a failed search, coordinates out
-   of range, the "Did you mean" choice) float under the box, over the top
-   of the map, so nothing on the page changes size (P1).  The list is the
-   box's width, so it never covers the map's zoom control.
-   #543: the coarse-match notice is a line in it too. */
 .map-window .mw-search-box {
-  position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
 }
-.map-window .mw-search-list {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 3;
-  border: 1px solid var(--rule);
-  background: var(--da-ground);
+/* #565 (Ryan, 2026-11-24, rulings 1 to 3; it replaces #541's and #543's
+   floating list): the search's messages (a town, a weak match, a failed
+   search, coordinates out of range, the "Did you mean" choice) are a box
+   at the top of the right panel, under the road question and above the
+   road list.  Nothing floats over the map, and the map, the search row,
+   the bar and the footer never change size (P1).  T1: the box is on
+   --pri-off; both lines are .mw-line (13.5): the first 600 --ink (what
+   happened), the second --ink-on-dark (what to do next).  The padding
+   and the 12 px under the box are .mw-status's, the 4 px between the
+   lines .mw-head-text's (CHOSEN, Rule 12: the panel's own spacing).  The
+   box is a live region, always mounted; empty, it is not displayed. */
+.map-window .mw-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px var(--space-block);
+  background: var(--pri-off);
+  margin-bottom: 12px;
 }
-.map-window .mw-search-list:empty {
+.map-window .mw-feedback:empty {
   display: none;
 }
-.map-window .mw-search-line {
-  padding: 8px 12px;
+/* The first line is a .mw-line too (its size and line height), made 600
+   and --ink here. */
+.map-window .mw-feedback-what {
+  font-weight: 600;
+  color: var(--ink);
 }
+/* With no message and no road answer the road section holds nothing, so
+   it takes no room (and no gap) in the panel. */
+.map-window .mw-section[data-empty="true"] {
+  display: none;
+}
+/* The "Did you mean" choice, a real button in the box, 44 px. */
 .map-window .mw-search-pick {
   display: block;
   width: 100%;
   min-height: 44px;
-  padding: 0 12px;
+  padding: 0;
   border: 0;
   background: transparent;
   font-family: var(--font-sans);

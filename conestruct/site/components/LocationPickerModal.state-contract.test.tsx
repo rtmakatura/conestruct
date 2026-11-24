@@ -262,7 +262,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
 
     await screen.findByText(
-      "That search found a town or area. Tap the map on the road where the work starts.",
+      "That search found a town or area, not a street.",
     );
     expect(pendingDetects).toHaveLength(0);
     // No pin was placed either — Save stays gated on a pin.
@@ -285,7 +285,7 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
     expect(pendingDetects).toHaveLength(1);
     expect(
       screen.queryByText(
-        "That search found a town or area. Tap the map on the road where the work starts.",
+        "That search found a town or area, not a street.",
       ),
     ).toBeNull();
   });
@@ -345,7 +345,7 @@ describe("#347 cross-street search", () => {
     search("Colfax & Main");
 
     await screen.findByText(
-      "That search found a town or area. Tap the map on the road where the work starts.",
+      "That search found a town or area, not a street.",
     );
     expect(pendingDetects).toHaveLength(0);
   });
