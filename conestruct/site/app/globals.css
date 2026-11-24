@@ -6315,6 +6315,16 @@ input[type="number"] {
   outline: 2px solid var(--act);
   outline-offset: 2px;
 }
+/* #556 (Ryan, 2026-11-24): "At 390, the week note under the chart must
+   never be cut off."  The note is two lines at this width and the body was
+   15 px short for it.  CHOSEN (S10): 640 px tall at 600 px wide and under,
+   40 px more, which is two more lines of the note (2 x 13.5 px x 1.45).
+   Both views are still one size at any one width (#526 ruling 4). */
+@media (max-width: 600px) {
+  .workbench .whd {
+    height: min(640px, calc(100vh - 32px));
+  }
+}
 .workbench .whd-head {
   display: flex;
   align-items: flex-start;
@@ -6374,6 +6384,17 @@ input[type="number"] {
   display: grid;
   align-content: start;
   gap: 8px;
+}
+/* #556 (Ryan, 2026-11-24): "the week note under the chart must never be
+   cut off … with the last line fully visible."  S12: when a view is taller
+   than the body, the note stays at the body's bottom edge, whole, on the
+   window's own ground, and the chart scrolls behind it.  It doesn't move
+   when the view fits. */
+.workbench .whd-note {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: var(--da-ground);
 }
 .workbench .whd-verdict {
   display: flex;
@@ -6616,6 +6637,18 @@ input[type="number"] {
   height: 4px;
   background: var(--dim);
 }
+/* #556 (Ryan, 2026-11-24): "a small striped swatch matching the striped
+   days": .whd-closed's two tokens and angle, with the day column's border.
+   CHOSEN (S2): 3 px stripes (the days' are 6 px), so two pairs fit the
+   10 px box. */
+.workbench .whd-key.is-closed {
+  border: 1px solid var(--rule-soft);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--da-ground) 0 3px,
+    var(--pri-off) 3px 6px
+  );
+}
 /* Round 2 (R145 S10, Rule 10): a day with no window on record is an empty
    column with a dashed --rule border, labelled "No record". */
 .workbench .whd-key.is-none {
@@ -6638,7 +6671,8 @@ input[type="number"] {
   min-width: 0;
 }
 /* Round 3 (#531, S24, Rule 10): on a no-record day your hours are not
-   checked, so they never take the inside ink: a hollow dashed bar. */
+   checked, so they never take the inside ink: a hollow dashed bar.
+   #556 (S4): the same bar when no street class is set. */
 .workbench .whd-yours.is-unchecked {
   background: transparent;
   border: 1px dashed var(--ink-faint);

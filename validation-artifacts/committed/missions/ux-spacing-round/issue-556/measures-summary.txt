@@ -1,0 +1,282 @@
+== 1440 (1440x900) errors: none; WHAT section height before the window opened 1061.5, after it closed 1061.5
+   the backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null,"outside":[]},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record","outside":[]}}}
+1440 534-week-note-fits day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 534-week-note-fits week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 5 bar(s): is-v=rgb(234, 240, 247)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 534-week-note-outside day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 3 bar(s): plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 534-week-note-outside week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 15 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 535-no-closures day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 535-no-closures week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed (1 line(s)); striped days 2; notice: none
+   your hours: 9 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+   swatch 14x10, 1px solid rgb(34, 50, 68), repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+1440 535-class-unset day: window 560x600; body 410 px, content 410 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 1 bar(s): is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 535-class-unset week: window 560x600; body 410 px, content 410 px; note 1 line(s), last line 350.56 to 366.56 in a 410 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 7 bar(s): is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-note-multi-week week: window 560x600; body 384 px, content 384 px; note 2 line(s), last line 338.56 to 354.56 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 7 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-note-one-day week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 2 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+== 1198 (1198x930) errors: none; WHAT section height before the window opened 1061.5, after it closed 1061.5
+   the backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null,"outside":[]},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record","outside":[]}}}
+1198 534-week-note-fits day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 534-week-note-fits week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 5 bar(s): is-v=rgb(234, 240, 247)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 534-week-note-outside day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 3 bar(s): plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 534-week-note-outside week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 15 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 535-no-closures day: window 560x600; body 384 px, content 384 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 535-no-closures week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed (1 line(s)); striped days 2; notice: none
+   your hours: 9 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+   swatch 14x10, 1px solid rgb(34, 50, 68), repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+1198 535-class-unset day: window 560x600; body 410 px, content 410 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (1 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 1 bar(s): is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 535-class-unset week: window 560x600; body 410 px, content 410 px; note 1 line(s), last line 350.56 to 366.56 in a 410 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 7 bar(s): is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 556-note-multi-week week: window 560x600; body 384 px, content 384 px; note 2 line(s), last line 338.56 to 354.56 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 7 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1198 556-note-one-day week: window 560x600; body 384 px, content 384 px; note 1 line(s), last line 319 to 335 in a 384 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (1 line(s)); striped days 0; notice: none
+   your hours: 2 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+== 390 (390x844) errors: none; WHAT section height before the window opened 1917.25, after it closed 1917.25
+   the backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null,"outside":[]},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record","outside":[]}}}
+390 534-week-note-fits day: window 358x640; body 382 px, content 382 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 534-week-note-fits week: window 358x640; body 382 px, content 382 px; note 2 line(s), last line 338.56 to 354.56 in a 382 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 5 bar(s): is-v=rgb(234, 240, 247)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 534-week-note-outside day: window 358x640; body 382 px, content 382 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: none
+   your hours: 3 bar(s): plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 534-week-note-outside week: window 358x640; body 382 px, content 382 px; note 2 line(s), last line 338.56 to 354.56 in a 382 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 15 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 535-no-closures day: window 358x640; body 382 px, content 382 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 535-no-closures week: window 358x640; body 382 px, content 382 px; note 2 line(s), last line 338.56 to 354.56 in a 382 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed (2 line(s)); striped days 2; notice: none
+   your hours: 9 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+   swatch 14x10, 1px solid rgb(34, 50, 68), repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+390 535-class-unset day: window 358x640; body 408 px, content 408 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 1 bar(s): is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 535-class-unset week: window 358x640; body 408 px, content 408 px; note 2 line(s), last line 389.13 to 405.13 in a 408 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: "Pick a street class on the page and we'll check your hours against it." first in body true
+   your hours: 7 bar(s): is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 0; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-note-multi-week week: window 358x640; body 382 px, content 382 px; note 2 line(s), last line 338.56 to 354.56 in a 382 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 7 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-note-one-day week: window 358x640; body 382 px, content 382 px; note 1 line(s), last line 319 to 335 in a 382 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 2 bar(s): is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+== 390x667 (390x667) errors: none; WHAT section height before the window opened 1917.25, after it closed 1917.25
+390x667 534-week-note-fits day: window 358x635; body 377 px, content 377 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 534-week-note-fits week: window 358x635; body 377 px, content 377 px; note 2 line(s), last line 338.56 to 354.56 in a 377 px box: inside at rest; the body doesn't scroll
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 5 bar(s): is-v=rgb(234, 240, 247)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+== 390x600 (390x600) errors: none; WHAT section height before the window opened 1917.25, after it closed 1917.25
+390x600 534-week-note-fits day: window 358x568; body 310 px, content 310 px; no note in this view
+   key: Allowed | Your hours | Outside what's allowed (2 line(s)); striped days 0; notice: none
+   your hours: 1 bar(s): plain=rgb(234, 240, 247)/0px solid; bands 2; track 28; columns not measured; week rows not measured
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 534-week-note-fits week: window 358x568; body 310 px, content 357 px; note 2 line(s), last line 291 to 307 in a 310 px box: inside at rest; scrolled to the end (scrollTop 47) 291 to 307: inside
+   key: Allowed | Your hours | Outside what's allowed | No record (2 line(s)); striped days 0; notice: none
+   your hours: 5 bar(s): is-v=rgb(234, 240, 247)/0px solid; bands 10; track not measured; columns 240; week rows 274px 32px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+
+34 readings; failed checks: none
+
+== worst-case wordings (measures-worst-<class>-<size>.json)
+-- 390 (390x844), street class set; errors: none
+390 556-worst-class-set-night day: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-set-night week: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-set-thu-fri day: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-set-thu-fri week: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-set-multi-week day: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-set-multi-week week: window 358x640; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 382 px, content 382 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 390 (390x844), street class unset; errors: none; street_class in the page's hours request: absent; the backend answered {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+390 556-worst-class-unset-night day: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 388 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-unset-night week: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 408 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 350 to 385.56, whole, on top, over the chart's box by 8.13 px; scrolled to the end (scrollTop 20) lines 350 to 385.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-unset-thu-fri day: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 388 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-unset-thu-fri week: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 350 to 385.56, whole, on top, over the chart's box by 8.13 px; scrolled to the end (scrollTop 20) lines 350 to 385.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-unset-multi-week day: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 388 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390 556-worst-class-unset-multi-week week: window 358x640; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 388 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 350 to 385.56, whole, on top, over the chart's box by 8.13 px; scrolled to the end (scrollTop 20) lines 350 to 385.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 390x667 (390x667), street class set; errors: none
+390x667 556-worst-class-set-night day: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-set-night week: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-set-thu-fri day: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-set-thu-fri week: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-set-multi-week day: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-set-multi-week week: window 358x635; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 377 px, content 377 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 390x667 (390x667), street class unset; errors: none; street_class in the page's hours request: absent; the backend answered {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+390x667 556-worst-class-unset-night day: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 383 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-unset-night week: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 408 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 345 to 380.56, whole, on top, over the chart's box by 13.13 px; scrolled to the end (scrollTop 25) lines 345 to 380.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-unset-thu-fri day: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 383 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-unset-thu-fri week: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 345 to 380.56, whole, on top, over the chart's box by 13.13 px; scrolled to the end (scrollTop 25) lines 345 to 380.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-unset-multi-week day: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 383 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x667 556-worst-class-unset-multi-week week: window 358x635; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 383 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 345 to 380.56, whole, on top, over the chart's box by 13.13 px; scrolled to the end (scrollTop 25) lines 345 to 380.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 390x600 (390x600), street class set; errors: none
+390x600 556-worst-class-set-night day: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 310 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-set-night week: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 357 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 271.44 to 307, whole, on top, over the chart's box by 35.56 px; scrolled to the end (scrollTop 47) lines 271.44 to 307, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-set-thu-fri day: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 310 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-set-thu-fri week: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 357 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 271.44 to 307, whole, on top, over the chart's box by 35.56 px; scrolled to the end (scrollTop 47) lines 271.44 to 307, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-set-multi-week day: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 310 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-set-multi-week week: window 358x568; subtitle 2 line(s); notice no; key 2 line(s); source line yes; body 310 px, content 357 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 271.44 to 307, whole, on top, over the chart's box by 35.56 px; scrolled to the end (scrollTop 47) lines 271.44 to 307, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 390x600 (390x600), street class unset; errors: none; street_class in the page's hours request: absent; the backend answered {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+390x600 556-worst-class-unset-night day: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 316 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-unset-night week: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 408 px
+   note 2 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 278 to 313.56, whole, on top, over the chart's box by 80.13 px; scrolled to the end (scrollTop 92) lines 278 to 313.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-unset-thu-fri day: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 316 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-unset-thu-fri week: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 278 to 313.56, whole, on top, over the chart's box by 80.13 px; scrolled to the end (scrollTop 92) lines 278 to 313.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-unset-multi-week day: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 316 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+390x600 556-worst-class-unset-multi-week week: window 358x568; subtitle 3 line(s); notice yes; key 2 line(s); source line no; body 316 px, content 408 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 278 to 313.56, whole, on top, over the chart's box by 80.13 px; scrolled to the end (scrollTop 92) lines 278 to 313.56, whole, on top, over the chart's box by 0 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 1440 (1440x900), street class set; errors: none
+1440 556-worst-class-set-night day: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-set-night week: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   note 1 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 319 to 335, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-set-thu-fri day: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-set-thu-fri week: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   note 1 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 319 to 335, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-set-multi-week day: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-set-multi-week week: window 560x600; subtitle 2 line(s); notice no; key 1 line(s); source line yes; body 364 px, content 364 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 319 to 354.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+-- 1440 (1440x900), street class unset; errors: none; street_class in the page's hours request: absent; the backend answered {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+1440 556-worst-class-unset-night day: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-unset-night week: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   note 1 line(s) "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.": at rest lines 350.56 to 366.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-unset-thu-fri day: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-unset-thu-fri week: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   note 1 line(s) "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.": at rest lines 350.56 to 366.56, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-unset-multi-week day: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+1440 556-worst-class-unset-multi-week week: window 560x600; subtitle 2 line(s); notice yes; key 1 line(s); source line no; body 390 px, content 390 px
+   note 2 line(s) "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.": at rest lines 350.56 to 386.13, whole, on top, over the chart's box by 0 px; the body doesn't scroll
+   font __Inter_176161; sizes 12.5px,13.5px,19px; axe 0 violation(s); under 44 px 0
+
+48 worst-case readings; failed checks: none
+dashed outline rgb(147, 160, 176) on the window's ground rgb(16, 28, 41) (computed colours, 390 535-class-unset week): contrast 6.47 to 1

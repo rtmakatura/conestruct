@@ -1,0 +1,15 @@
+# #556 red run: the new and rewritten tests against the base code (d46b0914)
+# npx vitest run components/WorkHoursDialog.test.tsx lib/scenarios/why-lines.test.ts
+
+ FAIL  components/WorkHoursDialog.test.tsx > #526 ruling 4: the whole week > shows 7 days and dims the days not in the job
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > a: the key names the stripes, with a striped swatch, in a week with a no-closures day
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > a: the swatch is the days' stripes: the same two tokens at the same angle (globals.css)
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > b: the weekday view with no street class: the notice on top, a hollow bar, no inside or outside ink
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > b: the whole week with no street class: the notice on top, every bar hollow, no inside or outside ink
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > c: the note is the last line of a body that scrolls, and the window is taller at 600 px wide and under (globals.css)
+ FAIL  components/WorkHoursDialog.test.tsx > #556: the no-closures key, hours with no street class, the week note > c: the week note, part of a week and the whole week
+ FAIL  lib/scenarios/why-lines.test.ts > #526: the work-hours words > #556: the week note names the days that aren't in the dates (S8, S9)
+ FAIL  lib/scenarios/why-lines.test.ts > #526: the work-hours words > S5: the week note
+
+ Test Files  2 failed (2)
+      Tests  9 failed | 68 passed (77)

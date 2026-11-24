@@ -1,0 +1,387 @@
+{
+ "site": "http://localhost:3556",
+ "viewport": [
+  390,
+  600
+ ],
+ "streetClass": "set",
+ "errors": [],
+ "states": {
+  "556-worst-class-set-night": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 310,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 357,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 35.56
+     },
+     "atEnd": {
+      "scrollTop": 47,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-v is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-worst-class-set-thu-fri": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 310,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 357,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": {
+     "text": "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 35.56
+     },
+     "atEnd": {
+      "scrollTop": 47,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-v is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-worst-class-set-multi-week": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 310,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 9:30 am to 2:30 pm.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 568
+    },
+    "body": {
+     "clientHeight": 310,
+     "scrollHeight": 357,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "When you can close a lane on an arterial street. Your hours: 9:30 am to 2:30 pm.",
+     "lines": 2
+    },
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": "Source: Rule 22.3 IV.4, Apr 22, 2022",
+    "note": {
+     "text": "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 35.56
+     },
+     "atEnd": {
+      "scrollTop": 47,
+      "lines": 2,
+      "firstLineTop": 271.44,
+      "lastLineBottom": 307,
+      "boxTop": 270.44,
+      "boxBottom": 309.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid"
+     },
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  }
+ },
+ "jurisdictionByHand": false
+}

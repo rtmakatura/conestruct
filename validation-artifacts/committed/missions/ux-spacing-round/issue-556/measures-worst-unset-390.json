@@ -1,0 +1,365 @@
+{
+ "site": "http://localhost:3556",
+ "viewport": [
+  390,
+  844
+ ],
+ "streetClass": "unset",
+ "errors": [],
+ "states": {
+  "556-worst-class-unset-night": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 388,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 408,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 8.13
+     },
+     "atEnd": {
+      "scrollTop": 20,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-worst-class-unset-thu-fri": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 388,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 408,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": {
+     "text": "Your dates: Thu Dec 10 to Fri Dec 11. Mon to Wed, Sat and Sun aren't in them.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 8.13
+     },
+     "atEnd": {
+      "scrollTop": 20,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-worst-class-unset-multi-week": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 388,
+     "scrolls": false,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 9:30 am to 2:30 pm.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "clientHeight": 388,
+     "scrollHeight": 408,
+     "scrolls": true,
+     "scrollWidth": 324,
+     "clientWidth": 324
+    },
+    "sub": {
+     "text": "Street class not set, so the hours for it aren't known. Your hours: 9:30 am to 2:30 pm.",
+     "lines": 3
+    },
+    "notice": "Pick a street class on the page and we'll check your hours against it.",
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "source": null,
+    "note": {
+     "text": "Your dates: Thu Dec 10 to Wed Dec 23. This is the first week; every week has the same hours.",
+     "position": "sticky",
+     "background": "rgb(16, 28, 41)",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 8.13
+     },
+     "atEnd": {
+      "scrollTop": 20,
+      "lines": 2,
+      "firstLineTop": 350,
+      "lastLineBottom": 385.56,
+      "boxTop": 349,
+      "boxBottom": 388.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     }
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed"
+     }
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  }
+ },
+ "hoursRequestStreetClass": "absent",
+ "backendAnswer": {
+  "missing": "street_class",
+  "status": "unknown",
+  "weekdayAllowed": null,
+  "weekdayOutside": [],
+  "weekendRecord": "none"
+ },
+ "jurisdictionByHand": false
+}

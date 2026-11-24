@@ -293,15 +293,38 @@ describe("#526: the work-hours words", () => {
   it("S5: the week note", () => {
     const week = (n: number) => Array.from({ length: 7 }, (_, i) => ({ in_job: i < n }));
     expect(weekNote(null)).toBe("Pick work dates on the page to see your days here.");
+    // #556 (Ryan, 2026-11-24): "Your dates: <Mon Dec 7> to <Fri Dec 11>.
+    // <Sat and Sun> aren't in them." (and "the whole week" when they are).
     expect(weekNote({ start: "2026-11-16", end: "2026-11-20", days: 5, week: week(5) })).toBe(
-      "Your dates run Nov 16 to Nov 20, so the other days are greyed out.",
+      "Your dates: Mon Nov 16 to Fri Nov 20. Sat and Sun aren't in them.",
     );
     expect(weekNote({ start: "2026-11-16", end: "2026-11-22", days: 7, week: week(7) })).toBe(
-      "Your dates run Nov 16 to Nov 22, the whole week.",
+      "Your dates: Mon Nov 16 to Sun Nov 22, the whole week.",
     );
     expect(weekNote({ start: "2026-11-16", end: "2026-12-04", days: 19, week: week(7) })).toBe(
-      "Your dates run Nov 16 to Dec 4. This is the first week; every week has the same hours.",
+      "Your dates: Mon Nov 16 to Fri Dec 4. This is the first week; every week has the same hours.",
     );
+  });
+
+  it("#556: the week note names the days that aren't in the dates (S8, S9)", () => {
+    // Nov 16 2026 is a Monday; `on` lists the days in the job, Mon = 0.
+    const iso = (i: number) => `2026-11-${16 + i}`;
+    const note = (on: number[]) =>
+      weekNote({
+        start: iso(on[0]),
+        end: iso(on[on.length - 1]),
+        days: on.length,
+        week: Array.from({ length: 7 }, (_, i) => ({ in_job: on.includes(i) })),
+      });
+    expect(note([0, 1, 2, 3, 4, 5])).toBe("Your dates: Mon Nov 16 to Sat Nov 21. Sun isn't in them.");
+    expect(note([1, 2, 3, 4, 5, 6])).toBe("Your dates: Tue Nov 17 to Sun Nov 22. Mon isn't in them.");
+    expect(note([2, 3, 4])).toBe("Your dates: Wed Nov 18 to Fri Nov 20. Mon, Tue, Sat and Sun aren't in them.");
+    expect(note([3, 4])).toBe("Your dates: Thu Nov 19 to Fri Nov 20. Mon to Wed, Sat and Sun aren't in them.");
+    expect(note([0, 1])).toBe("Your dates: Mon Nov 16 to Tue Nov 17. Wed to Sun aren't in them.");
+    expect(note([5, 6])).toBe("Your dates: Sat Nov 21 to Sun Nov 22. Mon to Fri aren't in them.");
+    expect(note([4, 5])).toBe("Your dates: Fri Nov 20 to Sat Nov 21. Mon to Thu and Sun aren't in them.");
+    // One day: one date, so "date"; the other six aren't listed.
+    expect(note([2])).toBe("Your date: Wed Nov 18. No work on the other days.");
   });
 
   it("the source line, from the backend's sources", () => {

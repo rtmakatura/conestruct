@@ -845,7 +845,12 @@ export function weekdayVerdict(name: string, status: "inside" | "outside"): stri
     : `Your hours go outside what ${name} allows on weekdays.`;
 }
 export const SET_TIMES_TO_SEE = "Set a start and end time on the page to see your hours here.";
-export const SET_CLASS_TO_SEE = "Pick a street class on the page to see its hours here.";
+/** #556 (Ryan, 2026-11-24): "A notice at the top of the chart reads 'Pick a
+ *  street class on the page and we'll check your hours against it.'"  It
+ *  replaces "Pick a street class on the page to see its hours here." */
+export const PICK_CLASS_TO_CHECK = "Pick a street class on the page and we'll check your hours against it.";
+/** #556 (Ryan, 2026-11-24): "The key gains 'No closures allowed'". */
+export const NO_CLOSURES_LABEL = "No closures allowed";
 /** R145 S8 / round 2 (S10): the weekend line, from the backend's `record`
  *  (Rule 10: no window on record is absence, never an allowed-all-day). */
 export function weekendLine(
@@ -877,15 +882,31 @@ export function holidayLine(rule: "none" | "holidays_banned" | "holidays_and_eve
   const what = rule === "holidays_banned" ? "holidays" : "holidays and the day before";
   return `No closures on ${what}. We don't check your dates against holidays yet.`;
 }
+/** #556 (Ryan, 2026-11-24): "Your dates: <Mon Dec 7> to <Fri Dec 11>. <Sat
+ *  and Sun> aren't in them." (and "the whole week" when they are).  Which
+ *  days are in the job is the backend's `in_job`; the week runs Mon to Sun. */
 export function weekNote(job: { start: string; end: string; days: number; week: { in_job: boolean }[] } | null): string {
   if (!job) return "Pick work dates on the page to see your days here.";
-  const span = job.days === 1 ? monthDay(job.start) : `${monthDay(job.start)} to ${monthDay(job.end)}`;
+  if (job.days === 1) return `Your date: ${shortDate(job.start)}. No work on the other days.`;
+  const span = `Your dates: ${shortDate(job.start)} to ${shortDate(job.end)}`;
   if (job.days > job.week.filter((d) => d.in_job).length) {
-    return `Your dates run ${span}. This is the first week; every week has the same hours.`;
+    return `${span}. This is the first week; every week has the same hours.`;
   }
-  return job.week.every((d) => d.in_job)
-    ? `Your dates run ${span}, the whole week.`
-    : `Your dates run ${span}, so the other days are greyed out.`;
+  if (job.week.every((d) => d.in_job)) return `${span}, the whole week.`;
+  // S9: three or more days in a row read as a range, one or two singly.
+  const day = (k: number) => DAYS[(k + 1) % 7];
+  const names: string[] = [];
+  for (let i = 0; i < job.week.length; i += 1) {
+    if (job.week[i].in_job) continue;
+    let j = i;
+    while (j + 1 < job.week.length && !job.week[j + 1].in_job) j += 1;
+    if (j - i >= 2) names.push(`${day(i)} to ${day(j)}`);
+    else for (let k = i; k <= j; k += 1) names.push(day(k));
+    i = j;
+  }
+  const list = names.length < 2 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  const off = job.week.filter((d) => !d.in_job).length;
+  return `${span}. ${list} ${off === 1 ? "isn't" : "aren't"} in them.`;
 }
 export function sourceLine(sources: { doc: string; section?: string; date?: string }[]): string | null {
   if (!sources.length) return null;

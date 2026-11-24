@@ -23,9 +23,10 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { DayKind, DayKindEval, HoursDays, JurisdictionBlock } from "@/lib/jurisdiction";
 import {
+  NO_CLOSURES_LABEL,
   NO_RECORD_LABEL,
   NO_RECORD_SR,
-  SET_CLASS_TO_SEE,
+  PICK_CLASS_TO_CHECK,
   SET_TIMES_TO_SEE,
   checkingDates,
   clock,
@@ -110,6 +111,21 @@ function clipped(
   const before = yours.some((p) => p.a < S) ? (outside.some((p) => p.a < S) ? "out" : "in") : null;
   const after = yours.some((p) => p.b > E) ? (outside.some((p) => p.b > E) ? "out" : "in") : null;
   return { before, after };
+}
+
+/** #556 (S3): a day with a record whose hours need a street class.  The
+ *  backend sends `allowed: null` for it and checks nothing, so your hours
+ *  there are not checked (Rule 10).  Read, never worked out here (Rule 3). */
+const needsClass = (k: DayKindEval) => k.record !== "none" && k.allowed === null;
+
+/** #556 (Ryan, 2026-11-24): "A notice at the top of the chart reads 'Pick a
+ *  street class on the page and we'll check your hours against it.'" */
+function ClassNotice() {
+  return (
+    <p className="whd-line" data-testid="hours-class-notice">
+      {PICK_CLASS_TO_CHECK}
+    </p>
+  );
 }
 
 /** The week shown: the job's first week, or a plain Monday-to-Sunday one. */
@@ -202,6 +218,10 @@ export function WorkHoursDialog({
   // Round 2 (R145 S10): "No record" joins the key only when a day shows it.
   const noRecordShown =
     view === "week" && days !== null && weekOf(days).some((d) => days.kinds[d.day_kind].record === "none");
+  // #556 (S1): "No closures allowed" joins the key only when a day is
+  // striped, by the same test the stripes use.
+  const noClosuresShown =
+    view === "week" && days !== null && weekOf(days).some((d) => days.kinds[d.day_kind].no_closures);
 
   return (
     <div className="whd-scrim">
@@ -279,7 +299,7 @@ export function WorkHoursDialog({
           )}
         </div>
         <div className="whd-foot">
-          <Legend noRecord={noRecordShown} />
+          <Legend noRecord={noRecordShown} noClosures={noClosuresShown} />
           {source && (
             <p className="whd-source" data-testid="hours-dialog-source">
               {source}
@@ -291,7 +311,7 @@ export function WorkHoursDialog({
   );
 }
 
-function Legend({ noRecord }: { noRecord: boolean }) {
+function Legend({ noRecord, noClosures }: { noRecord: boolean; noClosures: boolean }) {
   return (
     <ul className="whd-legend" aria-label="Key">
       <li>
@@ -310,6 +330,12 @@ function Legend({ noRecord }: { noRecord: boolean }) {
         <li data-testid="hours-key-no-record">
           <span className="whd-key is-none" aria-hidden />
           {NO_RECORD_LABEL}
+        </li>
+      )}
+      {noClosures && (
+        <li data-testid="hours-key-no-closures">
+          <span className="whd-key is-closed" aria-hidden />
+          {NO_CLOSURES_LABEL}
         </li>
       )}
     </ul>
@@ -368,7 +394,7 @@ function Weekday({
       {weekdayNoRecord(name)}
     </p>
   ) : wd.allowed === null ? (
-    <p className="whd-line">{SET_CLASS_TO_SEE}</p>
+    <ClassNotice />
   ) : !timed || (wd.status !== "inside" && wd.status !== "outside") ? (
     <p className="whd-line">{SET_TIMES_TO_SEE}</p>
   ) : (
@@ -378,6 +404,9 @@ function Weekday({
     </p>
   );
   const allowed = placed(noRecord ? [] : (wd.allowed ?? []));
+  // #556 (Ryan, 2026-11-24): "When no street class is set, your hours draw
+  // as a dashed outline (not checked yet), not the solid 'inside' ink."
+  const unchecked = noRecord || needsClass(wd);
   const yours = timed && start != null && end != null ? placed(hourSpans(start, end)) : null;
   const outside = placed(wd.outside);
   const clip = yours ? clipped(yours, outside) : null;
@@ -420,8 +449,8 @@ function Weekday({
               {yours.map(({ a, b }) => (
                 <span
                   key={`y${a}`}
-                  className={`whd-yours${noRecord ? " is-unchecked" : ""}`}
-                  data-unchecked={noRecord ? "" : undefined}
+                  className={`whd-yours${unchecked ? " is-unchecked" : ""}`}
+                  data-unchecked={unchecked ? "" : undefined}
                   style={{ left: pct(a), width: len(a, b) }}
                 />
               ))}
@@ -520,6 +549,7 @@ function Week({
   const yours = timed && start != null && end != null ? placed(hourSpans(start, end)) : null;
   return (
     <>
+      {week.some((d) => needsClass(days.kinds[d.day_kind])) && <ClassNotice />}
       <div className="whd-week" data-testid="hours-week">
         <div className="whd-vticks" aria-hidden>
           {TICKS.map((h) => (
@@ -534,6 +564,8 @@ function Week({
           // Round 2 (R145 S10): a day with no window on record is an empty
           // dashed column labelled "No record", never an Allowed band.
           const none = k.record === "none";
+          // #556: no record or no street class, so not checked (hollow).
+          const unchecked = none || needsClass(k);
           const outside = placed(k.outside);
           const clip = yours && d.in_job ? clipped(yours, outside) : null;
           return (
@@ -561,8 +593,8 @@ function Week({
                     {yours.map(({ a, b }) => (
                       <span
                         key={`y${a}`}
-                        className={`whd-yours is-v${none ? " is-unchecked" : ""}`}
-                        data-unchecked={none ? "" : undefined}
+                        className={`whd-yours is-v${unchecked ? " is-unchecked" : ""}`}
+                        data-unchecked={unchecked ? "" : undefined}
                         style={{ top: vpos(a), height: len(a, b) }}
                       />
                     ))}
@@ -617,7 +649,9 @@ function Week({
           </span>
         ))}
       </div>
-      <p className="whd-line" data-testid="hours-week-note">
+      {/* #556 (S12): the note stays whole at the bottom of the body when
+          the view runs long (.whd-note is sticky); the chart scrolls. */}
+      <p className="whd-line whd-note" data-testid="hours-week-note">
         {weekNote(days.job)}
       </p>
     </>

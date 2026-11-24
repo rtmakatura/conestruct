@@ -1,0 +1,811 @@
+{
+ "site": "http://localhost:3556",
+ "viewport": [
+  390,
+  844
+ ],
+ "errors": [],
+ "states": {
+  "534-week-note-fits": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": "✓Your hours fit on weekdays.",
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 1,
+    "bands": 2,
+    "ground": "rgb(16, 28, 41)",
+    "track": 28,
+    "cols": [],
+    "weekRows": null,
+    "sr": [],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 338.56,
+       "bottom": 354.56
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 357.13
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 5,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "534-week-note-outside": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm.",
+    "verdict": "Your hours go outside what Denver allows on weekdays.",
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     {
+      "cls": "whd-yours is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 3,
+    "bands": 2,
+    "ground": "rgb(16, 28, 41)",
+    "track": 28,
+    "cols": [],
+    "weekRows": null,
+    "sr": [],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 338.56,
+       "bottom": 354.56
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 357.13
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     {
+      "cls": "whd-yours is-v is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 15,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 7 am to 8:30 am, 3:30 pm to 5 pm.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "535-no-closures": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": "✓Your hours fit on weekdays.",
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 1,
+    "bands": 2,
+    "ground": "rgb(16, 28, 41)",
+    "track": 28,
+    "cols": [],
+    "weekRows": null,
+    "sr": [],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No closures allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": {
+     "text": "No closures allowed",
+     "size": "12.5px",
+     "swatch": {
+      "w": 14,
+      "h": 10,
+      "backgroundImage": "repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)",
+      "border": "1px solid rgb(34, 50, 68)"
+     },
+     "days": {
+      "w": 31.72,
+      "h": 238,
+      "backgroundImage": "repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 6px, rgb(29, 44, 60) 6px, rgb(29, 44, 60) 12px)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     "stripedDays": 2
+    },
+    "stripedDays": 2,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 338.56,
+       "bottom": 354.56
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 357.13
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     {
+      "cls": "whd-yours is-v is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 9,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "No closures. Outside: 9 am to 3 pm.",
+     "No closures. Outside: 9 am to 3 pm."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "535-class-unset": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 408,
+     "clientHeight": 408,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm.",
+    "verdict": null,
+    "notice": {
+     "text": "Pick a street class on the page and we'll check your hours against it.",
+     "firstInBody": true,
+     "top": 4,
+     "bottom": 43.13,
+     "size": "13.5px",
+     "color": "rgb(200, 209, 221)"
+    },
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed rgb(147, 160, 176)"
+     }
+    ],
+    "yoursCount": 1,
+    "bands": 0,
+    "ground": "rgb(16, 28, 41)",
+    "track": 28,
+    "cols": [],
+    "weekRows": null,
+    "sr": [],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 408,
+     "clientHeight": 408,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm.",
+    "verdict": null,
+    "notice": {
+     "text": "Pick a street class on the page and we'll check your hours against it.",
+     "firstInBody": true,
+     "top": 4,
+     "bottom": 43.13,
+     "size": "13.5px",
+     "color": "rgb(200, 209, 221)"
+    },
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 389.13,
+       "bottom": 405.13
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 368.56,
+       "bottom": 407.69
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed rgb(147, 160, 176)"
+     }
+    ],
+    "yoursCount": 7,
+    "bands": 0,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Needs a street class.",
+     "Needs a street class.",
+     "Needs a street class.",
+     "Needs a street class.",
+     "Needs a street class.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-note-multi-week": {
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Wed Dec 23. This is the first week; every week has the same hours.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 338.56,
+       "bottom": 354.56
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 357.13
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     {
+      "cls": "whd-yours is-v is-unchecked",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "1px dashed rgb(147, 160, 176)"
+     }
+    ],
+    "yoursCount": 7,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  },
+  "556-note-one-day": {
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 640
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 382,
+     "clientHeight": 382,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 8 am to 3 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your date: Wed Dec 9. No work on the other days.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 1,
+      "lastLine": {
+       "top": 319,
+       "bottom": 335
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 337.56
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     },
+     {
+      "cls": "whd-yours is-v is-out",
+      "bg": "rgb(255, 138, 46)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 2,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight. Outside: 8 am to 8:30 am.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  }
+ },
+ "jurisdictionByHand": false,
+ "bandHeightClosed": 1917.25,
+ "bandHeightAfterClose": 1917.25,
+ "classUnsetAnswer": {
+  "missing": "street_class",
+  "status": "unknown",
+  "kinds": {
+   "weekday": {
+    "allowed": null,
+    "record": "windows",
+    "no_closures": false,
+    "status": null,
+    "outside": []
+   },
+   "weekend": {
+    "allowed": [
+     [
+      0,
+      24
+     ]
+    ],
+    "record": "none",
+    "no_closures": false,
+    "status": "no_record",
+    "outside": []
+   }
+  }
+ }
+}

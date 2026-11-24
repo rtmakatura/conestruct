@@ -162,7 +162,7 @@ describe("#526 ruling 4: the whole week", () => {
       "Sun 22",
     ]);
     expect(screen.getByTestId("hours-week-note").textContent).toBe(
-      "Your dates run Nov 16 to Nov 20, so the other days are greyed out.",
+      "Your dates: Mon Nov 16 to Fri Nov 20. Sat and Sun aren't in them.",
     );
   });
 
@@ -840,5 +840,150 @@ describe("#555: both views run 6 am to 6 am", () => {
     expect(css).toMatch(/\.workbench \.whd-day \{[^}]*grid-template-rows: 34px 240px;/);
     expect(css).toMatch(/\.workbench \.whd-vticks \{[^}]*height: 240px;/);
     expect(css).toMatch(/\.workbench \.whd-midnight \{[^}]*border-left: 1px dashed var\(--ink-faint\);/);
+  });
+});
+
+// #556 (Ryan, 2026-11-24, item 2): "The key gains 'No closures allowed', with
+// a small striped swatch matching the striped days.  It shows only when the
+// week has a no-closures day."  "When no street class is set, your hours
+// draw as a dashed outline (not checked yet), not the solid 'inside' ink.  A
+// notice at the top of the chart reads 'Pick a street class on the page and
+// we'll check your hours against it.'"  "At 390, the week note under the
+// chart must never be cut off."
+describe("#556: the no-closures key, hours with no street class, the week note", () => {
+  const NOTICE = "Pick a street class on the page and we'll check your hours against it.";
+  const css = () => readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+  const toWeek = async () => {
+    await userEvent.setup().click(screen.getByTestId("hours-view-week"));
+    return screen.getAllByTestId("hours-week-day");
+  };
+  /** A Mon-to-Sun job with no street class: weekdays need a class, the
+   *  weekend has no record (the backend's answer for Denver). */
+  const classUnset = (lastDay: 20 | 22 = 22) => {
+    const d = denverDays("street_class");
+    const full = denverDays("partial").job;
+    return denverBlock(lastDay === 22 ? { ...d, job: full } : d);
+  };
+
+  it("a: the key names the stripes, with a striped swatch, in a week with a no-closures day", async () => {
+    open({ block: denverBlock(denverDays("weekend_closed")), start: 9, end: 15 });
+    // The weekday view draws no stripes, so its key has no entry for them.
+    expect(screen.queryByTestId("hours-key-no-closures")).toBeNull();
+    const days = await toWeek();
+    expect(days.filter((d) => d.querySelector(".whd-closed")).length).toBe(2);
+    const key = screen.getByTestId("hours-key-no-closures");
+    expect(key.textContent).toBe("No closures allowed");
+    const swatch = key.querySelector(".whd-key.is-closed");
+    expect(swatch).not.toBeNull();
+    expect(swatch?.getAttribute("aria-hidden")).toBe("true");
+    // It is in the key's list, after the entries that were there.
+    const items = [...screen.getByLabelText("Key").querySelectorAll("li")].map((li) => li.textContent);
+    expect(items).toEqual(["Allowed", "Your hours", "Outside what's allowed", "No closures allowed"]);
+  });
+
+  it("a: no entry in a week with no no-closures day", async () => {
+    open({ block: denverBlock(denverDays("partial")), start: 9, end: 15 });
+    const days = await toWeek();
+    expect(days.some((d) => d.querySelector(".whd-closed"))).toBe(false);
+    expect(screen.queryByTestId("hours-key-no-closures")).toBeNull();
+    expect(screen.getByTestId("hours-key-no-record")).not.toBeNull();
+  });
+
+  it("a: the swatch is the days' stripes: the same two tokens at the same angle (globals.css)", () => {
+    const stripes = (rule: string) => {
+      const m = new RegExp(`\\.workbench \\.${rule} \\{[^}]*\\}`).exec(css())?.[0] ?? "";
+      return [/repeating-linear-gradient\(\s*(\d+deg)/.exec(m)?.[1], ...[...m.matchAll(/var\((--[a-z-]+)\) \d/g)].map((x) => x[1])];
+    };
+    expect(stripes("whd-closed")).toEqual(["135deg", "--da-ground", "--pri-off"]);
+    expect(stripes("whd-key\\.is-closed")).toEqual(stripes("whd-closed"));
+  });
+
+  it("b: the weekday view with no street class: the notice on top, a hollow bar, no inside or outside ink", () => {
+    open({ block: classUnset(), start: 9, end: 14 });
+    const body = screen.getByRole("region", { name: "A weekday" });
+    const notice = screen.getByTestId("hours-class-notice");
+    expect(notice.textContent).toBe(NOTICE);
+    // At the top of the chart: the body's first line, above the ruler.
+    expect(body.firstElementChild).toBe(notice);
+    expect(notice.compareDocumentPosition(screen.getByTestId("hours-ruler")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(body.textContent).not.toContain("to see its hours here");
+    const ruler = screen.getByTestId("hours-ruler");
+    const yours = [...ruler.querySelectorAll(".whd-yours")];
+    expect(spans(ruler, ".whd-yours", "left", "width")).toEqual([["12.50%", "20.83%"]]);
+    for (const y of yours) expect(y.classList.contains("is-unchecked")).toBe(true);
+    expect(ruler.querySelector(".whd-yours.is-out")).toBeNull();
+    expect(ruler.querySelector(".whd-band")).toBeNull();
+    expect(screen.queryByTestId("hours-verdict")).toBeNull();
+    expect(screen.queryByTestId("hours-fix")).toBeNull();
+  });
+
+  it("b: the whole week with no street class: the notice on top, every bar hollow, no inside or outside ink", async () => {
+    open({ block: classUnset(), start: 9, end: 14 });
+    const days = await toWeek();
+    const body = screen.getByRole("region", { name: "The whole week" });
+    const notice = screen.getByTestId("hours-class-notice");
+    expect(notice.textContent).toBe(NOTICE);
+    expect(body.firstElementChild).toBe(notice);
+    expect(notice.compareDocumentPosition(screen.getByTestId("hours-week")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(days.map((d) => d.querySelectorAll(".whd-yours").length)).toEqual([1, 1, 1, 1, 1, 1, 1]);
+    for (const d of days) {
+      for (const y of d.querySelectorAll(".whd-yours")) expect(y.classList.contains("is-unchecked")).toBe(true);
+      expect(d.querySelector(".whd-yours.is-out")).toBeNull();
+    }
+    // The days still say why in words (unchanged).
+    expect(days.map((d) => d.querySelector(".sr-only")?.textContent)).toEqual([
+      ...Array(5).fill("Needs a street class."),
+      "No hours on record.",
+      "No hours on record.",
+    ]);
+  });
+
+  it("b: with a street class there is no notice, and checked hours keep the inside and outside ink", async () => {
+    open();
+    expect(screen.queryByTestId("hours-class-notice")).toBeNull();
+    expect(screen.getByTestId("hours-ruler").querySelector(".whd-yours.is-unchecked")).toBeNull();
+    expect(screen.getByTestId("hours-ruler").querySelectorAll(".whd-yours.is-out").length).toBe(2);
+    const days = await toWeek();
+    expect(screen.queryByTestId("hours-class-notice")).toBeNull();
+    for (const d of days) expect(d.querySelector(".whd-yours.is-unchecked")).toBeNull();
+  });
+
+  it("b: the hollow bar is dashed and unfilled, so it differs by shape (globals.css)", () => {
+    expect(css()).toMatch(
+      /\.workbench \.whd-yours\.is-unchecked \{\s*background: transparent;\s*border: 1px dashed var\(--ink-faint\);\s*\}/,
+    );
+  });
+
+  it("c: the week note, part of a week and the whole week", async () => {
+    open();
+    await toWeek();
+    expect(screen.getByTestId("hours-week-note").textContent).toBe(
+      "Your dates: Mon Nov 16 to Fri Nov 20. Sat and Sun aren't in them.",
+    );
+    cleanup();
+    open({ block: denverBlock(denverDays("partial")), start: 9, end: 15 });
+    await toWeek();
+    expect(screen.getByTestId("hours-week-note").textContent).toBe(
+      "Your dates: Mon Nov 16 to Sun Nov 22, the whole week.",
+    );
+  });
+
+  it("c: the note is the last line of a body that scrolls and stays at its bottom edge; the window is taller at 600 px wide and under (globals.css)", async () => {
+    open();
+    await toWeek();
+    const body = screen.getByRole("region", { name: "The whole week" });
+    expect(body.lastElementChild).toBe(screen.getByTestId("hours-week-note"));
+    // S12: the note is a direct child of the scrolling body and sticks to
+    // its bottom, on the window's ground.  The walk measures the result.
+    expect(screen.getByTestId("hours-week-note").classList.contains("whd-note")).toBe(true);
+    expect(css()).toMatch(
+      /\.workbench \.whd-note \{\s*position: sticky;\s*bottom: 0;\s*z-index: 1;\s*background: var\(--da-ground\);\s*\}/,
+    );
+    expect(body.getAttribute("tabindex")).toBe("0");
+    expect(css()).toMatch(/\.workbench \.whd-body \{\s*overflow-y: auto;/);
+    expect(css()).toMatch(/\.workbench \.whd \{[^}]*height: min\(600px, calc\(100vh - 32px\)\);/);
+    expect(css()).toMatch(
+      /@media \(max-width: 600px\) \{\s*\.workbench \.whd \{\s*height: min\(640px, calc\(100vh - 32px\)\);\s*\}\s*\}/,
+    );
   });
 });

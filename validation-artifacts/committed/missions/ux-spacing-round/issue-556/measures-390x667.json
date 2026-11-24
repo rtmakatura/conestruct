@@ -1,0 +1,150 @@
+{
+ "site": "http://localhost:3556",
+ "viewport": [
+  390,
+  667
+ ],
+ "errors": [],
+ "states": {
+  "534-week-note-fits": {
+   "day": {
+    "dialog": {
+     "w": 358,
+     "h": 635
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 377,
+     "clientHeight": 377,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": "✓Your hours fit on weekdays.",
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": null,
+    "yours": [
+     {
+      "cls": "whd-yours",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 1,
+    "bands": 2,
+    "ground": "rgb(16, 28, 41)",
+    "track": 28,
+    "cols": [],
+    "weekRows": null,
+    "sr": [],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [],
+    "axe": [],
+    "under44": []
+   },
+   "week": {
+    "dialog": {
+     "w": 358,
+     "h": 635
+    },
+    "body": {
+     "scrollWidth": 324,
+     "clientWidth": 324,
+     "scrollHeight": 377,
+     "clientHeight": 377,
+     "scrolls": false,
+     "overflowY": "auto",
+     "tabindex": "0"
+    },
+    "sub": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+    "verdict": null,
+    "notice": null,
+    "legend": [
+     "Allowed",
+     "Your hours",
+     "Outside what's allowed",
+     "No record"
+    ],
+    "legendLines": 2,
+    "keyNoClosures": null,
+    "stripedDays": 0,
+    "note": {
+     "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+     "size": "13.5px",
+     "atRest": {
+      "scrollTop": 0,
+      "lines": 2,
+      "lastLine": {
+       "top": 338.56,
+       "bottom": 354.56
+      },
+      "lastLineInside": true,
+      "box": {
+       "top": 318,
+       "bottom": 357.13
+      },
+      "boxInside": true
+     },
+     "atEnd": null
+    },
+    "yours": [
+     {
+      "cls": "whd-yours is-v",
+      "bg": "rgb(234, 240, 247)",
+      "border": "0px solid rgb(229, 231, 235)"
+     }
+    ],
+    "yoursCount": 5,
+    "bands": 10,
+    "ground": "rgb(16, 28, 41)",
+    "track": null,
+    "cols": [
+     240
+    ],
+    "weekRows": "274px 32px",
+    "sr": [
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "Allowed midnight to 5 am, 8:30 am to 3:30 pm, 8 pm to midnight.",
+     "No hours on record.",
+     "No hours on record."
+    ],
+    "families": [
+     "__Inter_176161"
+    ],
+    "sizes": [
+     "12.5px",
+     "13.5px",
+     "19px"
+    ],
+    "srSizes": [
+     "13px"
+    ],
+    "axe": [],
+    "under44": []
+   }
+  }
+ },
+ "jurisdictionByHand": false,
+ "bandHeightClosed": 1917.25,
+ "bandHeightAfterClose": 1917.25
+}
