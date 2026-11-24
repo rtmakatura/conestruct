@@ -1,0 +1,1092 @@
+{
+ "site": "http://localhost:3557",
+ "mode": "after",
+ "viewport": [
+  390,
+  844
+ ],
+ "errors": [],
+ "aerial": {
+  "pinned": {
+   "frame": {
+    "w": 328,
+    "h": 150
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 210,
+     "t": 9,
+     "r": 319,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-hide",
+     "l": 223,
+     "t": 70,
+     "r": 319,
+     "b": 114,
+     "w": 95.75,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 122,
+     "r": 93,
+     "b": 141,
+     "w": 84,
+     "h": 19
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  },
+  "editPanel": {
+   "frame": {
+    "w": 328,
+    "h": 150
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 210,
+     "t": 9,
+     "r": 319,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-hide",
+     "l": 223,
+     "t": 70,
+     "r": 319,
+     "b": 114,
+     "w": 95.75,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 122,
+     "r": 93,
+     "b": 141,
+     "w": 84,
+     "h": 19
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  },
+  "reopened": {
+   "frame": {
+    "w": 328,
+    "h": 250
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 210,
+     "t": 9,
+     "r": 319,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 222,
+     "r": 93,
+     "b": 241,
+     "w": 84,
+     "h": 19
+    },
+    {
+     "name": "Zoom in",
+     "l": 275,
+     "t": 61,
+     "r": 319,
+     "b": 105,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Zoom out",
+     "l": 275,
+     "t": 109,
+     "r": 319,
+     "b": 153,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-legend",
+     "l": 0,
+     "t": 290,
+     "r": 328,
+     "b": 354,
+     "w": 328,
+     "h": 64.25
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": [
+    "band-aerial-legend"
+   ]
+  }
+ },
+ "whereHeightPinned": 923.25,
+ "zoomShown": 0,
+ "axePinned": [],
+ "under44Pinned": [
+  {
+   "tag": "a",
+   "cls": "mapboxgl-ctrl-logo",
+   "testid": null,
+   "label": "Mapbox logo",
+   "w": 88,
+   "h": 23
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Maxar",
+   "w": 47.05,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Mapbox",
+   "w": 53.77,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 OpenStreetMap",
+   "w": 100.81,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "Improve this map",
+   "w": 107.53,
+   "h": 14
+  }
+ ],
+ "editPanel": [
+  {
+   "testid": "move-action-spot",
+   "cls": "wq-link",
+   "text": "Change",
+   "x": 283.34,
+   "y": 530.25,
+   "w": 58.66,
+   "h": 44
+  },
+  {
+   "testid": "move-action-start",
+   "cls": "wq-link",
+   "text": "Move",
+   "x": 297.91,
+   "y": 587.75,
+   "w": 44.09,
+   "h": 44
+  },
+  {
+   "testid": "info-toggle-worklen",
+   "cls": "a-mark tr-prov is-plain",
+   "text": "Details for Work zone length (ft)",
+   "x": 294.95,
+   "y": 665,
+   "w": 47.05,
+   "h": 44
+  },
+  {
+   "testid": null,
+   "cls": "a-fld",
+   "text": "",
+   "x": 48,
+   "y": 715,
+   "w": 294,
+   "h": 44
+  },
+  {
+   "testid": "where-edit-cancel",
+   "cls": "wq-cancel tr-help",
+   "text": "Cancel",
+   "x": 262.66,
+   "y": 787,
+   "w": 79.34,
+   "h": 44
+  },
+  {
+   "testid": "where-edit-done",
+   "cls": "a-pri wq-next",
+   "text": "Done, back to the questions",
+   "x": 112.11,
+   "y": 839,
+   "w": 229.89,
+   "h": 44
+  }
+ ],
+ "factWhere": {
+  "row": {
+   "w": 362,
+   "h": 140.63
+  },
+  "link": {
+   "l": 47,
+   "t": 83.63,
+   "w": 298,
+   "h": 44,
+   "text": "Change",
+   "name": "Change",
+   "family": "__Inter_176161",
+   "size": "13.5px",
+   "weight": "600",
+   "color": "rgb(52, 169, 232)",
+   "transform": "none",
+   "tracking": "normal",
+   "decoration": "underline",
+   "borderBottom": "0px none"
+  },
+  "linkText": {
+   "l": 170.67,
+   "t": 97.5,
+   "w": 50.66,
+   "h": 16
+  },
+  "label": {
+   "l": 47,
+   "t": 13,
+   "w": 39.34,
+   "h": 17.5
+  },
+  "value": {
+   "l": 47,
+   "t": 38.5,
+   "w": 298,
+   "h": 39.13
+  },
+  "act": "#34a9e8"
+ },
+ "jurisdictionByHand": false,
+ "what": {
+  "band": [
+   14,
+   336.63,
+   362,
+   1610.75
+  ],
+  "boxes": {
+   "0:div.w-box#what-guesses": [
+    31,
+    478.88,
+    328,
+    445
+   ],
+   "1:p.w-box-head#what-guesses-head": [
+    48,
+    481.88,
+    168.78,
+    43.5
+   ],
+   "2:div.a-cell#cell-road-type": [
+    32,
+    525.38,
+    326,
+    132.5
+   ],
+   "3:label.w-label": [
+    48,
+    536.38,
+    60.53,
+    17.5
+   ],
+   "4:span.w-src-word#prov-road-type": [
+    62.78,
+    558.38,
+    279.22,
+    35
+   ],
+   "5:div.lb": [
+    48,
+    603.88,
+    294,
+    44
+   ],
+   "6:div.a-cell#cell-street-class": [
+    32,
+    657.88,
+    326,
+    132.5
+   ],
+   "7:label.w-label": [
+    48,
+    668.88,
+    70.13,
+    17.5
+   ],
+   "8:span.w-src-word#prov-street-class": [
+    62.78,
+    699.63,
+    169.56,
+    17.5
+   ],
+   "9:div.lb": [
+    48,
+    736.38,
+    294,
+    44
+   ],
+   "10:div.a-cell#cell-jurisdiction": [
+    32,
+    790.38,
+    326,
+    132.5
+   ],
+   "11:label.w-label": [
+    48,
+    801.38,
+    70.09,
+    17.5
+   ],
+   "12:span.w-src-word#prov-jurisdiction": [
+    62.78,
+    832.13,
+    159.97,
+    17.5
+   ],
+   "13:div.lb": [
+    48,
+    868.88,
+    294,
+    44
+   ],
+   "14:p.w-sec-head": [
+    31,
+    939.88,
+    328,
+    43.5
+   ],
+   "15:div.a-cell#cell-work-type": [
+    31,
+    983.38,
+    328,
+    132.5
+   ],
+   "16:label.w-label": [
+    31,
+    994.38,
+    78.33,
+    17.5
+   ],
+   "17:span.w-src-word#prov-work-type": [
+    31,
+    1025.13,
+    42.45,
+    17.5
+   ],
+   "18:div.lb": [
+    31,
+    1061.88,
+    328,
+    44
+   ],
+   "19:div.a-cell#cell-night": [
+    31,
+    1115.88,
+    328,
+    132.5
+   ],
+   "20:span.w-label": [
+    31,
+    1126.88,
+    68.97,
+    17.5
+   ],
+   "21:span.w-src-word#prov-night": [
+    31,
+    1157.63,
+    42.45,
+    17.5
+   ],
+   "22:div.a-seg": [
+    31,
+    1194.38,
+    328,
+    44
+   ],
+   "23:div.a-cell#cell-reduction": [
+    31,
+    1248.38,
+    328,
+    132.5
+   ],
+   "24:span.w-label": [
+    31,
+    1259.38,
+    98.42,
+    17.5
+   ],
+   "25:span.w-src-word#prov-reduction": [
+    31,
+    1290.13,
+    42.45,
+    17.5
+   ],
+   "26:div.a-seg": [
+    31,
+    1326.88,
+    328,
+    44
+   ],
+   "27:div.a-cell#cell-work-dates": [
+    31,
+    1380.88,
+    328,
+    173.5
+   ],
+   "28:label.w-label": [
+    31,
+    1391.88,
+    67.84,
+    17.5
+   ],
+   "29:span.w-src-word#prov-work-dates": [
+    31,
+    1422.63,
+    64.17,
+    17.5
+   ],
+   "30:div.drp": [
+    31,
+    1459.38,
+    328,
+    44
+   ],
+   "31:span.w-result#what-windows-line": [
+    31,
+    1509.38,
+    328,
+    35
+   ],
+   "32:div.w-hours-row#what-hours": [
+    31,
+    1554.38,
+    328,
+    125.5
+   ],
+   "33:div.w-row#what-measured": [
+    31,
+    1695.88,
+    328,
+    110.25
+   ],
+   "34:div.w-row#what-files": [
+    31,
+    1822.13,
+    328,
+    108.25
+   ]
+  },
+  "defaults": [
+   {
+    "testid": "info-toggle-work-type",
+    "word": "Default",
+    "box": [
+     29,
+     1011.88,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1025.13,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-night",
+    "word": "Default",
+    "box": [
+     29,
+     1144.38,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1157.63,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-reduction",
+    "word": "Default",
+    "box": [
+     29,
+     1276.88,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1290.13,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   }
+  ]
+ },
+ "axeWhat": [],
+ "under44What": [],
+ "defaultFocus": "default",
+ "hours": {
+  "outside": {
+   "row": {
+    "y": 1868.88,
+    "h": 125.5,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1898.38,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 1868.88,
+   "aboveInkBottom": 1856.13,
+   "focused": false,
+   "outline": "3px none offset 0px",
+   "ringTopToInk": "not measured",
+   "workDatesCell": {
+    "y": 1380.88,
+    "h": 173.5
+   },
+   "record": null
+  },
+  "withRecord": {
+   "row": {
+    "y": 1868.88,
+    "h": 125.5,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1898.38,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 1868.88,
+   "aboveInkBottom": 1856.13,
+   "focused": true,
+   "outline": "2px solid offset 2px",
+   "ringTopToInk": 38.25,
+   "workDatesCell": {
+    "y": 1380.88,
+    "h": 173.5
+   },
+   "record": "Hours changed to 8:30\u00a0am to 3:30\u00a0pm.Undo"
+  },
+  "afterUndo": {
+   "row": {
+    "y": 1868.88,
+    "h": 125.5,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1898.38,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 1868.88,
+   "aboveInkBottom": 1856.13,
+   "focused": false,
+   "outline": "3px none offset 0px",
+   "ringTopToInk": "not measured",
+   "workDatesCell": {
+    "y": 1380.88,
+    "h": 173.5
+   },
+   "record": null
+  }
+ },
+ "fixOffered": "Change my hours to 8:30\u00a0am to 3:30\u00a0pm",
+ "whatWithRecord": {
+  "band": [
+   14,
+   336.63,
+   362,
+   1925.25
+  ],
+  "boxes": {
+   "0:div.w-box#what-guesses": [
+    31,
+    478.88,
+    328,
+    445
+   ],
+   "1:p.w-box-head#what-guesses-head": [
+    48,
+    481.88,
+    168.78,
+    43.5
+   ],
+   "2:div.a-cell#cell-road-type": [
+    32,
+    525.38,
+    326,
+    132.5
+   ],
+   "3:label.w-label": [
+    48,
+    536.38,
+    60.53,
+    17.5
+   ],
+   "4:span.w-src-word#prov-road-type": [
+    62.78,
+    558.38,
+    279.22,
+    35
+   ],
+   "5:div.lb": [
+    48,
+    603.88,
+    294,
+    44
+   ],
+   "6:div.a-cell#cell-street-class": [
+    32,
+    657.88,
+    326,
+    132.5
+   ],
+   "7:label.w-label": [
+    48,
+    668.88,
+    70.13,
+    17.5
+   ],
+   "8:span.w-src-word#prov-street-class": [
+    62.78,
+    699.63,
+    169.56,
+    17.5
+   ],
+   "9:div.lb": [
+    48,
+    736.38,
+    294,
+    44
+   ],
+   "10:div.a-cell#cell-jurisdiction": [
+    32,
+    790.38,
+    326,
+    132.5
+   ],
+   "11:label.w-label": [
+    48,
+    801.38,
+    70.09,
+    17.5
+   ],
+   "12:span.w-src-word#prov-jurisdiction": [
+    62.78,
+    832.13,
+    159.97,
+    17.5
+   ],
+   "13:div.lb": [
+    48,
+    868.88,
+    294,
+    44
+   ],
+   "14:p.w-sec-head": [
+    31,
+    939.88,
+    328,
+    43.5
+   ],
+   "15:div.a-cell#cell-work-type": [
+    31,
+    983.38,
+    328,
+    132.5
+   ],
+   "16:label.w-label": [
+    31,
+    994.38,
+    78.33,
+    17.5
+   ],
+   "17:span.w-src-word#prov-work-type": [
+    31,
+    1025.13,
+    42.45,
+    17.5
+   ],
+   "18:div.lb": [
+    31,
+    1061.88,
+    328,
+    44
+   ],
+   "19:div.a-cell#cell-night": [
+    31,
+    1115.88,
+    328,
+    132.5
+   ],
+   "20:span.w-label": [
+    31,
+    1126.88,
+    68.97,
+    17.5
+   ],
+   "21:span.w-src-word#prov-night": [
+    31,
+    1157.63,
+    42.45,
+    17.5
+   ],
+   "22:div.a-seg": [
+    31,
+    1194.38,
+    328,
+    44
+   ],
+   "23:div.a-cell#cell-reduction": [
+    31,
+    1248.38,
+    328,
+    132.5
+   ],
+   "24:span.w-label": [
+    31,
+    1259.38,
+    98.42,
+    17.5
+   ],
+   "25:span.w-src-word#prov-reduction": [
+    31,
+    1290.13,
+    42.45,
+    17.5
+   ],
+   "26:div.a-seg": [
+    31,
+    1326.88,
+    328,
+    44
+   ],
+   "27:div.a-cell#cell-work-dates": [
+    31,
+    1380.88,
+    328,
+    173.5
+   ],
+   "28:label.w-label": [
+    31,
+    1391.88,
+    67.84,
+    17.5
+   ],
+   "29:span.w-src-word#prov-work-dates": [
+    31,
+    1422.63,
+    62.53,
+    17.5
+   ],
+   "30:div.drp": [
+    31,
+    1459.38,
+    328,
+    44
+   ],
+   "31:span.w-result#what-windows-line": [
+    31,
+    1509.38,
+    328,
+    35
+   ],
+   "32:div.a-cell#cell-start-time": [
+    31,
+    1554.38,
+    328,
+    157.25
+   ],
+   "33:label.w-label": [
+    31,
+    1565.38,
+    57.97,
+    17.5
+   ],
+   "34:span.w-src-word#prov-start-time": [
+    31,
+    1596.13,
+    62.53,
+    17.5
+   ],
+   "35:div.lb": [
+    31,
+    1632.88,
+    328,
+    44
+   ],
+   "36:span.tr-note": [
+    31,
+    1682.88,
+    328,
+    18.75
+   ],
+   "37:div.a-cell#cell-end-time": [
+    31,
+    1711.63,
+    328,
+    157.25
+   ],
+   "38:label.w-label": [
+    31,
+    1722.63,
+    51.97,
+    17.5
+   ],
+   "39:span.w-src-word#prov-end-time": [
+    31,
+    1753.38,
+    62.53,
+    17.5
+   ],
+   "40:div.lb": [
+    31,
+    1790.13,
+    328,
+    44
+   ],
+   "41:span.tr-note": [
+    31,
+    1840.13,
+    328,
+    18.75
+   ],
+   "42:div.w-hours-row#what-hours": [
+    31,
+    1868.88,
+    328,
+    125.5
+   ],
+   "43:div.w-row#what-measured": [
+    31,
+    2010.38,
+    328,
+    110.25
+   ],
+   "44:div.w-row#what-files": [
+    31,
+    2136.63,
+    328,
+    108.25
+   ]
+  },
+  "defaults": [
+   {
+    "testid": "info-toggle-work-type",
+    "word": "Default",
+    "box": [
+     29,
+     1011.88,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1025.13,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-night",
+    "word": "Default",
+    "box": [
+     29,
+     1144.38,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1157.63,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-reduction",
+    "word": "Default",
+    "box": [
+     29,
+     1276.88,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     31,
+     1290.13,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   }
+  ]
+ },
+ "axeWhatRecord": [],
+ "under44WhatRecord": [],
+ "night": {
+  "arrows": 0,
+  "clipElements": 0,
+  "columns": [
+   240
+  ],
+  "yourBars": 7,
+  "window": [
+   358,
+   640
+  ]
+ },
+ "axeNightWeek": [],
+ "under44NightWeek": [],
+ "nightDay": {
+  "arrows": 0,
+  "clipElements": 0
+ },
+ "axeNightDay": [],
+ "factWhat": {
+  "row": {
+   "w": 362,
+   "h": 140.63
+  },
+  "link": {
+   "l": 47,
+   "t": 83.63,
+   "w": 298,
+   "h": 44,
+   "text": "Change",
+   "name": "Change",
+   "family": "__Inter_176161",
+   "size": "13.5px",
+   "weight": "600",
+   "color": "rgb(52, 169, 232)",
+   "transform": "none",
+   "tracking": "normal",
+   "decoration": "underline",
+   "borderBottom": "0px none"
+  },
+  "linkText": {
+   "l": 170.67,
+   "t": 97.5,
+   "w": 50.66,
+   "h": 16
+  },
+  "label": {
+   "l": 47,
+   "t": 13,
+   "w": 92.84,
+   "h": 17.5
+  },
+  "value": {
+   "l": 47,
+   "t": 38.5,
+   "w": 298,
+   "h": 39.13
+  },
+  "act": "#34a9e8"
+ },
+ "axeReopened": [],
+ "under44Reopened": [
+  {
+   "tag": "a",
+   "cls": "mapboxgl-ctrl-logo",
+   "testid": null,
+   "label": "Mapbox logo",
+   "w": 88,
+   "h": 23
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Maxar",
+   "w": 47.05,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Mapbox",
+   "w": 53.77,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 OpenStreetMap",
+   "w": 100.81,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "Improve this map",
+   "w": 107.53,
+   "h": 14
+  }
+ ]
+}

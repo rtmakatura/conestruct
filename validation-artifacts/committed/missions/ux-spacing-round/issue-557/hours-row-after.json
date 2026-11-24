@@ -1,0 +1,126 @@
+{
+ "site": "http://localhost:3557",
+ "mode": "after",
+ "sizes": {
+  "390": {
+   "row": {
+    "h": 125.5,
+    "align": "baseline",
+    "padding": "4px 0px 8px"
+   },
+   "sentence": {
+    "l": 0,
+    "t": 4,
+    "w": 240.02,
+    "h": 17.5,
+    "ink": {
+     "t": 5,
+     "b": 20
+    },
+    "text": "Denver limits when you can close a lane."
+   },
+   "link": {
+    "l": 0,
+    "t": 29.5,
+    "w": 171.61,
+    "h": 44,
+    "ink": {
+     "t": 43.38,
+     "b": 59.38
+    },
+    "marginTop": "8px",
+    "text": "See Denver's work hours"
+   },
+   "slot": {
+    "l": 0,
+    "t": 73.5,
+    "w": 328,
+    "h": 44
+   },
+   "wrapped": true,
+   "sentenceInkToLinkTop": 9.5,
+   "inkOffset": 38.38,
+   "bandHeight": 1610.75
+  },
+  "1198": {
+   "row": {
+    "h": 108,
+    "align": "baseline",
+    "padding": "4px 0px 8px"
+   },
+   "sentence": {
+    "l": 0,
+    "t": 25.88,
+    "w": 240.02,
+    "h": 17.5,
+    "ink": {
+     "t": 26.88,
+     "b": 41.88
+    },
+    "text": "Denver limits when you can close a lane."
+   },
+   "link": {
+    "l": 248.02,
+    "t": 12,
+    "w": 171.61,
+    "h": 44,
+    "ink": {
+     "t": 25.88,
+     "b": 41.88
+    },
+    "marginTop": "8px",
+    "text": "See Denver's work hours"
+   },
+   "slot": {
+    "l": 0,
+    "t": 56,
+    "w": 846,
+    "h": 44
+   },
+   "wrapped": false,
+   "sentenceInkToLinkTop": -29.88,
+   "inkOffset": -1,
+   "bandHeight": 979.75
+  },
+  "1440": {
+   "row": {
+    "h": 108,
+    "align": "baseline",
+    "padding": "4px 0px 8px"
+   },
+   "sentence": {
+    "l": 0,
+    "t": 25.88,
+    "w": 240.02,
+    "h": 17.5,
+    "ink": {
+     "t": 26.88,
+     "b": 41.88
+    },
+    "text": "Denver limits when you can close a lane."
+   },
+   "link": {
+    "l": 248.02,
+    "t": 12,
+    "w": 171.61,
+    "h": 44,
+    "ink": {
+     "t": 25.88,
+     "b": 41.88
+    },
+    "marginTop": "8px",
+    "text": "See Denver's work hours"
+   },
+   "slot": {
+    "l": 0,
+    "t": 56,
+    "w": 846,
+    "h": 44
+   },
+   "wrapped": false,
+   "sentenceInkToLinkTop": -29.88,
+   "inkOffset": -1,
+   "bandHeight": 979.75
+  }
+ }
+}

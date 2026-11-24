@@ -44,7 +44,7 @@ describe("#228 single voice, inherited — the fact line renders, never derives"
           id: "where",
           label: "__LABEL__",
           value: "__VALUE__",
-          verb: "CHANGE",
+          verb: "Change",
           pending: null,
           glyph: "__GLYPH__" as unknown as "✓",
         }}
@@ -55,10 +55,10 @@ describe("#228 single voice, inherited — the fact line renders, never derives"
     expect(row.querySelector(".a-sym")?.textContent).toBe("__GLYPH__");
     expect(row.querySelector(".tr-field")?.textContent).toBe("__LABEL__");
     expect(row.querySelector(".a-val")?.textContent).toBe("__VALUE__");
-    expect(screen.getByTestId("fact-link-where").textContent).toBe("CHANGE");
+    expect(screen.getByTestId("fact-link-where").textContent).toBe("Change");
     // Nothing beyond the model's strings — a component-side word would
     // surface right here.
-    expect(row.textContent).toBe("__GLYPH____LABEL____VALUE__CHANGE");
+    expect(row.textContent).toBe("__GLYPH____LABEL____VALUE__Change");
   });
 
   it("a pending line shows the model's REASON, and no link at all", () => {
@@ -88,7 +88,7 @@ describe("#228 single voice, inherited — the fact line renders, never derives"
           id: "what",
           label: "__L__",
           value: "__V__",
-          verb: "CHANGE",
+          verb: "Change",
           pending: null,
           glyph: "✓",
         }}

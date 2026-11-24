@@ -134,3 +134,75 @@ describe("#545 the attribution button's tap area", () => {
     }
   });
 });
+
+// #557, Ryan's ruling of 2026-11-24 (docs/prompts/
+// cc-prompt-ux-spacing-round.md, item 3).  The sizes are measured in a
+// browser (validation-artifacts/committed/missions/ux-spacing-round/
+// issue-557/walk.md); these read globals.css and BandPrimitives.tsx as text
+// and keep the rules that produce them in place.
+describe("#557 the spacing round's page fixes (stylesheet)", () => {
+  const primitives = readFileSync(join(__dirname, "bands", "BandPrimitives.tsx"), "utf-8").replace(/\r\n/g, "\n");
+  /** The rule's body, only when the rule sits at the top level (column 0). */
+  const top = (selector: string): string => {
+    const at = css.indexOf(`\n${selector} {\n`);
+    expect(at, selector).toBeGreaterThanOrEqual(0);
+    return css.slice(at, css.indexOf("\n}", at));
+  };
+
+  it("d: the collapsed row's link takes the row actions' rule (.wq-link: Inter 13.5 / 600 in --act, 44 px), with no tracking and no capitals", () => {
+    expect(primitives).toContain('className="a-lk wq-link"');
+    const wq = top(".workbench .wq-link,\n.workbench .undo-link");
+    expect(wq).toMatch(/min-height: 44px;/);
+    expect(wq).toMatch(/min-width: 44px;/);
+    expect(wq).toMatch(/color: var\(--act\);/);
+    expect(wq).toMatch(/font-family: var\(--font-sans\);/);
+    expect(wq).toMatch(/font-size: var\(--fs-body-value\);/);
+    expect(wq).toMatch(/font-weight: 600;/);
+    const lk = top(".workbench .a-fact .a-lk");
+    expect(lk).toMatch(/letter-spacing: 0;/);
+    expect(lk).toMatch(/text-transform: none;/);
+    // The 44 px box on the row's 32 px line: 6 px taken back above and below.
+    expect(lk).toMatch(/margin: -6px 0;/);
+    expect(lk).not.toMatch(/font-size/);
+    // It has to come after both rules it adjusts.
+    expect(css.indexOf("\n.workbench .a-fact .a-lk {\n")).toBeGreaterThan(css.indexOf("\n.workbench .wq-link,\n.workbench .undo-link {\n"));
+    // On the phone the link has its own 44 px row, so nothing is taken back.
+    expect(css).toMatch(/@media \(max-width: 480px\) \{\n {2}\.workbench \.a-fact \.a-lk \{\n {4}margin: 0;\n {2}\}\n\}/);
+  });
+
+  it("e: the small aerial's zoom buttons are 44 x 44 at every width, with no smaller size left", () => {
+    const z = top(".workbench .a-aerial-zbtn");
+    expect(z).toMatch(/min-width: 44px;/);
+    expect(z).toMatch(/height: 44px;/);
+    // One rule sets the size: the old phone override is gone.
+    expect(css.match(/\.workbench \.a-aerial-zbtn \{/g)?.length).toBe(1);
+  });
+
+  it("e (S11): under the bar, in one column over 480 px, the zoom is a row, so Reset stays clear of the big-map button", () => {
+    expect(css).toContain(
+      "\n@container (max-width: 719.98px) {\n  @media (min-width: 481px) {\n    .workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {\n      flex-direction: row;\n      align-items: flex-start;\n    }\n  }\n}\n",
+    );
+    // The stack's own rule stays a column (two columns, and with no bar).
+    expect(top(".workbench .a-aerial-zoom")).toMatch(/flex-direction: column;/);
+    // The phone's rule comes later and keeps its stack on the left.
+    const phone = css.indexOf("@media (max-width: 480px) {\n  /* At 380-390 the right column holds Edit on map");
+    expect(phone).toBeGreaterThan(css.indexOf("@container (max-width: 719.98px) {\n  @media (min-width: 481px) {"));
+    expect(css.slice(phone, phone + 1200)).not.toMatch(/flex-direction/);
+  });
+
+  it("f: the hours link has 8 px above it at every width, and the row lines its words up by their baseline", () => {
+    expect(top(".workbench .w-hours-row .w-link")).toMatch(/margin-top: 8px;/);
+    const row = top(".workbench .w-hours-row");
+    expect(row).toMatch(/align-items: baseline;/);
+    expect(row).toMatch(/padding: 4px 0 8px;/);
+    // After the shared .w-link rule, so the margin is not reset.
+    expect(css.indexOf("\n.workbench .w-hours-row .w-link {\n")).toBeGreaterThan(css.indexOf("\n.workbench .w-link {\n"));
+  });
+
+  it("g: a Default source line gains 2 px each side by padding, taken back by the margin", () => {
+    const d = top('.workbench .w-src[data-source="default"]');
+    expect(d).toMatch(/padding: 0 2px;/);
+    expect(d).toMatch(/margin: 0 -2px;/);
+    expect(css.indexOf('\n.workbench .w-src[data-source="default"] {\n')).toBeGreaterThan(css.indexOf("\n.workbench .w-src {\n"));
+  });
+});

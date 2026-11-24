@@ -1,0 +1,113 @@
+== 1440 (1440x900) ==
+ d factWhere: row 58 -> 58 px tall; link "CHANGE" 42.19 x 32 -> "Change" 58.66 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 18.38 -> 20.88; value top 17.38 -> 19.88; value left 273.58 -> 257.11; link top in row 13 -> 7
+ d factWhat: row 58 -> 58 px tall; link "CHANGE" 42.19 x 32 -> "Change" 58.66 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 18.38 -> 20.88; value top 17.38 -> 19.88; value left 411.95 -> 395.48; link top in row 13 -> 7
+ e pinned: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e zoomedIn: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109], Reset to the whole corridor 51.61x44 at [350,157]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97], Reset to the whole corridor 51.61x32 at [350,133]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e editPanel: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e reopened: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: not shown
+   overlaps 0; past the frame's edge: none (before: none); everything else not compared (the picture was still loading in the before run)
+   WHERE section 793.25 -> 793.25 px tall (pinned); with Reset showing 793.25 -> 793.25
+ g info-toggle-work-type: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-night: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-reduction: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+   the hours row: 100 -> 108 px tall, top unchanged
+   What section boxes (cells, labels, source words, controls, rows): 35 read (35 before); 32 did not move (0 px on every side); 2 under the hours row are 8 px lower, same size; other: none
+   What section 971.75 -> 979.75 px tall
+ f outside: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+ f withRecord: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring 2px solid offset 2px; ring's top edge to the text above the row: 12.75 -> 20.75
+ f afterUndo: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+   hours row, before: 100 px, align-items center; link beside the sentence; sentence ink 18.25 to 33.25, link box top 4 (margin-top 0px), link ink top 17.88; ring's top edge (link top - 4) is -33.25 px (not under the sentence); ink tops differ -0.37; record line at 48, 44 px; What section 971.75
+   hours row, after: 108 px, align-items baseline; link beside the sentence; sentence ink 26.88 to 41.88, link box top 12 (margin-top 8px), link ink top 25.88; ring's top edge (link top - 4) is -33.88 px (not under the sentence); ink tops differ -1; record line at 56, 44 px; What section 979.75
+ week view, 8 pm to 5 am: arrow characters 0 (weekday view 0); .whd-clip elements 0; your-hours bars 7; columns 240 px; window 560 x 600 (before 560 x 600, columns 240)
+ axe: Pinned 0, What 0, WhatRecord 0, NightWeek 0, NightDay 0, Reopened 0 violation(s)
+ under 44 px, Pinned: 0 (before: Zoom in 32x32; Zoom out 32x32); exempt and unchanged: 5 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, What: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, WhatRecord: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, NightWeek: 0 (before: 0); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, Reopened: 0 (before: CHANGE 42.19x32); exempt and unchanged: 7 (Mapbox's marks, #505; the page's header and footer links)
+== 1198 (1198x930) ==
+ d factWhere: row 58 -> 58 px tall; link "CHANGE" 42.19 x 32 -> "Change" 58.66 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 18.38 -> 20.88; value top 17.38 -> 19.88; value left 273.58 -> 257.11; link top in row 13 -> 7
+ d factWhat: row 58 -> 58 px tall; link "CHANGE" 42.19 x 32 -> "Change" 58.66 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 18.38 -> 20.88; value top 17.38 -> 19.88; value left 411.95 -> 395.48; link top in row 13 -> 7
+ e pinned: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e zoomedIn: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109], Reset to the whole corridor 51.61x44 at [350,157]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97], Reset to the whole corridor 51.61x32 at [350,133]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e editPanel: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e reopened: frame 411 x 655 (before 411 x 655); bar false; zoom Zoom in 44x44 at [358,61], Zoom out 44x44 at [358,109]
+   before: Zoom in 32x32 at [370,61], Zoom out 32x32 at [370,97]
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+   WHERE section 793.25 -> 793.25 px tall (pinned); with Reset showing 793.25 -> 793.25
+ g info-toggle-work-type: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-night: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-reduction: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+   the hours row: 100 -> 108 px tall, top unchanged
+   What section boxes (cells, labels, source words, controls, rows): 35 read (35 before); 32 did not move (0 px on every side); 2 under the hours row are 8 px lower, same size; other: none
+   What section 971.75 -> 979.75 px tall
+ f outside: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+ f withRecord: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring 2px solid offset 2px; ring's top edge to the text above the row: 12.75 -> 20.75
+ f afterUndo: hours row 100 -> 108 px; Work dates cell 106 -> 106 px at y 800 -> 800; row top 995.75 -> 995.75; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+   hours row, before: 100 px, align-items center; link beside the sentence; sentence ink 18.25 to 33.25, link box top 4 (margin-top 0px), link ink top 17.88; ring's top edge (link top - 4) is -33.25 px (not under the sentence); ink tops differ -0.37; record line at 48, 44 px; What section 971.75
+   hours row, after: 108 px, align-items baseline; link beside the sentence; sentence ink 26.88 to 41.88, link box top 12 (margin-top 8px), link ink top 25.88; ring's top edge (link top - 4) is -33.88 px (not under the sentence); ink tops differ -1; record line at 56, 44 px; What section 979.75
+ week view, 8 pm to 5 am: arrow characters 0 (weekday view 0); .whd-clip elements 0; your-hours bars 7; columns 240 px; window 560 x 600 (before 560 x 600, columns 240)
+ axe: Pinned 0, What 0, WhatRecord 0, NightWeek 0, NightDay 0, Reopened 0 violation(s)
+ under 44 px, Pinned: 0 (before: Zoom in 32x32; Zoom out 32x32); exempt and unchanged: 5 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, What: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, WhatRecord: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, NightWeek: 0 (before: 0); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, Reopened: 0 (before: Zoom in 32x32; Zoom out 32x32; CHANGE 42.19x32); exempt and unchanged: 7 (Mapbox's marks, #505; the page's header and footer links)
+== 390 (390x844) ==
+ d factWhere: row 140.63 -> 140.63 px tall; link "CHANGE" 298 x 44 -> "Change" 298 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 13 -> 13; value top 38.5 -> 38.5; value left 47 -> 47; link top in row 83.63 -> 83.63
+ d factWhat: row 140.63 -> 140.63 px tall; link "CHANGE" 298 x 44 -> "Change" 298 x 44
+   type __JetBrains_Mono_5f34dc 9.5px/400 uppercase tracking 1.33px -> __Inter_176161 13.5px/600 none tracking normal; colour rgb(52, 169, 232) (--act #34a9e8); underline
+   label top 13 -> 13; value top 38.5 -> 38.5; value left 47 -> 47; link top in row 83.63 -> 83.63
+ e pinned: frame 328 x 150 (before 328 x 150); bar false; zoom not shown
+   before: not shown
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e editPanel: frame 328 x 150 (before 328 x 150); bar false; zoom not shown
+   before: not shown
+   overlaps 0; past the frame's edge: none (before: none); everything else where it was
+ e reopened: frame 328 x 250 (before 328 x 250); bar false; zoom Zoom in 44x44 at [275,61], Zoom out 44x44 at [275,109]
+   before: Zoom in 44x44 at [275,61], Zoom out 44x44 at [275,109]
+   overlaps 0; past the frame's edge: band-aerial-legend (before: band-aerial-legend); everything else where it was
+   WHERE section 923.25 -> 923.25 px tall (pinned); with Reset showing not measured -> not measured
+ g info-toggle-work-type: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-night: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+ g info-toggle-reduction: box 42.45 x 44 -> 46.45 x 44; box left -2 px; word moved 0, 0 px; padding 2px 2px, margin -2px -2px; __Inter_176161 12.5px
+   the hours row: 117.5 -> 125.5 px tall, top unchanged
+   What section boxes (cells, labels, source words, controls, rows): 35 read (35 before); 32 did not move (0 px on every side); 2 under the hours row are 8 px lower, same size; other: none
+   What section 1602.75 -> 1610.75 px tall
+ f outside: hours row 117.5 -> 125.5 px; Work dates cell 173.5 -> 173.5 px at y 1380.88 -> 1380.88; row top 1868.88 -> 1868.88; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+ f withRecord: hours row 117.5 -> 125.5 px; Work dates cell 173.5 -> 173.5 px at y 1380.88 -> 1380.88; row top 1868.88 -> 1868.88; link 171.61 x 44; ring 2px solid offset 2px; ring's top edge to the text above the row: 30.25 -> 38.25
+ f afterUndo: hours row 117.5 -> 125.5 px; Work dates cell 173.5 -> 173.5 px at y 1380.88 -> 1380.88; row top 1868.88 -> 1868.88; link 171.61 x 44; ring not focused; ring's top edge to the text above the row: not measured -> not measured
+   hours row, before: 117.5 px, align-items center; link wraps under the sentence; sentence ink 5 to 20, link box top 21.5 (margin-top 0px), link ink top 35.38; ring's top edge (link top - 4) is -2.5 px from the sentence's ink (negative: it crosses); ink tops differ 30.38; record line at 65.5, 44 px; What section 1602.75
+   hours row, after: 125.5 px, align-items baseline; link wraps under the sentence; sentence ink 5 to 20, link box top 29.5 (margin-top 8px), link ink top 43.38; ring's top edge (link top - 4) is 5.5 px from the sentence's ink (negative: it crosses); ink tops differ 38.38; record line at 73.5, 44 px; What section 1610.75
+ week view, 8 pm to 5 am: arrow characters 0 (weekday view 0); .whd-clip elements 0; your-hours bars 7; columns 240 px; window 358 x 640 (before 358 x 640, columns 240)
+ axe: Pinned 0, What 0, WhatRecord 0, NightWeek 0, NightDay 0, Reopened 0 violation(s)
+ under 44 px, Pinned: 0 (before: 0); exempt and unchanged: 5 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, What: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, WhatRecord: 0 (before: Default (why: Type of work) 42.45x44; Default (why: Work hours) 42.45x44; Default (why: Speed reduction) 42.45x44); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, NightWeek: 0 (before: 0); exempt and unchanged: 0 (Mapbox's marks, #505; the page's header and footer links)
+ under 44 px, Reopened: 0 (before: 0); exempt and unchanged: 5 (Mapbox's marks, #505; the page's header and footer links)
+
+all checks ok

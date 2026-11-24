@@ -1,0 +1,134 @@
+#557 columns check on the final code (2026-11-24)
+scripts/verify-columns-end-together.mjs, SIZES one per process, ZOOMS=1,2, every phase (no ONLY), local stub backend and site (walk.md).
+
+== 1024x768: 105 PASS lines, 20 FAIL lines ==
+1024x768 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 32.25 px
+1024x768 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 14.75 px
+1024x768@text200 what dates-none             FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 28 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1024x768@text200 what date-picker-open       FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 61 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1024x768@text200 what dates-no-times         FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1917 | box "Check these 3 guesses"
+1024x768@text200 what dates-inside           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1024x768@text200 what hours-dialog-day       FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1024x768@text200 what hours-dialog-week      FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1024x768@text200 what dates-outside          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1024x768@text200 what hours-fixed            FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 33 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1024x768@text200 what hours-undone           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1024x768@text200 what dates-worst-two-kinds  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1024x768@text200 what dates-worst-closures   FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1024x768@text200 what dates-worst-no-record  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1024x768@text200 what dates-worst-partial    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1024x768@text200 what dates-worst-no-data    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1024x768@text200 what dates-no-data          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1024x768@text200 what work-dates row FAIL | 10 states, height diff 70 px
+1024x768@text200 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 41 px
+1024x768@text200 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 21.5 px
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 32 states x 2 two-column size/zoom runs: max 0
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 64 readings (2 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 64 readings: 0 past it
+  Generate outline map placeholder (1024x768): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1024x768-generate-outline-map.png
+  Generate outline map placeholder (1024x768@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1024x768@text200-generate-outline-map.png
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-work-type], div[cell-night]): 2 runs, max 0
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-reduction], div[cell-work-dates]): 2 runs, max 41
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-speed], div[cell-lanes]): 2 runs, max 0
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-lane-width], div[cell-carriageway]): 2 runs, max 21.5
+  section.zone.results > div > section[your-plan] > div.hero (div.hero-cell, div.hero-cell, div.hero-meta): 2 runs, max 0
+  div > div[downloads] > section[downloads] > div[dl-cards] (div.dl-card, div.dl-card, div.dl-card, div.dl-card): 2 runs, max 0
+  div[what-road-grid] > div[cell-carriageway] > div.a-cell-ctl > div.a-seg (button, button): 1 runs, max 0
+  Work dates row (#526), 1024x768: no-dates 106, no-times 106, fits 106, outside 106, worst-two-kinds 106, worst-closures 106, worst-no-record 106, worst-partial 106, worst-no-data 106, no-data 106 px; diff 0 px PASS
+  Work dates row (#526), 1024x768@text200: no-dates 211, no-times 176, fits 141, outside 211, worst-two-kinds 176, worst-closures 211, worst-no-record 211, worst-partial 211, worst-no-data 211, no-data 211 px; diff 70 px FAIL
+  Hours row reserve (#526 round 2), 1024x768: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 1024x768@text200: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Work-hours window (#526), 1024x768: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  Work-hours window (#526), 1024x768@text200: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  WHAT section (#517): 21 states x 2 size/zoom runs, 42 readings: two-column grids, where each column's content ends (#520), max 19.5 px; controls under 44 px in 0 readings; axe violations in 0 readings
+
+RESULT FAIL
+
+== 1198x930: 105 PASS lines, 20 FAIL lines ==
+1198x930 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 32.25 px
+1198x930 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 14.75 px
+1198x930@text200 what dates-none             FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 28 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1198x930@text200 what date-picker-open       FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 61 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1198x930@text200 what dates-no-times         FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1917 | box "Check these 3 guesses"
+1198x930@text200 what dates-inside           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1198x930@text200 what hours-dialog-day       FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1198x930@text200 what hours-dialog-week      FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1198x930@text200 what dates-outside          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1198x930@text200 what hours-fixed            FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 33 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1198x930@text200 what hours-undone           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1198x930@text200 what dates-worst-two-kinds  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1198x930@text200 what dates-worst-closures   FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1198x930@text200 what dates-worst-no-record  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1198x930@text200 what dates-worst-partial    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1198x930@text200 what dates-worst-no-data    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1198x930@text200 what dates-no-data          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1198x930@text200 what work-dates row FAIL | 10 states, height diff 70 px
+1198x930@text200 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 41 px
+1198x930@text200 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 21.5 px
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 32 states x 2 two-column size/zoom runs: max 0
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 64 readings (2 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 64 readings: 0 past it
+  Generate outline map placeholder (1198x930): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1198x930-generate-outline-map.png
+  Generate outline map placeholder (1198x930@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1198x930@text200-generate-outline-map.png
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-work-type], div[cell-night]): 2 runs, max 0
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-reduction], div[cell-work-dates]): 2 runs, max 41
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-speed], div[cell-lanes]): 2 runs, max 0
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-lane-width], div[cell-carriageway]): 2 runs, max 21.5
+  section.zone.results > div > section[your-plan] > div.hero (div.hero-cell, div.hero-cell, div.hero-meta): 2 runs, max 0
+  div > div[downloads] > section[downloads] > div[dl-cards] (div.dl-card, div.dl-card, div.dl-card, div.dl-card): 2 runs, max 0
+  div[what-road-grid] > div[cell-carriageway] > div.a-cell-ctl > div.a-seg (button, button): 1 runs, max 0
+  Work dates row (#526), 1198x930: no-dates 106, no-times 106, fits 106, outside 106, worst-two-kinds 106, worst-closures 106, worst-no-record 106, worst-partial 106, worst-no-data 106, no-data 106 px; diff 0 px PASS
+  Work dates row (#526), 1198x930@text200: no-dates 211, no-times 176, fits 141, outside 211, worst-two-kinds 176, worst-closures 211, worst-no-record 211, worst-partial 211, worst-no-data 211, no-data 211 px; diff 70 px FAIL
+  Hours row reserve (#526 round 2), 1198x930: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 1198x930@text200: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Work-hours window (#526), 1198x930: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  Work-hours window (#526), 1198x930@text200: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  WHAT section (#517): 21 states x 2 size/zoom runs, 42 readings: two-column grids, where each column's content ends (#520), max 19.5 px; controls under 44 px in 0 readings; axe violations in 0 readings
+
+RESULT FAIL
+
+== 1440x900: 105 PASS lines, 20 FAIL lines ==
+1440x900 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 32.25 px
+1440x900 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 14.75 px
+1440x900@text200 what dates-none             FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 28 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1440x900@text200 what date-picker-open       FAIL | columns about content 0 px (last cells cell-reduction/cell-work-dates, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 61 controls, 0 under | axe 0 | band 1768.5 | box "Check these 3 guesses"
+1440x900@text200 what dates-no-times         FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1917 | box "Check these 3 guesses"
+1440x900@text200 what dates-inside           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1440x900@text200 what hours-dialog-day       FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1440x900@text200 what hours-dialog-week      FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 35 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1440x900@text200 what dates-outside          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1440x900@text200 what hours-fixed            FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 33 controls, 0 under | axe 0 | band 1882 | box "Check these 3 guesses"
+1440x900@text200 what hours-undone           FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1440x900@text200 what dates-worst-two-kinds  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1952 | box "Check these 3 guesses"
+1440x900@text200 what dates-worst-closures   FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1440x900@text200 what dates-worst-no-record  FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1440x900@text200 what dates-worst-partial    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 32 controls, 0 under | axe 0 | band 1987 | box "Check these 3 guesses"
+1440x900@text200 what dates-worst-no-data    FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1440x900@text200 what dates-no-data          FAIL | columns about content 0 px (last cells cell-start-time/cell-end-time, boxes 0 px), measured content 19.5 px (last cells cell-lane-width/cell-carriageway, boxes 0 px) | 44 px: 31 controls, 0 under | axe 0 | band 1891 | box "Check these 3 guesses"
+1440x900@text200 what work-dates row FAIL | 10 states, height diff 70 px
+1440x900@text200 WHAT open FAIL | div.a-body > div.w-what > div[what-about] > div[what-about-grid] | 2 columns (div[cell-reduction], div[cell-work-dates]) | bottoms 0 px | last buttons 41 px
+1440x900@text200 WHAT open FAIL | div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] | 2 columns (div[cell-lane-width], div[cell-carriageway]) | bottoms 0 px | last buttons 21.5 px
+Layouts checked (largest bottom difference, px):
+  WHERE band: aerial ↔ right column, 32 states x 2 two-column size/zoom runs: max 0
+  WHERE frame: controls and lines against Mapbox's logo and attribution, 64 readings (2 size/zoom runs): 0 with an overlap
+  WHERE band: every text-bearing element against the band's bottom, 64 readings: 0 past it
+  Generate outline map placeholder (1440x900): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1440x900-generate-outline-map.png
+  Generate outline map placeholder (1440x900@text200): marks drawn, attribution "© Maxar © Mapbox © OpenStreetMap Improve this map", crop 1440x900@text200-generate-outline-map.png
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-work-type], div[cell-night]): 2 runs, max 0
+  div.a-body > div.w-what > div[what-about] > div[what-about-grid] (div[cell-reduction], div[cell-work-dates]): 2 runs, max 41
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-speed], div[cell-lanes]): 2 runs, max 0
+  div.w-what > div[what-measured] > div[what-measured-panel] > div[what-road-grid] (div[cell-lane-width], div[cell-carriageway]): 2 runs, max 21.5
+  section.zone.results > div > section[your-plan] > div.hero (div.hero-cell, div.hero-cell, div.hero-meta): 2 runs, max 0
+  div > div[downloads] > section[downloads] > div[dl-cards] (div.dl-card, div.dl-card, div.dl-card, div.dl-card): 2 runs, max 0
+  div[what-road-grid] > div[cell-carriageway] > div.a-cell-ctl > div.a-seg (button, button): 1 runs, max 0
+  Work dates row (#526), 1440x900: no-dates 106, no-times 106, fits 106, outside 106, worst-two-kinds 106, worst-closures 106, worst-no-record 106, worst-partial 106, worst-no-data 106, no-data 106 px; diff 0 px PASS
+  Work dates row (#526), 1440x900@text200: no-dates 211, no-times 176, fits 141, outside 211, worst-two-kinds 176, worst-closures 211, worst-no-record 211, worst-partial 211, worst-no-data 211, no-data 211 px; diff 70 px FAIL
+  Hours row reserve (#526 round 2), 1440x900: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Hours row reserve (#526 round 2), 1440x900@text200: before 108, fixed 108, undone 108 px; diff 0 px PASS
+  Work-hours window (#526), 1440x900: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  Work-hours window (#526), 1440x900@text200: size 560x600, day vs week 0 px, Esc closes true, focus back true PASS
+  WHAT section (#517): 21 states x 2 size/zoom runs, 42 readings: two-column grids, where each column's content ends (#520), max 19.5 px; controls under 44 px in 0 readings; axe violations in 0 readings
+
+RESULT FAIL

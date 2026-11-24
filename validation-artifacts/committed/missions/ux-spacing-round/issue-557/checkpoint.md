@@ -1,0 +1,27 @@
+# #557 checkpoint
+
+Written before the diff. Base `c7fc482e` (`issue-556-hours-window-fixes`). Paths are under `conestruct/site/` unless they start with `src/` or `validation-artifacts`.
+
+- **Problem.**
+  - d. The closed Where row's link reads "CHANGE" in mono 9.5 px capitals and is 42 x 32 at 1440 (`lib/scenarios/band-facts.ts:458`, `app/globals.css:4552`).
+  - e. The small aerial's + and − are 32 x 32 over 480 px (`app/globals.css:7381`).
+  - f. The focus ring on "See <jurisdiction>'s work hours" (2 px, 2 px offset) crosses the row's own sentence at 390, where the link wraps under it: the link's box starts 1.5 px under the sentence's ink, so the ring is 2.5 px into it (`hours-row-before.json`; `.w-hours-row`, `app/globals.css:6268`, no row gap). At 1440 and 1198 the link is beside the sentence and the ring is 12.75 px clear of the text above.
+  - g. The three "Default" links in About the work are 42 px wide (`.w-src`, `app/globals.css:6104`, no side padding).
+  - Leftovers: a comment still cites "R145 S9" (`components/WorkHoursDialog.tsx:164`), and the clip arrows' code is dead since #555 (`components/WorkHoursDialog.tsx:107-115, 467-482, 612-617`; `app/globals.css:6485-6513`).
+- **Rulings.** Ryan's item 3, word for word, and R145 self-ruled S1 to S11 in `rulings.md` (S11 added after the first diff).
+- **The change.**
+  - d. The verb is "Change" in `band-facts.ts` (both collapsed rows). The fact link takes `.wq-link` beside `.a-lk`; one new rule, `.workbench .a-fact .a-lk`, drops the tracking and the uppercase and sets a -6 px block margin over 480 px.
+  - e. `.a-aerial-zbtn` is 44 x 44; the phone override goes.
+  - f. The link in `.w-hours-row` gets `margin-top: 8px`; the row's `align-items` goes from `center` to `baseline` (rulings.md S6). Amended before the diff: the first plan, 8 px of padding on the row, would not have fixed 390.
+  - g. `.w-src[data-source="default"]`: 2 px side padding, -2 px side margin.
+  - The comment is rewritten for P15; `clipped()`, the four arrow spans and the seven `.whd-clip` rules are removed.
+- **Churn prediction (Rule 5), before the diff.**
+  - Files changed: `app/globals.css`, `lib/scenarios/band-facts.ts`, `components/bands/BandPrimitives.tsx`, `components/WorkHoursDialog.tsx`; tests `components/WorkHoursDialog.test.tsx`, `components/BandStack.single-voice.test.tsx`, `components/GeneratorSidebar.prepin-gating.test.tsx`, `components/tap-targets.test.ts`, and any other test that pins the fact link's text, the zoom buttons' size or the removed class. New: this evidence folder.
+  - What moves on screen: the fact link's word, face, size and width (about 42 to about 59 px at 1440, so the row's value ends about 17 px further left; the row's text may sit up to 2 px lower because the link's baseline moves; the row's height doesn't change); the zoom buttons' size, and so where − and Reset sit (12 and 24 px lower; the stack's top doesn't move); the hours link, 8 px lower in its row at every width, the row's sentence with it where the two share a line (it may also shift by under 1 px against the link, baseline for centre), and everything under the row 8 px lower; the "Default" links' hit box, 2 px wider each side.
+  - What stays byte-identical: every backend file and every wire field; every device count; `lib/scenarios/move-ledger.ts`; `lib/design/*` (no new size, no new hex, the type census list unchanged); the work-hours window's drawing for every valid input (the arrows never rendered), so its #555 and #556 crops; the fact row's height at each width; the Work dates row's height; the positions of every neighbour of the "Default" links (0 px); the aerial frame's height and the positions of "Edit on map", the bar, the foot and Mapbox's marks; the phone's zoom buttons (already 44 x 44).
+  - No user-facing string is added. One changes: "CHANGE" to "Change".
+  - Amended after the first diff, before the second (rulings.md S11): the walk found that under the bar, in one column over 480 px, a 44 px zoom stack with Reset reaches "Use the big map instead". Added to the prediction: one more rule in `app/globals.css` (a container query with a media query inside it) puts the three zoom buttons in a row in that layout only; `components/tap-targets.test.ts` gains one stylesheet test for it. Still byte-identical: the stack in two columns, on the phone, and with no bar.
+  - Missed by the prediction, found after the first diff: removing `.whd-clip` removes a font-size declaration, so `lib/design/type-exceptions.ts` loses that rule's row and its count goes from 236 to 235. The prediction said `lib/design/*` would be untouched. No size is added.
+- **The proof.**
+  - Red first: the mounted tests that read the link's text (`GeneratorSidebar.prepin-gating`, `BandStack.single-voice` for the class), stylesheet tests (they read `app/globals.css` as text, not a rendered page) for the 44 px rules, the hours link's margin, the "Default" padding and the absence of `.whd-clip`, and a `placed()` test over every half-hour start and end.
+  - Then a headless walk of the local dev server at 1440x900, 1198x930 and 390x844: the five before-shot views again, before-and-after measures of the rows and neighbours, overlap checks on the aerial frame, axe, the 44 px measure, and the columns check (`scripts/verify-columns-end-together.mjs`) if its stub backend can be run here; if not, `walk.md` says "not run" and why.

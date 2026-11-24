@@ -1,0 +1,23 @@
+ ❯ lib/scenarios/band-facts.test.ts (15 tests | 1 failed)
+   × #557: the collapsed rows' link reads Change > Where and What's the job? both offer Change once they have a value
+ ❯ components/tap-targets.test.ts (14 tests | 4 failed)
+   × #557 the spacing round's page fixes (stylesheet) > d: the collapsed row's link takes the row actions' rule (.wq-link: Inter 13.5 / 600 in --act, 44 px), with no tracking and no capitals
+   × #557 the spacing round's page fixes (stylesheet) > e: the small aerial's zoom buttons are 44 x 44 at every width, with no smaller size left
+   × #557 the spacing round's page fixes (stylesheet) > f: the hours link has 8 px above it at every width, and the row lines its words up by their baseline
+   × #557 the spacing round's page fixes (stylesheet) > g: a Default source line gains 2 px each side by padding, taken back by the margin
+ ✓ components/BandStack.single-voice.test.tsx (6 tests)
+ ❯ components/GeneratorSidebar.prepin-gating.test.tsx (4 tests | 1 failed)
+   × pre-pin gating (#222), as the column does it > post-pin: the pending line becomes an answer, and the band opens
+ ❯ components/WorkHoursDialog.test.tsx (58 tests | 1 failed)
+   × #557 (S9): nothing is placed off the 6 am to 6 am scale, so the clip arrows are gone > no .whd-clip rule is left, and the window's source draws no arrow (globals.css and WorkHoursDialog.tsx, read as text)
+ ❯ components/GeneratorSidebar.prepin-gating.test.tsx:131:30
+ ❯ components/tap-targets.test.ts:153:24
+ ❯ components/tap-targets.test.ts:175:15
+ ❯ top components/tap-targets.test.ts:148:26
+ ❯ components/tap-targets.test.ts:182:12
+ ❯ top components/tap-targets.test.ts:148:26
+ ❯ components/tap-targets.test.ts:191:15
+ ❯ components/WorkHoursDialog.test.tsx:1047:21
+ ❯ lib/scenarios/band-facts.test.ts:161:57
+ Test Files  4 failed | 1 passed (5)
+      Tests  7 failed | 90 passed (97)

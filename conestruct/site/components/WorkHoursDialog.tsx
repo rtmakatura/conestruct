@@ -98,21 +98,6 @@ function hourSpans(start: number, end: number): [number, number][] {
   return end > start ? [[start, end]] : [[start, 24], [0, end]];
 }
 
-/** S6 / round 2 (finding 7): the hours clipped at the scale's ends.  An
- *  arrow is --dim only when the clipped part is outside what's allowed;
- *  otherwise it only says "more this way" in --ink-faint.
- *  #555 (S9): the scale now holds all 24 hours, so no placed piece runs
- *  past either end and this always answers null for both.  The arrows'
- *  markup and CSS stay until #557 removes them. */
-function clipped(
-  yours: Piece[],
-  outside: Piece[],
-): { before: null | "out" | "in"; after: null | "out" | "in" } {
-  const before = yours.some((p) => p.a < S) ? (outside.some((p) => p.a < S) ? "out" : "in") : null;
-  const after = yours.some((p) => p.b > E) ? (outside.some((p) => p.b > E) ? "out" : "in") : null;
-  return { before, after };
-}
-
 /** #556 (S3): a day with a record whose hours need a street class.  The
  *  backend sends `allowed: null` for it and checks nothing, so your hours
  *  there are not checked (Rule 10).  Read, never worked out here (Rule 3). */
@@ -161,7 +146,9 @@ export function WorkHoursDialog({
   start: number | null;
   end: number | null;
   verifying: boolean;
-  /** R145 S9: the fix applied, while its times stand. */
+  /** P15 (Ryan, 2026-11-12, replacing R145 S9): the fix applied.  Its
+   *  record stays until Undo or a pin move; a hand edit of the times
+   *  doesn't clear it. */
   fixed: FixRecord | null;
   onFix: (fix: [number, number]) => void;
   onUndo: () => void;
@@ -409,7 +396,6 @@ function Weekday({
   const unchecked = noRecord || needsClass(wd);
   const yours = timed && start != null && end != null ? placed(hourSpans(start, end)) : null;
   const outside = placed(wd.outside);
-  const clip = yours ? clipped(yours, outside) : null;
   const holiday = holidayLine(days.holiday_rule);
   return (
     <>
@@ -461,25 +447,6 @@ function Weekday({
                   style={{ left: pct(a), width: len(a, b) }}
                 />
               ))}
-              {/* S6: hours past the ruler's ends were clipped with an arrow.
-                  #555 (S9): nothing is clipped on the 24-hour scale, so
-                  these never render; #557 removes them. */}
-              {clip?.before && (
-                <span
-                  className={`whd-clip is-left${clip.before === "out" ? " is-out" : ""}`}
-                  data-testid="hours-clip-left"
-                >
-                  ◂
-                </span>
-              )}
-              {clip?.after && (
-                <span
-                  className={`whd-clip is-right${clip.after === "out" ? " is-out" : ""}`}
-                  data-testid="hours-clip-right"
-                >
-                  ▸
-                </span>
-              )}
             </>
           )}
         </div>
@@ -567,7 +534,6 @@ function Week({
           // #556: no record or no street class, so not checked (hollow).
           const unchecked = none || needsClass(k);
           const outside = placed(k.outside);
-          const clip = yours && d.in_job ? clipped(yours, outside) : null;
           return (
             <div
               key={i}
@@ -606,14 +572,6 @@ function Week({
                       />
                     ))}
                   </>
-                )}
-                {/* Finding 7: clipped ends, as on the ruler.  #555 (S9):
-                    never rendered on the 24-hour scale; #557 removes them. */}
-                {clip?.before && (
-                  <span className={`whd-clip is-top${clip.before === "out" ? " is-out" : ""}`}>▴</span>
-                )}
-                {clip?.after && (
-                  <span className={`whd-clip is-bottom${clip.after === "out" ? " is-out" : ""}`}>▾</span>
                 )}
               </div>
               <span className="sr-only">

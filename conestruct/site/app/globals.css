@@ -6129,6 +6129,14 @@ input[type="number"] {
 .workbench .w-src.is-guess {
   color: var(--warn);
 }
+/* #557 g (Ryan, 2026-11-24): "The three "Default" links in About the work
+   reach 44 px wide by padding only, with nothing else moving."  The word
+   measures 42.45 px; 2 px each side (CHOSEN) makes the target 46.45, and the
+   margin takes the same 2 px back so the word and its neighbours stay put. */
+.workbench .w-src[data-source="default"] {
+  padding: 0 2px;
+  margin: 0 -2px;
+}
 .workbench .w-src:focus-visible {
   outline: 2px solid var(--act);
   outline-offset: 2px;
@@ -6264,14 +6272,22 @@ input[type="number"] {
   background: var(--dim);
 }
 /* The row under the grid: "<j> limits when you can close a lane." and the
-   link (ruling 2), and the fix's record with the shared Undo (S9). */
+   link (ruling 2), and the fix's record with the shared Undo (P15, which
+   replaced S9).  #557 f (Ryan, 2026-11-24): "8 px more space above it, so
+   its focus ring clears the line above".  At 390 the link wraps under the
+   row's own sentence, so the space is the link's margin (the rule below),
+   and the row lines its words up by their baseline so the sentence stays
+   level with the link where the two share a line. */
 .workbench .w-hours-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   column-gap: var(--space-tight);
   padding: 4px 0 8px;
   color: var(--ink-on-dark);
+}
+.workbench .w-hours-row .w-link {
+  margin-top: 8px;
 }
 .workbench .w-hours-record {
   display: inline-flex;
@@ -6479,37 +6495,6 @@ input[type="number"] {
 }
 .workbench .whd-yours.is-out {
   background: var(--dim);
-}
-/* Round 2 (finding 7): a clipped end is --ink-faint ("more this way");
-   --dim only when the clipped part is outside what's allowed. */
-.workbench .whd-clip {
-  position: absolute;
-  top: 4px;
-  font-size: var(--fs-field-label);
-  line-height: 1;
-  color: var(--ink-faint);
-}
-.workbench .whd-clip.is-out {
-  color: var(--dim);
-}
-.workbench .whd-clip.is-top,
-.workbench .whd-clip.is-bottom {
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-.workbench .whd-clip.is-top {
-  top: -1px;
-}
-.workbench .whd-clip.is-bottom {
-  top: auto;
-  bottom: -1px;
-}
-.workbench .whd-clip.is-left {
-  left: -10px;
-}
-.workbench .whd-clip.is-right {
-  right: -10px;
 }
 .workbench .whd-fix {
   justify-self: start;
@@ -7368,7 +7353,9 @@ input[type="number"] {
 
 /* The band aerial's zoom (Ryan's hand-check ruling, 2026-09-26): + / −
    and Reset on the image, top-right (clear of the Mapbox logo and
-   attribution at the bottom).  32 px, 44 at 380 — rule 133's pair. */
+   attribution at the bottom).  #557 e (Ryan, 2026-11-24): "The small
+   aerial's + and − become 44 x 44, matching the map window's".  44 px at
+   every width (it was 32, and 44 at 380). */
 .workbench .a-aerial-zoom {
   position: absolute;
   top: 8px;
@@ -7379,8 +7366,8 @@ input[type="number"] {
   gap: 4px;
 }
 .workbench .a-aerial-zbtn {
-  min-width: 32px;
-  height: 32px;
+  min-width: 44px;
+  height: 44px;
   padding: 0;
   color: var(--ink);
   background: rgb(var(--ws-surface-rgb) / 0.9);
@@ -7397,12 +7384,6 @@ input[type="number"] {
 .workbench .a-aerial-zbtn:focus-visible {
   outline: 2px solid var(--act);
   outline-offset: 1px;
-}
-@media (max-width: 480px) {
-  .workbench .a-aerial-zbtn {
-    min-width: 44px;
-    height: 44px;
-  }
 }
 
 /* ─── coming-soon-gate Arc 2 — the Plan Sheet (R5a) ───
@@ -10685,6 +10666,23 @@ input[type="number"] {
   outline: 2px solid var(--act);
   outline-offset: 2px;
 }
+/* #557 d (Ryan, 2026-11-24): "The closed Where row's "CHANGE" becomes
+   "Change": Inter 13.5/600 in --act, a 44 px target. No mono, no caps."
+   The collapsed row's link is .a-lk for its place in the row and .wq-link
+   for its type and target (BandPrimitives.tsx); here only what .a-lk would
+   still add.  Over 480 px the 44 px box sits on the row's 32 px line: 6 px
+   taken back above and below (CHOSEN: (44 - 32) / 2), so the row keeps its
+   height.  On the phone the link has its own 44 px row. */
+.workbench .a-fact .a-lk {
+  letter-spacing: 0;
+  text-transform: none;
+  margin: -6px 0;
+}
+@media (max-width: 480px) {
+  .workbench .a-fact .a-lk {
+    margin: 0;
+  }
+}
 .workbench .wq-sum-details {
   margin: var(--space-tight) 0 0;
 }
@@ -10852,6 +10850,20 @@ input[type="number"] {
 }
 .workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {
   top: 104px;
+}
+/* #557 e (R145 self-ruled S11): in one column over 480 px the frame is
+   300 px tall, and under the bar a 44 px stack with Reset would reach
+   "Use the big map instead" in the foot (measured at 768: Reset to 245,
+   the button from 220).  There the three sit in a row, in the same corner.
+   Two columns (a 655 px frame) and the phone (the stack on the left) keep
+   the column. */
+@container (max-width: 719.98px) {
+  @media (min-width: 481px) {
+    .workbench .a-aerial-frame.has-bar .a-aerial-edit ~ .a-aerial-zoom {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
 }
 /* Ruling 4: 44 px, the aerial's bottom-right.  #490 repair 1: in the
    frame's foot (.a-aerial-foot), over Mapbox's marks. */

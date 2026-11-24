@@ -1,0 +1,340 @@
+{
+ "site": "http://localhost:3557",
+ "mode": "before",
+ "sizes": {
+  "600": {
+   "viewport": [
+    600,
+    900
+   ],
+   "errors": [],
+   "tapQuestion": {
+    "frame": {
+     "w": 538,
+     "h": 300
+    },
+    "hasBar": true,
+    "bar": "Tap the intersection nearest the work",
+    "boxes": [
+     {
+      "name": "band-aerial-bar",
+      "l": 1,
+      "t": 1,
+      "r": 537,
+      "b": 45,
+      "w": 536,
+      "h": 44
+     },
+     {
+      "name": "where-open-picker",
+      "l": 420,
+      "t": 53,
+      "r": 529,
+      "b": 97,
+      "w": 108.52,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-big-map",
+      "l": 338,
+      "t": 220,
+      "r": 529,
+      "b": 264,
+      "w": 190.84,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-logo",
+      "l": 9,
+      "t": 272,
+      "r": 93,
+      "b": 291,
+      "w": 84,
+      "h": 19
+     },
+     {
+      "name": "band-aerial-attribution",
+      "l": 192,
+      "t": 272,
+      "r": 537,
+      "b": 288,
+      "w": 345.36,
+      "h": 15.75
+     },
+     {
+      "name": "Zoom in",
+      "l": 497,
+      "t": 105,
+      "r": 529,
+      "b": 137,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Zoom out",
+      "l": 497,
+      "t": 141,
+      "r": 529,
+      "b": 173,
+      "w": 32,
+      "h": 32
+     }
+    ],
+    "overlaps": [],
+    "bandHeight": 832
+   },
+   "zoomShown": 1,
+   "tapQuestionReset": {
+    "frame": {
+     "w": 538,
+     "h": 300
+    },
+    "hasBar": true,
+    "bar": "Tap the intersection nearest the work",
+    "boxes": [
+     {
+      "name": "band-aerial-bar",
+      "l": 1,
+      "t": 1,
+      "r": 537,
+      "b": 45,
+      "w": 536,
+      "h": 44
+     },
+     {
+      "name": "where-open-picker",
+      "l": 420,
+      "t": 53,
+      "r": 529,
+      "b": 97,
+      "w": 108.52,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-big-map",
+      "l": 338,
+      "t": 220,
+      "r": 529,
+      "b": 264,
+      "w": 190.84,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-logo",
+      "l": 9,
+      "t": 272,
+      "r": 93,
+      "b": 291,
+      "w": 84,
+      "h": 19
+     },
+     {
+      "name": "band-aerial-attribution",
+      "l": 192,
+      "t": 272,
+      "r": 537,
+      "b": 288,
+      "w": 345.36,
+      "h": 15.75
+     },
+     {
+      "name": "Zoom in",
+      "l": 497,
+      "t": 105,
+      "r": 529,
+      "b": 137,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Zoom out",
+      "l": 497,
+      "t": 141,
+      "r": 529,
+      "b": 173,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Reset to the whole corridor",
+      "l": 477,
+      "t": 177,
+      "r": 529,
+      "b": 209,
+      "w": 51.61,
+      "h": 32
+     }
+    ],
+    "overlaps": [],
+    "bandHeight": 832
+   }
+  },
+  "768": {
+   "viewport": [
+    768,
+    900
+   ],
+   "errors": [],
+   "tapQuestion": {
+    "frame": {
+     "w": 706,
+     "h": 300
+    },
+    "hasBar": true,
+    "bar": "Tap the intersection nearest the work",
+    "boxes": [
+     {
+      "name": "band-aerial-bar",
+      "l": 1,
+      "t": 1,
+      "r": 705,
+      "b": 45,
+      "w": 704,
+      "h": 44
+     },
+     {
+      "name": "where-open-picker",
+      "l": 588,
+      "t": 53,
+      "r": 697,
+      "b": 97,
+      "w": 108.52,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-big-map",
+      "l": 506,
+      "t": 220,
+      "r": 697,
+      "b": 264,
+      "w": 190.84,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-logo",
+      "l": 9,
+      "t": 272,
+      "r": 93,
+      "b": 291,
+      "w": 84,
+      "h": 19
+     },
+     {
+      "name": "band-aerial-attribution",
+      "l": 360,
+      "t": 272,
+      "r": 705,
+      "b": 288,
+      "w": 345.36,
+      "h": 15.75
+     },
+     {
+      "name": "Zoom in",
+      "l": 665,
+      "t": 105,
+      "r": 697,
+      "b": 137,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Zoom out",
+      "l": 665,
+      "t": 141,
+      "r": 697,
+      "b": 173,
+      "w": 32,
+      "h": 32
+     }
+    ],
+    "overlaps": [],
+    "bandHeight": 811.75
+   },
+   "zoomShown": 1,
+   "tapQuestionReset": {
+    "frame": {
+     "w": 706,
+     "h": 300
+    },
+    "hasBar": true,
+    "bar": "Tap the intersection nearest the work",
+    "boxes": [
+     {
+      "name": "band-aerial-bar",
+      "l": 1,
+      "t": 1,
+      "r": 705,
+      "b": 45,
+      "w": 704,
+      "h": 44
+     },
+     {
+      "name": "where-open-picker",
+      "l": 588,
+      "t": 53,
+      "r": 697,
+      "b": 97,
+      "w": 108.52,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-big-map",
+      "l": 506,
+      "t": 220,
+      "r": 697,
+      "b": 264,
+      "w": 190.84,
+      "h": 44
+     },
+     {
+      "name": "band-aerial-logo",
+      "l": 9,
+      "t": 272,
+      "r": 93,
+      "b": 291,
+      "w": 84,
+      "h": 19
+     },
+     {
+      "name": "band-aerial-attribution",
+      "l": 360,
+      "t": 272,
+      "r": 705,
+      "b": 288,
+      "w": 345.36,
+      "h": 15.75
+     },
+     {
+      "name": "Zoom in",
+      "l": 665,
+      "t": 105,
+      "r": 697,
+      "b": 137,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Zoom out",
+      "l": 665,
+      "t": 141,
+      "r": 697,
+      "b": 173,
+      "w": 32,
+      "h": 32
+     },
+     {
+      "name": "Reset to the whole corridor",
+      "l": 645,
+      "t": 177,
+      "r": 697,
+      "b": 209,
+      "w": 51.61,
+      "h": 32
+     }
+    ],
+    "overlaps": [],
+    "bandHeight": 811.75
+   }
+  }
+ }
+}

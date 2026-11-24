@@ -41,8 +41,11 @@ export type BandId = "where" | "what" | "generate";
 export type KindState = "none" | "picked" | "confirmed";
 
 /** Rule 58's verbs.  "MOVE" is Part 1 §7.14's — a map position is a drag,
- *  not a field edit.  "SET" marks an unset optional. */
-export type FactVerb = "CHANGE" | "MOVE" | "SET" | "CHANGE ONE THING";
+ *  not a field edit.  "SET" marks an unset optional.
+ *  #557 (Ryan, 2026-11-24): "The closed Where row's "CHANGE" becomes
+ *  "Change"".  The collapsed rows' link is written as it reads, in the row
+ *  actions' style; nothing uppercases it. */
+export type FactVerb = "Change" | "MOVE" | "SET" | "CHANGE ONE THING";
 
 export interface BandFact {
   id: BandId;
@@ -455,7 +458,7 @@ export function deriveBands({
       id: "where",
       label: "Where",
       value: where,
-      verb: located ? "CHANGE" : null,
+      verb: located ? "Change" : null,
       pending: located ? null : "pending: find the work first",
       glyph: located ? "✓" : "◌",
     },
@@ -463,7 +466,7 @@ export function deriveBands({
       id: "what",
       label: "What's the job?",
       value: whatReady ? whatValue(scenario, jurisdictionName) : null,
-      verb: whatReady ? "CHANGE" : null,
+      verb: whatReady ? "Change" : null,
       pending: whatReady
         ? null
         : located

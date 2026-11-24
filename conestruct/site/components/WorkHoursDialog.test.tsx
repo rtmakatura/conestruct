@@ -17,7 +17,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { DEFAULT_SHOULDER, type Scenario } from "@/lib/scenarios";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
-import { WorkHoursDialog, noRecordRuns, type FixRecord } from "./WorkHoursDialog";
+import { WorkHoursDialog, noRecordRuns, placed, type FixRecord } from "./WorkHoursDialog";
 import { WhatBand } from "./bands/WhatBand";
 import { windowsSummary } from "./ScheduleField";
 import { denverBlock, denverDays } from "./__fixtures__/what-section";
@@ -54,6 +54,11 @@ function open(
 /** The drawn spans under `root`: each one's inline start and length. */
 const spans = (root: Element, selector: string, at: "left" | "top", size: "width" | "height") =>
   [...root.querySelectorAll<HTMLElement>(selector)].map((e) => [e.style[at], e.style[size]]);
+
+/** #557 (S9, S10): the four arrows (◂ ▸ ▴ ▾) that marked a clipped end
+ *  until #557 removed them.  Read from the drawn text, so a mark that comes
+ *  back under any class is caught. */
+const ARROWS = /[◂▸▴▾]/;
 
 const focusables = (d: HTMLElement) =>
   Array.from(d.querySelectorAll<HTMLElement>("button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])"));
@@ -130,7 +135,7 @@ describe("#526 ruling 4: a weekday", () => {
     open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
     expect(screen.getByTestId("hours-dialog-sub").textContent).toContain("Your hours: 8\u00a0pm to 5\u00a0am.");
     const ruler = screen.getByTestId("hours-ruler");
-    expect(ruler.querySelector(".whd-clip")).toBeNull();
+    expect(ruler.textContent).not.toMatch(ARROWS);
   });
 
   it("weekends: S8's absence, never a permission", () => {
@@ -320,7 +325,8 @@ describe("#526 round 2 (R145 S10, Rule 10): no window on record is drawn as abse
 });
 
 // #555 (S9): the scale holds all 24 hours, so the states that used to clip
-// (finding 7) now draw in full and no arrow renders.
+// (finding 7) now draw in full and no arrow renders.  #557 (S9) removed the
+// arrows' markup and CSS; these read the drawn text for the four characters.
 describe("#526 round 2 (finding 7), after #555: hours that used to be clipped draw in full, with no arrows", () => {
   const outsideBlock = (outside: [number, number][]) => {
     const d = denverDays("outside");
@@ -335,8 +341,7 @@ describe("#526 round 2 (finding 7), after #555: hours that used to be clipped dr
       start: 4,
       end: 22,
     });
-    expect(screen.queryByTestId("hours-clip-left")).toBeNull();
-    expect(screen.queryByTestId("hours-clip-right")).toBeNull();
+    expect(screen.getByTestId("hours-ruler").textContent).not.toMatch(ARROWS);
     // Both outside spans are on the ruler whole: 3:30 to 10 pm, and 4 to
     // 8:30 am cut at 6 am (6 to 8:30 at the start, 4 to 6 at the end).
     expect(spans(screen.getByTestId("hours-ruler"), ".whd-yours.is-out", "left", "width")).toEqual([
@@ -348,13 +353,13 @@ describe("#526 round 2 (finding 7), after #555: hours that used to be clipped dr
   it("the ruler: night work that fits draws whole, with no arrows and nothing in --dim", () => {
     open({ block: denverBlock(denverDays("inside")), start: 20, end: 5 });
     const ruler = screen.getByTestId("hours-ruler");
-    expect(ruler.querySelector(".whd-clip")).toBeNull();
+    expect(ruler.textContent).not.toMatch(ARROWS);
     expect(ruler.querySelector(".whd-yours.is-out")).toBeNull();
   });
   it("the whole week: no day carries an arrow", async () => {
     open({ block: outsideBlock([[4, 8.5]]), start: 4, end: 22 });
     await userEvent.setup().click(screen.getByTestId("hours-view-week"));
-    for (const d of screen.getAllByTestId("hours-week-day")) expect(d.querySelector(".whd-clip")).toBeNull();
+    for (const d of screen.getAllByTestId("hours-week-day")) expect(d.textContent).not.toMatch(ARROWS);
     // The outside span is the backend's, on the in-job days only.
     const days = screen.getAllByTestId("hours-week-day");
     expect(spans(days[0], ".whd-yours.is-out", "top", "height")).toEqual([
@@ -985,5 +990,64 @@ describe("#556: the no-closures key, hours with no street class, the week note",
     expect(css()).toMatch(
       /@media \(max-width: 600px\) \{\s*\.workbench \.whd \{\s*height: min\(640px, calc\(100vh - 32px\)\);\s*\}\s*\}/,
     );
+  });
+});
+
+// #557 (Ryan, 2026-11-24): "make the ▾ marks at the bottom of the week
+// columns readable. If they're no longer needed with the 6 am to 6 am chart,
+// remove them and record that."  R145 self-ruled S9: an arrow marked hours
+// placed before 6 or after 30 on the scale, and no start and end the page
+// can hold (clock hours 0 to 24) is placed there, so all four are removed.
+describe("#557 (S9): nothing is placed off the 6 am to 6 am scale, so the clip arrows are gone", () => {
+  it("every start and end on the half hour, past midnight included, is placed inside 6 to 30", () => {
+    let checked = 0;
+    for (let start = 0; start <= 24; start += 0.5) {
+      for (let end = 0; end <= 24; end += 0.5) {
+        if (start === end) continue;
+        // The page's hours as the window reads them (#188): an end before
+        // the start runs past midnight.
+        const hours: [number, number][] =
+          end > start
+            ? [[start, end]]
+            : [
+                [start, 24],
+                [0, end],
+              ];
+        for (const p of placed(hours)) {
+          expect(p.a, `${start} to ${end}`).toBeGreaterThanOrEqual(6);
+          expect(p.b, `${start} to ${end}`).toBeLessThanOrEqual(30);
+          expect(p.b, `${start} to ${end}`).toBeGreaterThan(p.a);
+        }
+        checked += 1;
+      }
+    }
+    // 49 starts x 49 ends, less the 49 pairs where they are equal.
+    expect(checked).toBe(49 * 49 - 49);
+  });
+
+  it("no arrow in either view for hours at the scale's ends (mounted)", async () => {
+    const user = userEvent.setup();
+    for (const [start, end] of [
+      [20, 5],
+      [0, 24],
+      [5.5, 6.5],
+      [23.5, 0.5],
+    ]) {
+      const { dialog } = open({ block: denverBlock(denverDays("outside")), start, end });
+      expect(dialog.textContent, `${start} to ${end}, weekday`).not.toMatch(ARROWS);
+      await user.click(screen.getByTestId("hours-view-week"));
+      expect(screen.getAllByTestId("hours-week-day")).toHaveLength(7);
+      expect(dialog.textContent, `${start} to ${end}, week`).not.toMatch(ARROWS);
+      cleanup();
+    }
+  });
+
+  it("no .whd-clip rule is left, and the window's source draws no arrow (globals.css and WorkHoursDialog.tsx, read as text)", () => {
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+    expect(css).not.toContain("whd-clip");
+    const src = readFileSync(join(__dirname, "WorkHoursDialog.tsx"), "utf-8");
+    expect(src).not.toMatch(ARROWS);
+    expect(src).not.toContain("whd-clip");
+    expect(src).not.toContain("hours-clip-");
   });
 });

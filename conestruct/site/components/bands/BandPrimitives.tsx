@@ -58,9 +58,12 @@ export function FactLine({
         {!pending && <span className="a-val">{fact.value}</span>}
       </div>
       {showLink ? (
+        // #557 (Ryan, 2026-11-24): "Inter 13.5/600 in --act, a 44 px
+        // target. No mono, no caps."  That is the row actions' rule
+        // (.wq-link); .a-lk keeps the link's place in the row.
         <button
           type="button"
-          className="a-lk"
+          className="a-lk wq-link"
           onClick={() => onOpen(fact.id)}
           data-testid={`fact-link-${fact.id}`}
         >

@@ -1,0 +1,1217 @@
+{
+ "site": "http://localhost:3557",
+ "mode": "after",
+ "viewport": [
+  1198,
+  930
+ ],
+ "errors": [],
+ "aerial": {
+  "pinned": {
+   "frame": {
+    "w": 411,
+    "h": 655
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 293,
+     "t": 9,
+     "r": 402,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 627,
+     "r": 93,
+     "b": 646,
+     "w": 84,
+     "h": 19
+    },
+    {
+     "name": "band-aerial-attribution",
+     "l": 65,
+     "t": 611,
+     "r": 410,
+     "b": 627,
+     "w": 345.36,
+     "h": 15.75
+    },
+    {
+     "name": "Zoom in",
+     "l": 358,
+     "t": 61,
+     "r": 402,
+     "b": 105,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Zoom out",
+     "l": 358,
+     "t": 109,
+     "r": 402,
+     "b": 153,
+     "w": 44,
+     "h": 44
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  },
+  "zoomedIn": {
+   "frame": {
+    "w": 411,
+    "h": 655
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 293,
+     "t": 9,
+     "r": 402,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 627,
+     "r": 93,
+     "b": 646,
+     "w": 84,
+     "h": 19
+    },
+    {
+     "name": "band-aerial-attribution",
+     "l": 65,
+     "t": 611,
+     "r": 410,
+     "b": 627,
+     "w": 345.36,
+     "h": 15.75
+    },
+    {
+     "name": "Zoom in",
+     "l": 358,
+     "t": 61,
+     "r": 402,
+     "b": 105,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Zoom out",
+     "l": 358,
+     "t": 109,
+     "r": 402,
+     "b": 153,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Reset to the whole corridor",
+     "l": 350,
+     "t": 157,
+     "r": 402,
+     "b": 201,
+     "w": 51.61,
+     "h": 44
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  },
+  "editPanel": {
+   "frame": {
+    "w": 411,
+    "h": 655
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 293,
+     "t": 9,
+     "r": 402,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 627,
+     "r": 93,
+     "b": 646,
+     "w": 84,
+     "h": 19
+    },
+    {
+     "name": "band-aerial-attribution",
+     "l": 65,
+     "t": 611,
+     "r": 410,
+     "b": 627,
+     "w": 345.36,
+     "h": 15.75
+    },
+    {
+     "name": "Zoom in",
+     "l": 358,
+     "t": 61,
+     "r": 402,
+     "b": 105,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Zoom out",
+     "l": 358,
+     "t": 109,
+     "r": 402,
+     "b": 153,
+     "w": 44,
+     "h": 44
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  },
+  "reopened": {
+   "frame": {
+    "w": 411,
+    "h": 655
+   },
+   "hasBar": false,
+   "boxes": [
+    {
+     "name": "where-open-picker",
+     "l": 293,
+     "t": 9,
+     "r": 402,
+     "b": 53,
+     "w": 108.52,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-logo",
+     "l": 9,
+     "t": 627,
+     "r": 93,
+     "b": 646,
+     "w": 84,
+     "h": 19
+    },
+    {
+     "name": "band-aerial-attribution",
+     "l": 65,
+     "t": 611,
+     "r": 410,
+     "b": 627,
+     "w": 345.36,
+     "h": 15.75
+    },
+    {
+     "name": "Zoom in",
+     "l": 358,
+     "t": 61,
+     "r": 402,
+     "b": 105,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Zoom out",
+     "l": 358,
+     "t": 109,
+     "r": 402,
+     "b": 153,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "band-aerial-legend",
+     "l": 8,
+     "t": 8,
+     "r": 142,
+     "b": 136,
+     "w": 133.86,
+     "h": 127.75
+    }
+   ],
+   "overlaps": [],
+   "outsideFrame": []
+  }
+ },
+ "whereHeightPinned": 793.25,
+ "zoomShown": 2,
+ "whereHeightZoomed": 793.25,
+ "axePinned": [],
+ "under44Pinned": [
+  {
+   "tag": "a",
+   "cls": "mapboxgl-ctrl-logo",
+   "testid": null,
+   "label": "Mapbox logo",
+   "w": 88,
+   "h": 23
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Maxar",
+   "w": 47.05,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Mapbox",
+   "w": 53.77,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 OpenStreetMap",
+   "w": 100.81,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "Improve this map",
+   "w": 107.53,
+   "h": 14
+  }
+ ],
+ "editPanel": [
+  {
+   "testid": "move-action-spot",
+   "cls": "wq-link",
+   "text": "Change",
+   "x": 946.34,
+   "y": 306.75,
+   "w": 58.66,
+   "h": 44
+  },
+  {
+   "testid": "move-action-start",
+   "cls": "wq-link",
+   "text": "Move",
+   "x": 960.91,
+   "y": 362.75,
+   "w": 44.09,
+   "h": 44
+  },
+  {
+   "testid": "info-toggle-worklen",
+   "cls": "a-mark tr-prov is-plain",
+   "text": "Details for Work zone length (ft)",
+   "x": 628,
+   "y": 462.5,
+   "w": 47.05,
+   "h": 44
+  },
+  {
+   "testid": null,
+   "cls": "a-fld",
+   "text": "",
+   "x": 772,
+   "y": 439.25,
+   "w": 233,
+   "h": 44
+  },
+  {
+   "testid": "where-edit-cancel",
+   "cls": "wq-cancel tr-help",
+   "text": "Cancel",
+   "x": 687.77,
+   "y": 786.5,
+   "w": 79.34,
+   "h": 44
+  },
+  {
+   "testid": "where-edit-done",
+   "cls": "a-pri wq-next",
+   "text": "Done, back to the questions",
+   "x": 775.11,
+   "y": 786.5,
+   "w": 229.89,
+   "h": 44
+  }
+ ],
+ "factWhere": {
+  "row": {
+   "w": 880,
+   "h": 58
+  },
+  "link": {
+   "l": 804.34,
+   "t": 7,
+   "w": 58.66,
+   "h": 44,
+   "text": "Change",
+   "name": "Change",
+   "family": "__Inter_176161",
+   "size": "13.5px",
+   "weight": "600",
+   "color": "rgb(52, 169, 232)",
+   "transform": "none",
+   "tracking": "normal",
+   "decoration": "underline",
+   "borderBottom": "0px none"
+  },
+  "linkText": {
+   "l": 808.34,
+   "t": 20.88,
+   "w": 50.66,
+   "h": 16
+  },
+  "label": {
+   "l": 51,
+   "t": 20.88,
+   "w": 39.34,
+   "h": 17.5
+  },
+  "value": {
+   "l": 257.11,
+   "t": 19.88,
+   "w": 533.23,
+   "h": 19.56
+  },
+  "act": "#34a9e8"
+ },
+ "jurisdictionByHand": false,
+ "what": {
+  "band": [
+   159,
+   241,
+   880,
+   979.75
+  ],
+  "boxes": {
+   "0:div.w-box#what-guesses": [
+    176,
+    363,
+    846,
+    295
+   ],
+   "1:p.w-box-head#what-guesses-head": [
+    193,
+    366,
+    168.78,
+    43.5
+   ],
+   "2:div.a-cell#cell-road-type": [
+    177,
+    409.5,
+    844,
+    82.5
+   ],
+   "3:label.w-label": [
+    193,
+    420.5,
+    60.53,
+    17.5
+   ],
+   "4:span.w-src-word#prov-road-type": [
+    207.78,
+    451.25,
+    351.91,
+    17.5
+   ],
+   "5:div.lb": [
+    725,
+    429.25,
+    280,
+    44
+   ],
+   "6:div.a-cell#cell-street-class": [
+    177,
+    492,
+    844,
+    82.5
+   ],
+   "7:label.w-label": [
+    193,
+    503,
+    70.13,
+    17.5
+   ],
+   "8:span.w-src-word#prov-street-class": [
+    207.78,
+    533.75,
+    169.56,
+    17.5
+   ],
+   "9:div.lb": [
+    725,
+    511.75,
+    280,
+    44
+   ],
+   "10:div.a-cell#cell-jurisdiction": [
+    177,
+    574.5,
+    844,
+    82.5
+   ],
+   "11:label.w-label": [
+    193,
+    585.5,
+    70.09,
+    17.5
+   ],
+   "12:span.w-src-word#prov-jurisdiction": [
+    207.78,
+    616.25,
+    159.97,
+    17.5
+   ],
+   "13:div.lb": [
+    725,
+    594.25,
+    280,
+    44
+   ],
+   "14:p.w-sec-head": [
+    176,
+    674,
+    846,
+    43.5
+   ],
+   "15:div.a-cell#cell-work-type": [
+    176,
+    717.5,
+    407,
+    82.5
+   ],
+   "16:label.w-label": [
+    176,
+    728.5,
+    78.33,
+    17.5
+   ],
+   "17:span.w-src-word#prov-work-type": [
+    176,
+    759.25,
+    42.45,
+    17.5
+   ],
+   "18:div.lb": [
+    320,
+    737.25,
+    263,
+    44
+   ],
+   "19:div.a-cell#cell-night": [
+    615,
+    717.5,
+    407,
+    82.5
+   ],
+   "20:span.w-label": [
+    615,
+    728.5,
+    68.97,
+    17.5
+   ],
+   "21:span.w-src-word#prov-night": [
+    615,
+    759.25,
+    42.45,
+    17.5
+   ],
+   "22:div.a-seg": [
+    759,
+    737.25,
+    263,
+    44
+   ],
+   "23:div.a-cell#cell-reduction": [
+    176,
+    800,
+    407,
+    106
+   ],
+   "24:span.w-label": [
+    176,
+    834.5,
+    98.42,
+    17.5
+   ],
+   "25:span.w-src-word#prov-reduction": [
+    176,
+    865.25,
+    42.45,
+    17.5
+   ],
+   "26:div.a-seg": [
+    320,
+    843.25,
+    263,
+    44
+   ],
+   "27:div.a-cell#cell-work-dates": [
+    615,
+    800,
+    407,
+    106
+   ],
+   "28:label.w-label": [
+    615,
+    822.75,
+    67.84,
+    17.5
+   ],
+   "29:span.w-src-word#prov-work-dates": [
+    615,
+    853.5,
+    64.17,
+    17.5
+   ],
+   "30:div.drp": [
+    759,
+    811,
+    263,
+    44
+   ],
+   "31:span.w-result#what-windows-line": [
+    759,
+    861,
+    263,
+    35
+   ],
+   "32:div.w-hours-row#what-hours": [
+    176,
+    906,
+    846,
+    108
+   ],
+   "33:div.w-row#what-measured": [
+    176,
+    1030,
+    846,
+    90
+   ],
+   "34:div.w-row#what-files": [
+    176,
+    1136,
+    846,
+    67.75
+   ]
+  },
+  "defaults": [
+   {
+    "testid": "info-toggle-work-type",
+    "word": "Default",
+    "box": [
+     174,
+     746,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     176,
+     759.25,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-night",
+    "word": "Default",
+    "box": [
+     613,
+     746,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     615,
+     759.25,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-reduction",
+    "word": "Default",
+    "box": [
+     174,
+     852,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     176,
+     865.25,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   }
+  ]
+ },
+ "axeWhat": [],
+ "under44What": [],
+ "defaultFocus": "default",
+ "hours": {
+  "outside": {
+   "row": {
+    "y": 995.75,
+    "h": 108,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1007.75,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 995.75,
+   "aboveInkBottom": 983,
+   "focused": false,
+   "outline": "3px none offset 0px",
+   "ringTopToInk": "not measured",
+   "workDatesCell": {
+    "y": 800,
+    "h": 106
+   },
+   "record": null
+  },
+  "withRecord": {
+   "row": {
+    "y": 995.75,
+    "h": 108,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1007.75,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 995.75,
+   "aboveInkBottom": 983,
+   "focused": true,
+   "outline": "2px solid offset 2px",
+   "ringTopToInk": 20.75,
+   "workDatesCell": {
+    "y": 800,
+    "h": 106
+   },
+   "record": "Hours changed to 8:30\u00a0am to 3:30\u00a0pm.Undo"
+  },
+  "afterUndo": {
+   "row": {
+    "y": 995.75,
+    "h": 108,
+    "padding": "4px 0px 8px"
+   },
+   "link": {
+    "y": 1007.75,
+    "w": 171.61,
+    "h": 44,
+    "text": "See Denver's work hours"
+   },
+   "aboveBottom": 995.75,
+   "aboveInkBottom": 983,
+   "focused": false,
+   "outline": "3px none offset 0px",
+   "ringTopToInk": "not measured",
+   "workDatesCell": {
+    "y": 800,
+    "h": 106
+   },
+   "record": null
+  }
+ },
+ "fixOffered": "Change my hours to 8:30\u00a0am to 3:30\u00a0pm",
+ "whatWithRecord": {
+  "band": [
+   159,
+   241,
+   880,
+   1069.5
+  ],
+  "boxes": {
+   "0:div.w-box#what-guesses": [
+    176,
+    363,
+    846,
+    295
+   ],
+   "1:p.w-box-head#what-guesses-head": [
+    193,
+    366,
+    168.78,
+    43.5
+   ],
+   "2:div.a-cell#cell-road-type": [
+    177,
+    409.5,
+    844,
+    82.5
+   ],
+   "3:label.w-label": [
+    193,
+    420.5,
+    60.53,
+    17.5
+   ],
+   "4:span.w-src-word#prov-road-type": [
+    207.78,
+    451.25,
+    351.91,
+    17.5
+   ],
+   "5:div.lb": [
+    725,
+    429.25,
+    280,
+    44
+   ],
+   "6:div.a-cell#cell-street-class": [
+    177,
+    492,
+    844,
+    82.5
+   ],
+   "7:label.w-label": [
+    193,
+    503,
+    70.13,
+    17.5
+   ],
+   "8:span.w-src-word#prov-street-class": [
+    207.78,
+    533.75,
+    169.56,
+    17.5
+   ],
+   "9:div.lb": [
+    725,
+    511.75,
+    280,
+    44
+   ],
+   "10:div.a-cell#cell-jurisdiction": [
+    177,
+    574.5,
+    844,
+    82.5
+   ],
+   "11:label.w-label": [
+    193,
+    585.5,
+    70.09,
+    17.5
+   ],
+   "12:span.w-src-word#prov-jurisdiction": [
+    207.78,
+    616.25,
+    159.97,
+    17.5
+   ],
+   "13:div.lb": [
+    725,
+    594.25,
+    280,
+    44
+   ],
+   "14:p.w-sec-head": [
+    176,
+    674,
+    846,
+    43.5
+   ],
+   "15:div.a-cell#cell-work-type": [
+    176,
+    717.5,
+    407,
+    82.5
+   ],
+   "16:label.w-label": [
+    176,
+    728.5,
+    78.33,
+    17.5
+   ],
+   "17:span.w-src-word#prov-work-type": [
+    176,
+    759.25,
+    42.45,
+    17.5
+   ],
+   "18:div.lb": [
+    320,
+    737.25,
+    263,
+    44
+   ],
+   "19:div.a-cell#cell-night": [
+    615,
+    717.5,
+    407,
+    82.5
+   ],
+   "20:span.w-label": [
+    615,
+    728.5,
+    68.97,
+    17.5
+   ],
+   "21:span.w-src-word#prov-night": [
+    615,
+    759.25,
+    42.45,
+    17.5
+   ],
+   "22:div.a-seg": [
+    759,
+    737.25,
+    263,
+    44
+   ],
+   "23:div.a-cell#cell-reduction": [
+    176,
+    800,
+    407,
+    106
+   ],
+   "24:span.w-label": [
+    176,
+    811,
+    98.42,
+    17.5
+   ],
+   "25:span.w-src-word#prov-reduction": [
+    176,
+    841.75,
+    42.45,
+    17.5
+   ],
+   "26:div.a-seg": [
+    320,
+    819.75,
+    263,
+    44
+   ],
+   "27:div.a-cell#cell-work-dates": [
+    615,
+    800,
+    407,
+    106
+   ],
+   "28:label.w-label": [
+    615,
+    822.75,
+    67.84,
+    17.5
+   ],
+   "29:span.w-src-word#prov-work-dates": [
+    615,
+    853.5,
+    62.53,
+    17.5
+   ],
+   "30:div.drp": [
+    759,
+    811,
+    263,
+    44
+   ],
+   "31:span.w-result#what-windows-line": [
+    759,
+    861,
+    263,
+    35
+   ],
+   "32:div.a-cell#cell-start-time": [
+    176,
+    906,
+    407,
+    89.75
+   ],
+   "33:label.w-label": [
+    176,
+    920.63,
+    57.97,
+    17.5
+   ],
+   "34:span.w-src-word#prov-start-time": [
+    176,
+    951.38,
+    62.53,
+    17.5
+   ],
+   "35:div.lb": [
+    320,
+    917,
+    263,
+    44
+   ],
+   "36:span.tr-note": [
+    320,
+    967,
+    263,
+    18.75
+   ],
+   "37:div.a-cell#cell-end-time": [
+    615,
+    906,
+    407,
+    89.75
+   ],
+   "38:label.w-label": [
+    615,
+    920.63,
+    51.97,
+    17.5
+   ],
+   "39:span.w-src-word#prov-end-time": [
+    615,
+    951.38,
+    62.53,
+    17.5
+   ],
+   "40:div.lb": [
+    759,
+    917,
+    263,
+    44
+   ],
+   "41:span.tr-note": [
+    759,
+    967,
+    263,
+    18.75
+   ],
+   "42:div.w-hours-row#what-hours": [
+    176,
+    995.75,
+    846,
+    108
+   ],
+   "43:div.w-row#what-measured": [
+    176,
+    1119.75,
+    846,
+    90
+   ],
+   "44:div.w-row#what-files": [
+    176,
+    1225.75,
+    846,
+    67.75
+   ]
+  },
+  "defaults": [
+   {
+    "testid": "info-toggle-work-type",
+    "word": "Default",
+    "box": [
+     174,
+     746,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     176,
+     759.25,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-night",
+    "word": "Default",
+    "box": [
+     613,
+     746,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     615,
+     759.25,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   },
+   {
+    "testid": "info-toggle-reduction",
+    "word": "Default",
+    "box": [
+     174,
+     828.5,
+     46.45,
+     44
+    ],
+    "wordBox": [
+     176,
+     841.75,
+     42.45,
+     17.5
+    ],
+    "padding": "2px 2px",
+    "margin": "-2px -2px",
+    "family": "__Inter_176161",
+    "size": "12.5px"
+   }
+  ]
+ },
+ "axeWhatRecord": [],
+ "under44WhatRecord": [],
+ "night": {
+  "arrows": 0,
+  "clipElements": 0,
+  "columns": [
+   240
+  ],
+  "yourBars": 7,
+  "window": [
+   560,
+   600
+  ]
+ },
+ "axeNightWeek": [],
+ "under44NightWeek": [],
+ "nightDay": {
+  "arrows": 0,
+  "clipElements": 0
+ },
+ "axeNightDay": [],
+ "factWhat": {
+  "row": {
+   "w": 880,
+   "h": 58
+  },
+  "link": {
+   "l": 804.34,
+   "t": 7,
+   "w": 58.66,
+   "h": 44,
+   "text": "Change",
+   "name": "Change",
+   "family": "__Inter_176161",
+   "size": "13.5px",
+   "weight": "600",
+   "color": "rgb(52, 169, 232)",
+   "transform": "none",
+   "tracking": "normal",
+   "decoration": "underline",
+   "borderBottom": "0px none"
+  },
+  "linkText": {
+   "l": 808.34,
+   "t": 20.88,
+   "w": 50.66,
+   "h": 16
+  },
+  "label": {
+   "l": 51,
+   "t": 20.88,
+   "w": 92.84,
+   "h": 17.5
+  },
+  "value": {
+   "l": 395.48,
+   "t": 19.88,
+   "w": 394.86,
+   "h": 19.56
+  },
+  "act": "#34a9e8"
+ },
+ "axeReopened": [],
+ "under44Reopened": [
+  {
+   "tag": "a",
+   "cls": "mapboxgl-ctrl-logo",
+   "testid": null,
+   "label": "Mapbox logo",
+   "w": 88,
+   "h": 23
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Maxar",
+   "w": 47.05,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 Mapbox",
+   "w": 53.77,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "\u00a9 OpenStreetMap",
+   "w": 100.81,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "",
+   "testid": null,
+   "label": "Improve this map",
+   "w": 107.53,
+   "h": 14
+  },
+  {
+   "tag": "a",
+   "cls": "inline-flex items-center min-h-[32px] min-w-[32px]",
+   "testid": null,
+   "label": "Terms",
+   "w": 35,
+   "h": 32
+  },
+  {
+   "tag": "a",
+   "cls": "inline-flex items-center min-h-[32px] min-w-[32px]",
+   "testid": null,
+   "label": "Privacy",
+   "w": 49,
+   "h": 32
+  }
+ ]
+}

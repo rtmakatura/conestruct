@@ -125,7 +125,11 @@ describe("pre-pin gating (#222), as the column does it", () => {
     expect(stack.getAttribute("data-open-band")).toBe("what");
     const where = document.querySelector('[data-testid="fact-where"]')!;
     expect(where.getAttribute("data-fact-state")).toBe("done");
-    expect(where.querySelector("button")!.textContent).toBe("CHANGE");
+    // #557 (Ryan, 2026-11-24): "The closed Where row's "CHANGE" becomes
+    // "Change"".  The word is the model's, in the row actions' style.
+    const link = where.querySelector("button")!;
+    expect(link.textContent).toBe("Change");
+    expect(link.className).toBe("a-lk wq-link");
     expect(document.querySelector("[inert]")).toBeNull();
   });
 

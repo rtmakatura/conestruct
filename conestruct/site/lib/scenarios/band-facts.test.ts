@@ -151,3 +151,14 @@ describe("the column waits on the occupied side (#290 sweep)", () => {
     expect(m.open).toBe("what");
   });
 });
+
+// #557 (Ryan, 2026-11-24): "The closed Where row's "CHANGE" becomes
+// "Change"".  R145 self-ruled S1, S2: the word is made here, and both
+// collapsed rows carry it.
+describe("#557: the collapsed rows' link reads Change", () => {
+  it("Where and What's the job? both offer Change once they have a value", () => {
+    const m = deriveBands({ scenario: PINNED_SHOULDER, jurisdictionName: null, openOverride: null, kindConfirmed: true });
+    expect(m.facts.find((f) => f.id === "where")!.verb).toBe("Change");
+    expect(m.facts.find((f) => f.id === "what")!.verb).toBe("Change");
+  });
+});

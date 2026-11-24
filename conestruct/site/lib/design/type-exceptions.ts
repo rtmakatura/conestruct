@@ -441,7 +441,6 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .whd-source", size: "var(--fs-field-label)" },
       { selector: ".workbench .whd-seg", size: "var(--fs-body-value)" },
       { selector: ".workbench .whd-labels, .workbench .whd-ticks", size: "var(--fs-field-label)" },
-      { selector: ".workbench .whd-clip", size: "var(--fs-field-label)" },
       { selector: ".workbench .whd-fix", size: "var(--fs-body-value)" },
       { selector: ".workbench .whd-vticks", size: "var(--fs-field-label)" },
       { selector: ".workbench .whd-dayname", size: "var(--fs-field-label)" },
@@ -863,7 +862,7 @@ export const CENSUS_PINS = {
   // the lean sections add 10.  195 -> 170.
   // #435: +7 — the two sentence roles (.tr-help, .tr-note) and the five
   // sites of the text-rules exception row.  170 -> 177.
-  cssDeclarations: 236, // #537: +1 (235 -> 236), the coordinates bar (S2); sizes unchanged, all existing tokens; // #526: +13 (222 -> 235), the guesses count, the Work dates line and the work-hours dialog; sizes unchanged, all existing tokens; // #517: +15 (207 -> 222), the What section's rules (ruling 1), the listbox and the date picker; sizes unchanged, all existing tokens; // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
+  cssDeclarations: 235, // #557: -1 (236 -> 235), the work-hours window's clip arrows are removed with their rule (.whd-clip); sizes unchanged; // #537: +1 (235 -> 236), the coordinates bar (S2); sizes unchanged, all existing tokens; // #526: +13 (222 -> 235), the guesses count, the Work dates line and the work-hours dialog; sizes unchanged, all existing tokens; // #517: +15 (207 -> 222), the What section's rules (ruling 1), the listbox and the date picker; sizes unchanged, all existing tokens; // #507: +8 (199 -> 207), the map window's rules (ruling 1); sizes unchanged, all existing tokens; // #456: +1 (198 -> 199), the strip's Hide map / Show map; sizes unchanged (ruling 5). #443: +12 (186 -> 198), the three sections; the retired cards' CSS stays until the follow-up; // #440: +3 (183 -> 186) — the tap bar, Use the big map instead, the ✓ row's name; sizes unchanged (ruling 8). #439: +3 (180 -> 183) — Edit on map, the summary row's links, the CONFIRM button; sizes unchanged. #437 branch 3: 183 -> 180 (below). #436: +2 — the road-picked row's name and plain-words line
   // #437: +4 (179 -> 183) — the question heading, the answer label, the
   // Next / Apply button and the strip's question sentence; sizes unchanged.
   // #437 branch 3: 183 -> 180 — seven out (the dismiss picker's legend,
