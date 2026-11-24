@@ -39,7 +39,7 @@ One window per text, opened with "Pick on map" and closed with Escape, so every 
 | HTTP 429 | 0 | 0 | 0 |
 | POST `/api/geocode` / `/api/road-bearing` / `/api/render/corridor-geometry` | 5 / 2 / 1 | 5 / 2 / 1 | 5 / 2 / 1 |
 | Token in the page (6 checks) | 0 hits | 0 hits | 0 hits |
-| Verdict (16 named checks in `results.json` `verdict`) | PASS, 0 failed | PASS, 0 failed | PASS, 0 failed |
+| Verdict (17 named checks in `results.json` `verdict`) | PASS, 0 failed | PASS, 0 failed | PASS, 0 failed |
 
 - The 1 console error per size is Chromium's "Failed to load resource" for the geocoder's 404 answer to the #553 text. The page shows the geocoder's sentence. No page error, no other console error.
 - Non-GET requests to the site: the 8 in the table. Nothing else.
