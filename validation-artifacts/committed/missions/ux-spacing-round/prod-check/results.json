@@ -1,0 +1,5401 @@
+{
+ "ranAt": "2026-11-24T20:16:35.237Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "step": "done",
+   "part": "A2",
+   "console": [],
+   "chunkShas": [
+    "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+    "ab73b3b"
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "errors": [],
+   "A": {
+    "aerial": {
+     "pinned": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       }
+      ]
+     },
+     "zoomShownPinned": 2,
+     "zoomedIn": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       },
+       {
+        "name": "Reset to the whole corridor",
+        "text": "Reset",
+        "w": 51.61,
+        "h": 44,
+        "left": 350.39,
+        "top": 157,
+        "shown": true
+       }
+      ]
+     },
+     "under44Where": [
+      "Mapbox logo 88x23",
+      "\u00a9 Maxar 47.05x14",
+      "\u00a9 Mapbox 53.77x14",
+      "\u00a9 OpenStreetMap 100.81x14",
+      "Improve this map 107.53x14"
+     ],
+     "axeWhere": [],
+     "reopened": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       }
+      ]
+     },
+     "zoomShownReopened": 2
+    },
+    "factWhere": {
+     "row": {
+      "w": 880,
+      "h": 58
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 58.66,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "defaults": [
+     {
+      "testid": "info-toggle-work-type",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-night",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-reduction",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     }
+    ],
+    "under44What": [],
+    "axeWhat": [],
+    "day-9-15": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 61.75,
+         "lengthPx": 123.5,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "hoursRing": {
+     "outside": {
+      "row": {
+       "h": 108
+      },
+      "link": {
+       "w": 171.61,
+       "h": 44,
+       "text": "See Denver's work hours",
+       "marginTop": "8px"
+      },
+      "focused": true,
+      "outline": "2px solid offset 2px",
+      "ringTopToGridTextAbove": 56,
+      "ringTopToRowSentenceAbove": "no text above the link here",
+      "record": null
+     }
+    },
+    "day-7-17": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": "Your hours go outside what Denver allows on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 20.59,
+         "lengthPx": 205.84,
+         "startPct": 4.17,
+         "lengthPct": 41.67,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 20.59,
+         "lengthPx": 30.88,
+         "startPct": 4.17,
+         "lengthPct": 6.25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 195.52,
+         "lengthPx": 30.88,
+         "startPct": 39.58,
+         "lengthPct": 6.25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "night-20-5": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 288.14,
+         "lengthPx": 185.25,
+         "startPct": 58.33,
+         "lengthPct": 37.5,
+         "midnightPx": 370.5,
+         "crossesMidnight": true
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "factWhat": {
+     "row": {
+      "w": 880,
+      "h": 58
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 58.66,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "under44Reopened": [
+     "Mapbox logo 88x23",
+     "\u00a9 Maxar 47.05x14",
+     "\u00a9 Mapbox 53.77x14",
+     "\u00a9 OpenStreetMap 100.81x14",
+     "Improve this map 107.53x14",
+     "Terms 35x32",
+     "Privacy 49x32"
+    ]
+   },
+   "B": {
+    "edits": {
+     "closuresAnswersRewritten": 2,
+     "classRequestsStripped": 2
+    },
+    "no-closures": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 61.75,
+         "lengthPx": 123.5,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No closures allowed"
+      ],
+      "keyNoClosures": {
+       "text": "No closures allowed",
+       "w": 139.28,
+       "h": 18.75,
+       "swatch": {
+        "w": 14,
+        "h": 10,
+        "backgroundImage": "repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)",
+        "border": "1px solid"
+       }
+      },
+      "stripedDays": 2,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "classUnsetAnswer": {
+     "missing": "street_class",
+     "status": "unknown",
+     "kinds": {
+      "weekday": {
+       "allowed": null,
+       "record": "windows",
+       "no_closures": false,
+       "status": null
+      },
+      "weekend": {
+       "allowed": [
+        [
+         0,
+         24
+        ]
+       ],
+       "record": "none",
+       "no_closures": false,
+       "status": "no_record"
+      }
+     }
+    },
+    "class-unset": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 410,
+       "clientHeight": 410
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours is-unchecked",
+         "bg": "rgba(0, 0, 0, 0)",
+         "border": "1px dashed",
+         "startPx": 61.75,
+         "lengthPx": 102.89,
+         "startPct": 12.5,
+         "lengthPct": 20.83,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 0
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 23.56,
+       "firstBarTop": 69.56,
+       "aboveBars": true
+      },
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 410,
+       "clientHeight": 410
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       56.19,
+       116.19,
+       176.19,
+       236.19,
+       296.19
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 23.56,
+       "firstBarTop": 96.31,
+       "aboveBars": true
+      },
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 350.56,
+        "bottom": 366.56
+       },
+       "box": {
+        "top": 349.56,
+        "bottom": 369.13,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 410,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    }
+   },
+   "landedOn": "/sandbox",
+   "jurisdictionByHand": false,
+   "scripts": {
+    "loaded": 13,
+    "read": 13
+   },
+   "consoleErrors": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 30,
+    "www.conestruct.com net::ERR_ABORTED": 4
+   },
+   "nonGetCounts": {
+    "A POST /api/geocode": 1,
+    "A POST /api/road-bearing": 1,
+    "A POST /api/render/corridor-geometry": 18,
+    "A POST /api/render/nearest-intersection": 1,
+    "A POST /api/jurisdiction/suggest": 1,
+    "A POST /api/corridor-map": 3,
+    "A POST /api/render/audit": 11,
+    "B POST /api/render/audit": 4,
+    "B POST /api/render/corridor-geometry": 3,
+    "A2 POST /api/render/audit": 2,
+    "A2 POST /api/corridor-map": 1
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "555 five ticks, both views, 8 pm to 5 am": true,
+    "555 five ticks, both views, 9 am to 3 pm": true,
+    "555 night week: 7 days, one bar each, each across midnight": true,
+    "555 night ruler: one bar, across midnight": true,
+    "555 day week: 5 days with one bar each, none across midnight": true,
+    "555 day ruler: one bar, not across midnight": true,
+    "555 axe 0 in the window, every part A reading": true,
+    "556 week note whole, 9 am to 3 pm": true,
+    "556 week note whole, 7 am to 5 pm": true,
+    "556 (edit) key reads No closures allowed with a striped swatch, days striped": true,
+    "556 no key entry for No closures on unmodified data": true,
+    "556 (edit) no street class: notice first, bars hollow and dashed, both views": true,
+    "556 axe 0 in the window, both edits": true,
+    "557 Change on the Where row": true,
+    "557 Change on the What row": true,
+    "557 aerial +, - and Reset shown, each 44 px or more both ways": true,
+    "557 hours link ring clear of the text above": true,
+    "557 Default links 44 px or wider": true,
+    "557 no clip arrows, night week and ruler": true,
+    "no429": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "1198x930",
+   "step": "done",
+   "part": "A2",
+   "console": [],
+   "chunkShas": [
+    "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+    "ab73b3b"
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "errors": [],
+   "A": {
+    "aerial": {
+     "pinned": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       }
+      ]
+     },
+     "zoomShownPinned": 2,
+     "zoomedIn": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       },
+       {
+        "name": "Reset to the whole corridor",
+        "text": "Reset",
+        "w": 51.61,
+        "h": 44,
+        "left": 350.39,
+        "top": 157,
+        "shown": true
+       }
+      ]
+     },
+     "under44Where": [
+      "Mapbox logo 88x23",
+      "\u00a9 Maxar 47.05x14",
+      "\u00a9 Mapbox 53.77x14",
+      "\u00a9 OpenStreetMap 100.81x14",
+      "Improve this map 107.53x14"
+     ],
+     "axeWhere": [],
+     "reopened": {
+      "frame": {
+       "w": 411,
+       "h": 655
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 358,
+        "top": 109,
+        "shown": true
+       }
+      ]
+     },
+     "zoomShownReopened": 2
+    },
+    "factWhere": {
+     "row": {
+      "w": 880,
+      "h": 58
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 58.66,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "defaults": [
+     {
+      "testid": "info-toggle-work-type",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-night",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-reduction",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     }
+    ],
+    "under44What": [],
+    "axeWhat": [],
+    "day-9-15": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 61.75,
+         "lengthPx": 123.5,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "hoursRing": {
+     "outside": {
+      "row": {
+       "h": 108
+      },
+      "link": {
+       "w": 171.61,
+       "h": 44,
+       "text": "See Denver's work hours",
+       "marginTop": "8px"
+      },
+      "focused": true,
+      "outline": "2px solid offset 2px",
+      "ringTopToGridTextAbove": 56,
+      "ringTopToRowSentenceAbove": "no text above the link here",
+      "record": null
+     }
+    },
+    "day-7-17": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": "Your hours go outside what Denver allows on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 20.59,
+         "lengthPx": 205.84,
+         "startPct": 4.17,
+         "lengthPct": 41.67,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 20.59,
+         "lengthPx": 30.88,
+         "startPct": 4.17,
+         "lengthPct": 6.25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 195.52,
+         "lengthPx": 30.88,
+         "startPct": 39.58,
+         "lengthPct": 6.25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "night-20-5": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 288.14,
+         "lengthPx": 185.25,
+         "startPct": 58.33,
+         "lengthPct": 37.5,
+         "midnightPx": 370.5,
+         "crossesMidnight": true
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "factWhat": {
+     "row": {
+      "w": 880,
+      "h": 58
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 58.66,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "under44Reopened": [
+     "Mapbox logo 88x23",
+     "\u00a9 Maxar 47.05x14",
+     "\u00a9 Mapbox 53.77x14",
+     "\u00a9 OpenStreetMap 100.81x14",
+     "Improve this map 107.53x14",
+     "Terms 35x32",
+     "Privacy 49x32"
+    ]
+   },
+   "B": {
+    "edits": {
+     "closuresAnswersRewritten": 2,
+     "classRequestsStripped": 2
+    },
+    "no-closures": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 61.75,
+         "lengthPx": 123.5,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 384,
+       "clientHeight": 384
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No closures allowed"
+      ],
+      "keyNoClosures": {
+       "text": "No closures allowed",
+       "w": 139.28,
+       "h": 18.75,
+       "swatch": {
+        "w": 14,
+        "h": 10,
+        "backgroundImage": "repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)",
+        "border": "1px solid"
+       }
+      },
+      "stripedDays": 2,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 319,
+        "bottom": 335
+       },
+       "box": {
+        "top": 318,
+        "bottom": 337.56,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 383.88,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "classUnsetAnswer": {
+     "missing": "street_class",
+     "status": "unknown",
+     "kinds": {
+      "weekday": {
+       "allowed": null,
+       "record": "windows",
+       "no_closures": false,
+       "status": null
+      },
+      "weekend": {
+       "allowed": [
+        [
+         0,
+         24
+        ]
+       ],
+       "record": "none",
+       "no_closures": false,
+       "status": "no_record"
+      }
+     }
+    },
+    "class-unset": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 410,
+       "clientHeight": 410
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       124.62,
+       248.06,
+       359.93,
+       495.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 494,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours is-unchecked",
+         "bg": "rgba(0, 0, 0, 0)",
+         "border": "1px dashed",
+         "startPx": 61.75,
+         "lengthPx": 102.89,
+         "startPct": 12.5,
+         "lengthPct": 20.83,
+         "midnightPx": 370.5,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 0
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 23.56,
+       "firstBarTop": 69.56,
+       "aboveBars": true
+      },
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 560,
+       "h": 600
+      },
+      "body": {
+       "scrollWidth": 526,
+       "clientWidth": 526,
+       "scrollHeight": 410,
+       "clientHeight": 410
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       56.19,
+       116.19,
+       176.19,
+       236.19,
+       296.19
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 23.56,
+       "firstBarTop": 96.31,
+       "aboveBars": true
+      },
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 1,
+       "lastLine": {
+        "top": 350.56,
+        "bottom": 366.56
+       },
+       "box": {
+        "top": 349.56,
+        "bottom": 369.13,
+        "left": 0,
+        "right": 526
+       },
+       "bodyHeight": 410,
+       "bodyWidth": 526,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    }
+   },
+   "landedOn": "/sandbox",
+   "jurisdictionByHand": false,
+   "scripts": {
+    "loaded": 14,
+    "read": 14
+   },
+   "consoleErrors": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 45,
+    "www.conestruct.com net::ERR_ABORTED": 3
+   },
+   "nonGetCounts": {
+    "A POST /api/geocode": 1,
+    "A POST /api/road-bearing": 1,
+    "A POST /api/render/corridor-geometry": 18,
+    "A POST /api/render/nearest-intersection": 1,
+    "A POST /api/jurisdiction/suggest": 1,
+    "A POST /api/corridor-map": 3,
+    "A POST /api/render/audit": 11,
+    "B POST /api/render/audit": 4,
+    "B POST /api/render/corridor-geometry": 3,
+    "A2 POST /api/render/audit": 2,
+    "A2 POST /api/corridor-map": 1
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "555 five ticks, both views, 8 pm to 5 am": true,
+    "555 five ticks, both views, 9 am to 3 pm": true,
+    "555 night week: 7 days, one bar each, each across midnight": true,
+    "555 night ruler: one bar, across midnight": true,
+    "555 day week: 5 days with one bar each, none across midnight": true,
+    "555 day ruler: one bar, not across midnight": true,
+    "555 axe 0 in the window, every part A reading": true,
+    "556 week note whole, 9 am to 3 pm": true,
+    "556 week note whole, 7 am to 5 pm": true,
+    "556 (edit) key reads No closures allowed with a striped swatch, days striped": true,
+    "556 no key entry for No closures on unmodified data": true,
+    "556 (edit) no street class: notice first, bars hollow and dashed, both views": true,
+    "556 axe 0 in the window, both edits": true,
+    "557 Change on the Where row": true,
+    "557 Change on the What row": true,
+    "557 aerial +, - and Reset shown, each 44 px or more both ways": true,
+    "557 hours link ring clear of the text above": true,
+    "557 Default links 44 px or wider": true,
+    "557 no clip arrows, night week and ruler": true,
+    "no429": true,
+    "tokenNotInPage": true
+   }
+  },
+  {
+   "size": "390x844",
+   "step": "done",
+   "part": "A2",
+   "console": [],
+   "chunkShas": [
+    "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+    "ab73b3b"
+   ],
+   "tokenChecks": 6,
+   "tokenHits": 0,
+   "errors": [],
+   "A": {
+    "aerial": {
+     "pinned": {
+      "frame": {
+       "w": 328,
+       "h": 150
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 0,
+        "h": 0,
+        "left": -31,
+        "top": -153.75,
+        "shown": false
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 0,
+        "h": 0,
+        "left": -31,
+        "top": -153.75,
+        "shown": false
+       }
+      ]
+     },
+     "zoomShownPinned": 0,
+     "under44Where": [
+      "Mapbox logo 88x23",
+      "\u00a9 Maxar 47.05x14",
+      "\u00a9 Mapbox 53.77x14",
+      "\u00a9 OpenStreetMap 100.81x14",
+      "Improve this map 107.53x14"
+     ],
+     "axeWhere": [],
+     "reopened": {
+      "frame": {
+       "w": 328,
+       "h": 250
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 275,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 275,
+        "top": 109,
+        "shown": true
+       }
+      ]
+     },
+     "zoomShownReopened": 2,
+     "zoomedIn": {
+      "frame": {
+       "w": 328,
+       "h": 250
+      },
+      "zoom": [
+       {
+        "name": "Zoom in",
+        "text": "+",
+        "w": 44,
+        "h": 44,
+        "left": 275,
+        "top": 61,
+        "shown": true
+       },
+       {
+        "name": "Zoom out",
+        "text": "\u2212",
+        "w": 44,
+        "h": 44,
+        "left": 275,
+        "top": 109,
+        "shown": true
+       },
+       {
+        "name": "Reset to the whole corridor",
+        "text": "Reset",
+        "w": 51.61,
+        "h": 44,
+        "left": 267.39,
+        "top": 157,
+        "shown": true
+       }
+      ]
+     }
+    },
+    "factWhere": {
+     "row": {
+      "w": 362,
+      "h": 140.63
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 298,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "defaults": [
+     {
+      "testid": "info-toggle-work-type",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-night",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     },
+     {
+      "testid": "info-toggle-reduction",
+      "word": "Default",
+      "w": 46.45,
+      "h": 44,
+      "wordW": 42.45
+     }
+    ],
+    "under44What": [],
+    "axeWhat": [],
+    "day-9-15": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       74.12,
+       147.06,
+       208.43,
+       293.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 292,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 36.5,
+         "lengthPx": 73,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 2,
+       "lastLine": {
+        "top": 338.56,
+        "bottom": 354.56
+       },
+       "box": {
+        "top": 318,
+        "bottom": 357.13,
+        "left": 0,
+        "right": 324
+       },
+       "bodyHeight": 381.56,
+       "bodyWidth": 324,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "hoursRing": {
+     "outside": {
+      "row": {
+       "h": 125.5
+      },
+      "link": {
+       "w": 171.61,
+       "h": 44,
+       "text": "See Denver's work hours",
+       "marginTop": "8px"
+      },
+      "focused": true,
+      "outline": "2px solid offset 2px",
+      "ringTopToGridTextAbove": 38.25,
+      "ringTopToRowSentenceAbove": 5.5,
+      "record": null
+     }
+    },
+    "day-7-17": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": "Your hours go outside what Denver allows on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       74.12,
+       147.06,
+       208.43,
+       293.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 292,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 12.17,
+         "lengthPx": 121.67,
+         "startPct": 4.17,
+         "lengthPct": 41.67,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 12.17,
+         "lengthPx": 18.25,
+         "startPct": 4.17,
+         "lengthPct": 6.25,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        },
+        {
+         "cls": "whd-yours is-out",
+         "bg": "rgb(255, 138, 46)",
+         "border": "0px solid",
+         "startPx": 115.56,
+         "lengthPx": 18.25,
+         "startPct": 39.58,
+         "lengthPct": 6.25,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 7\u00a0am to 5\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 99.17,
+          "startPct": 4.55,
+          "lengthPct": 41.32,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 10.92,
+          "lengthPx": 14.88,
+          "startPct": 4.55,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 95.19,
+          "lengthPx": 14.88,
+          "startPct": 39.66,
+          "lengthPct": 6.2,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-dim is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": []
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them.",
+       "size": "13.5px",
+       "lines": 2,
+       "lastLine": {
+        "top": 338.56,
+        "bottom": 354.56
+       },
+       "box": {
+        "top": 318,
+        "bottom": 357.13,
+        "left": 0,
+        "right": 324
+       },
+       "bodyHeight": 381.56,
+       "bodyWidth": 324,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "night-20-5": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       74.12,
+       147.06,
+       208.43,
+       293.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 292,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 170.31,
+         "lengthPx": 109.5,
+         "startPct": 58.33,
+         "lengthPct": 37.5,
+         "midnightPx": 219,
+         "crossesMidnight": true
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 8\u00a0pm to 5\u00a0am.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 139.81,
+          "lengthPx": 89.25,
+          "startPct": 58.26,
+          "lengthPct": 37.19,
+          "midnightPx": 179.5,
+          "crossesMidnight": true
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 2,
+       "lastLine": {
+        "top": 338.56,
+        "bottom": 354.56
+       },
+       "box": {
+        "top": 318,
+        "bottom": 357.13,
+        "left": 0,
+        "right": 324
+       },
+       "bodyHeight": 381.56,
+       "bodyWidth": 324,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "factWhat": {
+     "row": {
+      "w": 362,
+      "h": 140.63
+     },
+     "link": {
+      "textContent": "Change",
+      "innerText": "Change",
+      "name": "Change",
+      "w": 298,
+      "h": 44,
+      "family": "__Inter_176161",
+      "size": "13.5px",
+      "weight": "600",
+      "color": "rgb(52, 169, 232)",
+      "transform": "none",
+      "tracking": "normal"
+     }
+    },
+    "under44Reopened": [
+     "Mapbox logo 88x23",
+     "\u00a9 Maxar 47.05x14",
+     "\u00a9 Mapbox 53.77x14",
+     "\u00a9 OpenStreetMap 100.81x14",
+     "Improve this map 107.53x14"
+    ]
+   },
+   "B": {
+    "edits": {
+     "closuresAnswersRewritten": 2,
+     "classRequestsStripped": 2
+    },
+    "no-closures": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": "\u2713Your hours fit on weekdays.",
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       74.12,
+       147.06,
+       208.43,
+       293.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 292,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours",
+         "bg": "rgb(234, 240, 247)",
+         "border": "0px solid",
+         "startPx": 36.5,
+         "lengthPx": 73,
+         "startPct": 12.5,
+         "lengthPct": 25,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 2
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": null,
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 382,
+       "clientHeight": 382
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 3\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       24.63,
+       84.63,
+       144.63,
+       204.63,
+       264.63
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 2,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 1,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v",
+          "bg": "rgb(234, 240, 247)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         },
+         {
+          "cls": "whd-yours is-v is-out",
+          "bg": "rgb(255, 138, 46)",
+          "border": "0px solid",
+          "startPx": 30.75,
+          "lengthPx": 59.5,
+          "startPct": 12.81,
+          "lengthPct": 24.79,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No closures allowed"
+      ],
+      "keyNoClosures": {
+       "text": "No closures allowed",
+       "w": 139.28,
+       "h": 18.75,
+       "swatch": {
+        "w": 14,
+        "h": 10,
+        "backgroundImage": "repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)",
+        "border": "1px solid"
+       }
+      },
+      "stripedDays": 2,
+      "notice": null,
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 2,
+       "lastLine": {
+        "top": 338.56,
+        "bottom": 354.56
+       },
+       "box": {
+        "top": 318,
+        "bottom": 357.13,
+        "left": 0,
+        "right": 324
+       },
+       "bodyHeight": 381.56,
+       "bodyWidth": 324,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    },
+    "classUnsetAnswer": {
+     "missing": "street_class",
+     "status": "unknown",
+     "kinds": {
+      "weekday": {
+       "allowed": null,
+       "record": "windows",
+       "no_closures": false,
+       "status": null
+      },
+      "weekend": {
+       "allowed": [
+        [
+         0,
+         24
+        ]
+       ],
+       "record": "none",
+       "no_closures": false,
+       "status": "no_record"
+      }
+     }
+    },
+    "class-unset": {
+     "day": {
+      "view": "day",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 408,
+       "clientHeight": 408
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       1.38,
+       74.12,
+       147.06,
+       208.43,
+       293.38
+      ],
+      "midnightLines": 1,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": {
+       "track": {
+        "w": 292,
+        "h": 28
+       },
+       "yours": [
+        {
+         "cls": "whd-yours is-unchecked",
+         "bg": "rgba(0, 0, 0, 0)",
+         "border": "1px dashed",
+         "startPx": 36.5,
+         "lengthPx": 60.81,
+         "startPct": 12.5,
+         "lengthPct": 20.83,
+         "midnightPx": 219,
+         "crossesMidnight": false
+        }
+       ],
+       "bands": 0
+      },
+      "week": [],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 43.13,
+       "firstBarTop": 89.13,
+       "aboveBars": true
+      },
+      "note": null,
+      "axe": [],
+      "under44": []
+     },
+     "week": {
+      "view": "week",
+      "dialog": {
+       "w": 358,
+       "h": 640
+      },
+      "body": {
+       "scrollWidth": 324,
+       "clientWidth": 324,
+       "scrollHeight": 408,
+       "clientHeight": 408
+      },
+      "sub": "When you can close a lane on an arterial street. Your hours: 9\u00a0am to 2\u00a0pm.",
+      "verdict": null,
+      "ticks": [
+       "6 am",
+       "noon",
+       "6 pm",
+       "midnight",
+       "6 am"
+      ],
+      "ticksHaveNoBreakSpace": true,
+      "tickAt": [
+       75.75,
+       135.75,
+       195.75,
+       255.75,
+       315.75
+      ],
+      "midnightLines": 7,
+      "clipElements": 0,
+      "arrows": 0,
+      "ruler": null,
+      "week": [
+       {
+        "name": "Mon 7",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Tue 8",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Wed 9",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Thu 10",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Fri 11",
+        "cls": "whd-day",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sat 12",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       },
+       {
+        "name": "Sun 13",
+        "cls": "whd-day is-none",
+        "colH": 240,
+        "striped": 0,
+        "bands": 0,
+        "yours": [
+         {
+          "cls": "whd-yours is-v is-unchecked",
+          "bg": "rgba(0, 0, 0, 0)",
+          "border": "1px dashed",
+          "startPx": 30.75,
+          "lengthPx": 49.56,
+          "startPct": 12.81,
+          "lengthPct": 20.65,
+          "midnightPx": 179.5,
+          "crossesMidnight": false
+         }
+        ]
+       }
+      ],
+      "legend": [
+       "Allowed",
+       "Your hours",
+       "Outside what's allowed",
+       "No record"
+      ],
+      "keyNoClosures": null,
+      "stripedDays": 0,
+      "notice": {
+       "text": "Pick a street class on the page and we'll check your hours against it.",
+       "firstInBody": true,
+       "top": 4,
+       "bottom": 43.13,
+       "firstBarTop": 115.88,
+       "aboveBars": true
+      },
+      "note": {
+       "text": "Your dates: Mon Dec 7 to Sun Dec 13, the whole week.",
+       "size": "13.5px",
+       "lines": 2,
+       "lastLine": {
+        "top": 389.13,
+        "bottom": 405.13
+       },
+       "box": {
+        "top": 368.56,
+        "bottom": 407.69,
+        "left": 0,
+        "right": 324
+       },
+       "bodyHeight": 407.69,
+       "bodyWidth": 324,
+       "everyLineInsideBody": true,
+       "bodyInsideWindow": true,
+       "windowInsideScreen": true,
+       "noSidewaysOverflow": true,
+       "bodyScrolls": false
+      },
+      "axe": [],
+      "under44": []
+     }
+    }
+   },
+   "landedOn": "/sandbox",
+   "jurisdictionByHand": false,
+   "scripts": {
+    "loaded": 14,
+    "read": 14
+   },
+   "consoleErrors": 0,
+   "http429": 0,
+   "failedCounts": {
+    "api.mapbox.com net::ERR_ABORTED": 10,
+    "www.conestruct.com net::ERR_ABORTED": 3
+   },
+   "nonGetCounts": {
+    "A POST /api/geocode": 1,
+    "A POST /api/road-bearing": 1,
+    "A POST /api/render/corridor-geometry": 18,
+    "A POST /api/render/nearest-intersection": 1,
+    "A POST /api/jurisdiction/suggest": 1,
+    "A POST /api/corridor-map": 2,
+    "A POST /api/render/audit": 11,
+    "B POST /api/render/audit": 4,
+    "B POST /api/render/corridor-geometry": 3,
+    "A2 POST /api/render/audit": 2,
+    "A2 POST /api/corridor-map": 2
+   },
+   "verdict": {
+    "ran": true,
+    "landedOnSandbox": true,
+    "servedChunkCarriesSha": true,
+    "555 five ticks, both views, 8 pm to 5 am": true,
+    "555 five ticks, both views, 9 am to 3 pm": true,
+    "555 night week: 7 days, one bar each, each across midnight": true,
+    "555 night ruler: one bar, across midnight": true,
+    "555 day week: 5 days with one bar each, none across midnight": true,
+    "555 day ruler: one bar, not across midnight": true,
+    "555 axe 0 in the window, every part A reading": true,
+    "556 week note whole, 9 am to 3 pm": true,
+    "556 week note whole, 7 am to 5 pm": true,
+    "556 (edit) key reads No closures allowed with a striped swatch, days striped": true,
+    "556 no key entry for No closures on unmodified data": true,
+    "556 (edit) no street class: notice first, bars hollow and dashed, both views": true,
+    "556 axe 0 in the window, both edits": true,
+    "557 Change on the Where row": true,
+    "557 Change on the What row": true,
+    "557 aerial +, - and Reset shown, each 44 px or more both ways": true,
+    "557 hours link ring clear of the text above": true,
+    "557 Default links 44 px or wider": true,
+    "557 no clip arrows, night week and ruler": true,
+    "no429": true,
+    "tokenNotInPage": true
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "polls": 1,
+  "status": 200,
+  "sha": "ab73b3b1504bf83d167ba07a63bc34c5010f5224",
+  "isHead": true
+ },
+ "finishedAt": "2026-11-24T20:21:31.163Z",
+ "pass": true
+}

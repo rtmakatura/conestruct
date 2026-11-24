@@ -1,0 +1,375 @@
+run 2026-11-24T20:16:35.237Z to 2026-11-24T20:21:31.163Z; site https://www.conestruct.com; head ab73b3b1504bf83d167ba07a63bc34c5010f5224
+healthz sha ab73b3b1504bf83d167ba07a63bc34c5010f5224 (equals head: true); served /api/version sha ab73b3b1504bf83d167ba07a63bc34c5010f5224 (equals head: true, 1 poll(s))
+overall: PASS
+
+== 1440x900  errors: none; landed on /sandbox; jurisdiction set by hand: false
+ checks: 24 named, failed: none
+ -- part A: unmodified production data --
+ A day-9-15 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (123.5 px); midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A day-9-15 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ A day-7-17 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 3 piece(s): 4.17%+41.67% (205.84 px); 4.17%+6.25% (30.88 px) out; 39.58%+6.25% (30.88 px) out; midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict "Your hours go outside what Denver allows on weekdays."; axe 0; under 44 px 0
+ A day-7-17 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Tue 8: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Wed 9: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Thu 10: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Fri 11: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict none in this view; axe 0; under 44 px 0
+ A night-20-5 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 58.33%+37.5% (185.25 px) across midnight; midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A night-20-5 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Tue 8: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Wed 9: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Thu 10: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Fri 11: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Sat 12: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+     Sun 13: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict none in this view; axe 0; under 44 px 0
+ A  Where row link: "Change" (text-transform none) 58.66 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 880 x 58
+ A2 What row link:  "Change" (text-transform none) 58.66 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 880 x 58
+ A  aerial, pinned (Where open): frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109]
+ A  aerial, zoomed in once: frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109], Reset to the whole corridor "Reset" 51.61 x 44 at [350.39,157]
+ A2 aerial, Where reopened: frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109]
+ A  Default link info-toggle-work-type: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-night: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-reduction: 46.45 x 44 px (the word 42.45 px)
+ A  hours link "See Denver's work hours" 171.61 x 44, margin-top 8px; focused by keyboard true; ring 2px solid offset 2px; ring's top edge to the text in the grid above: 56 px; to the row's own sentence above the link: no text above the link here; hours row 108 px
+ A  under 44 px: Where section ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14"]; What section []; whole page with Where reopened (A2) ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14","Terms 35x32","Privacy 49x32"]
+ A  axe: Where section 0; What section 0
+ -- part B: browser-side edits --
+ edits made: answers with the weekend rewritten to no closures 2; requests sent without street_class 2
+ the real backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record"}}}
+ B no-closures weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (123.5 px); midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ B no-closures week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 2
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+     Sun 13: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed; "No closures allowed" entry 139.28x18.75, swatch 14x10, 1px solid, repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset weekday ruler: window 560x600; body 410 px, content 410 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 0; your hours: 1 piece(s): 12.5%+20.83% (102.89 px) hollow; midnight at 370.5 px
+   bar styles: is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 23.56 px; first bar top 69.56 px; above the bars true
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset week view: window 560x600; body 410 px, content 410 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 56.19, 116.19, 176.19, 236.19, 296.19 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Tue 8: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Wed 9: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Thu 10: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Fri 11: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sat 12: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sun 13: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+   bar styles: is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 23.56 px; first bar top 96.31 px; above the bars true
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 350.56 to 366.56 px in a 410 px body (box 349.56 to 369.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ -- the run --
+ console errors 0; HTTP 429 0; failed requests {"api.mapbox.com net::ERR_ABORTED":30,"www.conestruct.com net::ERR_ABORTED":4}
+ non-GET requests to the site, by part: {"A POST /api/geocode":1,"A POST /api/road-bearing":1,"A POST /api/render/corridor-geometry":18,"A POST /api/render/nearest-intersection":1,"A POST /api/jurisdiction/suggest":1,"A POST /api/corridor-map":3,"A POST /api/render/audit":11,"B POST /api/render/audit":4,"B POST /api/render/corridor-geometry":3,"A2 POST /api/render/audit":2,"A2 POST /api/corridor-map":1}
+ served scripts read 13/13; sha found in them: ab73b3b, ab73b3b; token checks 6, hits 0
+
+== 1198x930  errors: none; landed on /sandbox; jurisdiction set by hand: false
+ checks: 24 named, failed: none
+ -- part A: unmodified production data --
+ A day-9-15 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (123.5 px); midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A day-9-15 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ A day-7-17 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 3 piece(s): 4.17%+41.67% (205.84 px); 4.17%+6.25% (30.88 px) out; 39.58%+6.25% (30.88 px) out; midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict "Your hours go outside what Denver allows on weekdays."; axe 0; under 44 px 0
+ A day-7-17 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Tue 8: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Wed 9: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Thu 10: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Fri 11: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict none in this view; axe 0; under 44 px 0
+ A night-20-5 weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 58.33%+37.5% (185.25 px) across midnight; midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A night-20-5 week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Tue 8: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Wed 9: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Thu 10: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Fri 11: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Sat 12: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+     Sun 13: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict none in this view; axe 0; under 44 px 0
+ A  Where row link: "Change" (text-transform none) 58.66 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 880 x 58
+ A2 What row link:  "Change" (text-transform none) 58.66 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 880 x 58
+ A  aerial, pinned (Where open): frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109]
+ A  aerial, zoomed in once: frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109], Reset to the whole corridor "Reset" 51.61 x 44 at [350.39,157]
+ A2 aerial, Where reopened: frame 411 x 655; Zoom in "+" 44 x 44 at [358,61], Zoom out "−" 44 x 44 at [358,109]
+ A  Default link info-toggle-work-type: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-night: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-reduction: 46.45 x 44 px (the word 42.45 px)
+ A  hours link "See Denver's work hours" 171.61 x 44, margin-top 8px; focused by keyboard true; ring 2px solid offset 2px; ring's top edge to the text in the grid above: 56 px; to the row's own sentence above the link: no text above the link here; hours row 108 px
+ A  under 44 px: Where section ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14"]; What section []; whole page with Where reopened (A2) ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14","Terms 35x32","Privacy 49x32"]
+ A  axe: Where section 0; What section 0
+ -- part B: browser-side edits --
+ edits made: answers with the weekend rewritten to no closures 2; requests sent without street_class 2
+ the real backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record"}}}
+ B no-closures weekday ruler: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (123.5 px); midnight at 370.5 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ B no-closures week view: window 560x600; body 384 px, content 384 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 2
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+     Sun 13: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed; "No closures allowed" entry 139.28x18.75, swatch 14x10, 1px solid, repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 319 to 335 px in a 383.88 px body (box 318 to 337.56); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset weekday ruler: window 560x600; body 410 px, content 410 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 124.62, 248.06, 359.93, 495.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 494x28; allowed bands 0; your hours: 1 piece(s): 12.5%+20.83% (102.89 px) hollow; midnight at 370.5 px
+   bar styles: is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 23.56 px; first bar top 69.56 px; above the bars true
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset week view: window 560x600; body 410 px, content 410 px, width 526/526
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 56.19, 116.19, 176.19, 236.19, 296.19 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Tue 8: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Wed 9: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Thu 10: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Fri 11: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sat 12: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sun 13: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+   bar styles: is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 23.56 px; first bar top 96.31 px; above the bars true
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 1 line(s); last line 350.56 to 366.56 px in a 410 px body (box 349.56 to 369.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ -- the run --
+ console errors 0; HTTP 429 0; failed requests {"api.mapbox.com net::ERR_ABORTED":45,"www.conestruct.com net::ERR_ABORTED":3}
+ non-GET requests to the site, by part: {"A POST /api/geocode":1,"A POST /api/road-bearing":1,"A POST /api/render/corridor-geometry":18,"A POST /api/render/nearest-intersection":1,"A POST /api/jurisdiction/suggest":1,"A POST /api/corridor-map":3,"A POST /api/render/audit":11,"B POST /api/render/audit":4,"B POST /api/render/corridor-geometry":3,"A2 POST /api/render/audit":2,"A2 POST /api/corridor-map":1}
+ served scripts read 14/14; sha found in them: ab73b3b, ab73b3b; token checks 6, hits 0
+
+== 390x844  errors: none; landed on /sandbox; jurisdiction set by hand: false
+ checks: 24 named, failed: none
+ -- part A: unmodified production data --
+ A day-9-15 weekday ruler: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 74.12, 147.06, 208.43, 293.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 292x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (73 px); midnight at 219 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A day-9-15 week view: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 2 line(s); last line 338.56 to 354.56 px in a 381.56 px body (box 318 to 357.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ A day-7-17 weekday ruler: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 74.12, 147.06, 208.43, 293.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 292x28; allowed bands 2; your hours: 3 piece(s): 4.17%+41.67% (121.67 px); 4.17%+6.25% (18.25 px) out; 39.58%+6.25% (18.25 px) out; midnight at 219 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid, is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict "Your hours go outside what Denver allows on weekdays."; axe 0; under 44 px 0
+ A day-7-17 week view: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Tue 8: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Wed 9: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Thu 10: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Fri 11: 3 piece(s): 4.55%+41.32% (99.17 px); 4.55%+6.2% (14.88 px) out; 39.66%+6.2% (14.88 px) out
+     Sat 12: 0 piece(s)
+     Sun 13: 0 piece(s)
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Fri Dec 11. Sat and Sun aren't in them." 13.5px: 2 line(s); last line 338.56 to 354.56 px in a 381.56 px body (box 318 to 357.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 7 am to 5 pm."; verdict none in this view; axe 0; under 44 px 0
+ A night-20-5 weekday ruler: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 74.12, 147.06, 208.43, 293.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 292x28; allowed bands 2; your hours: 1 piece(s): 58.33%+37.5% (109.5 px) across midnight; midnight at 219 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ A night-20-5 week view: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Tue 8: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Wed 9: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Thu 10: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Fri 11: 1 piece(s): 58.26%+37.19% (89.25 px) across midnight
+     Sat 12: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+     Sun 13: 1 piece(s): 58.26%+37.19% (89.25 px) hollow across midnight
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 2 line(s); last line 338.56 to 354.56 px in a 381.56 px body (box 318 to 357.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 8 pm to 5 am."; verdict none in this view; axe 0; under 44 px 0
+ A  Where row link: "Change" (text-transform none) 298 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 362 x 140.63
+ A2 What row link:  "Change" (text-transform none) 298 x 44 px; __Inter_176161 13.5px/600, tracking normal, colour rgb(52, 169, 232); row 362 x 140.63
+ A  aerial, pinned (Where open): frame 328 x 150; zoom not shown
+ A2 aerial, zoomed in once: frame 328 x 250; Zoom in "+" 44 x 44 at [275,61], Zoom out "−" 44 x 44 at [275,109], Reset to the whole corridor "Reset" 51.61 x 44 at [267.39,157]
+ A2 aerial, Where reopened: frame 328 x 250; Zoom in "+" 44 x 44 at [275,61], Zoom out "−" 44 x 44 at [275,109]
+ A  Default link info-toggle-work-type: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-night: 46.45 x 44 px (the word 42.45 px)
+ A  Default link info-toggle-reduction: 46.45 x 44 px (the word 42.45 px)
+ A  hours link "See Denver's work hours" 171.61 x 44, margin-top 8px; focused by keyboard true; ring 2px solid offset 2px; ring's top edge to the text in the grid above: 38.25 px; to the row's own sentence above the link: 5.5 px; hours row 125.5 px
+ A  under 44 px: Where section ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14"]; What section []; whole page with Where reopened (A2) ["Mapbox logo 88x23","© Maxar 47.05x14","© Mapbox 53.77x14","© OpenStreetMap 100.81x14","Improve this map 107.53x14"]
+ A  axe: Where section 0; What section 0
+ -- part B: browser-side edits --
+ edits made: answers with the weekend rewritten to no closures 2; requests sent without street_class 2
+ the real backend's answer with no street class: {"missing":"street_class","status":"unknown","kinds":{"weekday":{"allowed":null,"record":"windows","no_closures":false,"status":null},"weekend":{"allowed":[[0,24]],"record":"none","no_closures":false,"status":"no_record"}}}
+ B no-closures weekday ruler: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 74.12, 147.06, 208.43, 293.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 292x28; allowed bands 2; your hours: 1 piece(s): 12.5%+25% (73 px); midnight at 219 px
+   bar styles: plain=rgb(234, 240, 247)/0px solid
+   key: Allowed | Your hours | Outside what's allowed
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict "✓Your hours fit on weekdays."; axe 0; under 44 px 0
+ B no-closures week view: window 358x640; body 382 px, content 382 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 24.63, 84.63, 144.63, 204.63, 264.63 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 2
+     Mon 7: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Tue 8: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Wed 9: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Thu 10: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Fri 11: 1 piece(s): 12.81%+24.79% (59.5 px)
+     Sat 12: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+     Sun 13: 2 piece(s): 12.81%+24.79% (59.5 px); 12.81%+24.79% (59.5 px) out; striped
+   bar styles: is-v=rgb(234, 240, 247)/0px solid, is-v is-out=rgb(255, 138, 46)/0px solid
+   key: Allowed | Your hours | Outside what's allowed | No closures allowed; "No closures allowed" entry 139.28x18.75, swatch 14x10, 1px solid, repeating-linear-gradient(135deg, rgb(16, 28, 41) 0px, rgb(16, 28, 41) 3px, rgb(29, 44, 60) 3px, rgb(29, 44, 60) 6px)
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 2 line(s); last line 338.56 to 354.56 px in a 381.56 px body (box 318 to 357.13); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset weekday ruler: window 358x640; body 408 px, content 408 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 1.38, 74.12, 147.06, 208.43, 293.38 px; midnight lines 1; clip elements 0; arrow characters 0
+   ruler 292x28; allowed bands 0; your hours: 1 piece(s): 12.5%+20.83% (60.81 px) hollow; midnight at 219 px
+   bar styles: is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 43.13 px; first bar top 89.13 px; above the bars true
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ B class-unset week view: window 358x640; body 408 px, content 408 px, width 324/324
+   ticks [6 am, noon, 6 pm, midnight, 6 am] at 75.75, 135.75, 195.75, 255.75, 315.75 px; midnight lines 7; clip elements 0; arrow characters 0
+   days 7; columns 240 px; striped days 0
+     Mon 7: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Tue 8: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Wed 9: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Thu 10: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Fri 11: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sat 12: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+     Sun 13: 1 piece(s): 12.81%+20.65% (49.56 px) hollow
+   bar styles: is-v is-unchecked=rgba(0, 0, 0, 0)/1px dashed
+   key: Allowed | Your hours | Outside what's allowed | No record
+   notice "Pick a street class on the page and we'll check your hours against it.": first in body true; 4 to 43.13 px; first bar top 115.88 px; above the bars true
+   week note "Your dates: Mon Dec 7 to Sun Dec 13, the whole week." 13.5px: 2 line(s); last line 389.13 to 405.13 px in a 407.69 px body (box 368.56 to 407.69); every line inside true; body inside window true; window inside screen true; no sideways overflow true; body scrolls false
+   sub "When you can close a lane on an arterial street. Your hours: 9 am to 2 pm."; verdict none in this view; axe 0; under 44 px 0
+ -- the run --
+ console errors 0; HTTP 429 0; failed requests {"api.mapbox.com net::ERR_ABORTED":10,"www.conestruct.com net::ERR_ABORTED":3}
+ non-GET requests to the site, by part: {"A POST /api/geocode":1,"A POST /api/road-bearing":1,"A POST /api/render/corridor-geometry":18,"A POST /api/render/nearest-intersection":1,"A POST /api/jurisdiction/suggest":1,"A POST /api/corridor-map":2,"A POST /api/render/audit":11,"B POST /api/render/audit":4,"B POST /api/render/corridor-geometry":3,"A2 POST /api/render/audit":2,"A2 POST /api/corridor-map":2}
+ served scripts read 14/14; sha found in them: ab73b3b, ab73b3b; token checks 6, hits 0
