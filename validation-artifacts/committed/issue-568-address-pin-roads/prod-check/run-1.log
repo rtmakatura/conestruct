@@ -1,0 +1,6 @@
+healthz sha 4894ad1 equals head: true
+served /api/version HTTP 200 sha 4894ad1: head true
+1440x900: 32 checks, 0 failed
+1198x930: 32 checks, 0 failed
+  390 ERROR at tap: Cannot read properties of undefined (reading 'slice')
+390x844: 26 checks, 1 failed, stopped on an error

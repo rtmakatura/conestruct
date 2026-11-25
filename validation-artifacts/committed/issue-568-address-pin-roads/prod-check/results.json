@@ -1,0 +1,750 @@
+{
+ "ranAt": "2026-11-25T04:01:01.672Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "4894ad10c33fbf75230b5c93f524d9be3f5326f5",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "checks": [
+    {
+     "name": "no-pin: the two work-start lines show",
+     "pass": true
+    },
+    {
+     "name": "no-pin: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "town: 'Tap the map to find the roads.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: focus is in the search box after the press",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "pair pin: roads listed, no nearest_only",
+     "pass": true
+    },
+    {
+     "name": "pair pin: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair pin: 'Tap the map to move it.' shows again",
+     "pass": true
+    },
+    {
+     "name": "address: the lookup's body carries reach: address",
+     "pass": true
+    },
+    {
+     "name": "address: HTTP 200, scan ok, nearest_only true",
+     "pass": true
+    },
+    {
+     "name": "address: Cherokee Street first, every road past 30 m and within 100 m",
+     "pass": true
+    },
+    {
+     "name": "address: the two nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "address: the first row is Cherokee Street with its distance",
+     "pass": true
+    },
+    {
+     "name": "address: the rows are the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: no road is picked",
+     "pass": true
+    },
+    {
+     "name": "address: not the no-road message",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "address: a pressed row is picked",
+     "pass": true
+    },
+    {
+     "name": "tap: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "tap: near the address pin",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads, no nearest_only, as before",
+     "pass": true
+    },
+    {
+     "name": "tap: the no-road message",
+     "pass": true
+    },
+    {
+     "name": "tap: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "did-you-mean",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.7392521562918,
+      "lng": -104.99096999999942
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "address",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "addressRows": [
+    "Cherokee StreetTraffic both ways \u00b7 58 m from your pin",
+    "West Colfax AvenueTraffic both ways \u00b7 84 m from your pin",
+    "West 14th AvenueOne-way \u00b7 87 m from your pin"
+   ]
+  },
+  {
+   "size": "1198x930",
+   "checks": [
+    {
+     "name": "no-pin: the two work-start lines show",
+     "pass": true
+    },
+    {
+     "name": "no-pin: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "town: 'Tap the map to find the roads.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: focus is in the search box after the press",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "pair pin: roads listed, no nearest_only",
+     "pass": true
+    },
+    {
+     "name": "pair pin: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair pin: 'Tap the map to move it.' shows again",
+     "pass": true
+    },
+    {
+     "name": "address: the lookup's body carries reach: address",
+     "pass": true
+    },
+    {
+     "name": "address: HTTP 200, scan ok, nearest_only true",
+     "pass": true
+    },
+    {
+     "name": "address: Cherokee Street first, every road past 30 m and within 100 m",
+     "pass": true
+    },
+    {
+     "name": "address: the two nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "address: the first row is Cherokee Street with its distance",
+     "pass": true
+    },
+    {
+     "name": "address: the rows are the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: no road is picked",
+     "pass": true
+    },
+    {
+     "name": "address: not the no-road message",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "address: a pressed row is picked",
+     "pass": true
+    },
+    {
+     "name": "tap: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "tap: near the address pin",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads, no nearest_only, as before",
+     "pass": true
+    },
+    {
+     "name": "tap: the no-road message",
+     "pass": true
+    },
+    {
+     "name": "tap: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "did-you-mean",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.73925285280336,
+      "lng": -104.9909710058288
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "address",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "addressRows": [
+    "Cherokee StreetTraffic both ways \u00b7 58 m from your pin",
+    "West Colfax AvenueTraffic both ways \u00b7 84 m from your pin",
+    "West 14th AvenueOne-way \u00b7 87 m from your pin"
+   ]
+  },
+  {
+   "size": "390x844",
+   "checks": [
+    {
+     "name": "no-pin: the two work-start lines show",
+     "pass": true
+    },
+    {
+     "name": "no-pin: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "town: 'Tap the map to find the roads.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: no other 'tap the map' line",
+     "pass": true
+    },
+    {
+     "name": "did-you-mean: focus is in the search box after the press",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "pair pin: roads listed, no nearest_only",
+     "pass": true
+    },
+    {
+     "name": "pair pin: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "pair pin: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair pin: 'Tap the map to move it.' shows again",
+     "pass": true
+    },
+    {
+     "name": "address: the lookup's body carries reach: address",
+     "pass": true
+    },
+    {
+     "name": "address: HTTP 200, scan ok, nearest_only true",
+     "pass": true
+    },
+    {
+     "name": "address: Cherokee Street first, every road past 30 m and within 100 m",
+     "pass": true
+    },
+    {
+     "name": "address: the two nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "address: the first row is Cherokee Street with its distance",
+     "pass": true
+    },
+    {
+     "name": "address: the rows are the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: no road is picked",
+     "pass": true
+    },
+    {
+     "name": "address: not the no-road message",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "address: a pressed row is picked",
+     "pass": true
+    },
+    {
+     "name": "tap: the lookup's body has no reach",
+     "pass": true
+    },
+    {
+     "name": "tap: near the address pin",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads, no nearest_only, as before",
+     "pass": true
+    },
+    {
+     "name": "tap: the no-road message",
+     "pass": true
+    },
+    {
+     "name": "tap: no nearest-only lines",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "did-you-mean",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.73924848243311,
+      "lng": -104.99096999999912
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "address",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED",
+    "did-you-mean: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "addressRows": [
+    "Cherokee StreetTraffic both ways \u00b7 58 m from your pin",
+    "West Colfax AvenueTraffic both ways \u00b7 84 m from your pin",
+    "West 14th AvenueOne-way \u00b7 87 m from your pin"
+   ]
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "4894ad10c33fbf75230b5c93f524d9be3f5326f5",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "status": 200,
+  "sha": "4894ad10c33fbf75230b5c93f524d9be3f5326f5",
+  "isHead": true
+ }
+}
