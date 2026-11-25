@@ -1325,6 +1325,36 @@ export function LocationPickerModal({
 
   // ---- Search bar / geocode ---------------------------------------------
 
+  // #569 (Ryan, 2026-11-25): "starting a new search clears the previous
+  // pin, road list, saved choice and every message before the new result
+  // shows, exactly like a fresh window".  Before this only a search that
+  // placed a pin cleared them (in detectAt), so a town's notice sat over
+  // the last pin's roads and a pick saved the plan at the old place.  The
+  // token is bumped so a road lookup still running can't answer for the
+  // removed pin.  The text saved as the address and a marked cross street
+  // belong to the old pin and go with it (R145 self-ruled).
+  const resetForNewSearch = useCallback(() => {
+    bearingTokenRef.current++;
+    pinFromAddressRef.current = false;
+    markerRef.current?.remove();
+    markerRef.current = null;
+    setMarkerBearingRef.current = null;
+    setHasPin(false);
+    setLat(0);
+    setLng(0);
+    setAddress("");
+    setBearingCandidates([]);
+    setSelectedCandidateIdx(null);
+    confirmedMethodRef.current = null;
+    setDetectionContext({ isUrban: false, placeName: null });
+    setClassify({ state: "idle" });
+    setNearestOnly(false);
+    setRoadAxis(null);
+    setCoarseNotice(null);
+    setSearchStatus({ state: "idle" });
+    clearCrossPin();
+  }, [clearCrossPin]);
+
   // #541 ruling 1: coordinates from the search box.  The pin goes there by
   // #538's path (fly at the search zoom, road lookup).
   const placeSearchCoords = useCallback(
@@ -1347,10 +1377,16 @@ export function LocationPickerModal({
       e.preventDefault();
       const q = searchQuery.trim();
       if (!q) return;
-      setCoarseNotice(null);
       // #541 ruling 1: geocode sender 2 of 2.  Coordinates are read here,
       // before any request; only an address goes on to the geocoder.
       const read = readSearchCoords(q);
+      // #569: every search starts from a window with no pin.  The one
+      // search that is not new is the pin's own numbers (#538 fold-in (a)):
+      // it moves nothing, so the pin and its road pick stay.
+      const pinsOwnNumbers =
+        read.kind === "point" && hasPin && fmt4(read.lat) === fmt4(lat) && fmt4(read.lng) === fmt4(lng);
+      if (pinsOwnNumbers) setCoarseNotice(null);
+      else resetForNewSearch();
       if (read.kind === "point") {
         placeSearchCoords(read.lat, read.lng);
         return;
@@ -1415,7 +1451,7 @@ export function LocationPickerModal({
         setSearchStatus({ state: "error", message: SEARCH_NO_ANSWER });
       }
     },
-    [searchQuery, applyPinPosition, placeSearchCoords, initial.jurisdictionKey],
+    [searchQuery, applyPinPosition, placeSearchCoords, resetForNewSearch, hasPin, lat, lng, initial.jurisdictionKey],
   );
 
   // The "Did you mean" choice: the pair the other way round, shown in the
@@ -1547,6 +1583,12 @@ export function LocationPickerModal({
   // with the list, with the lookup running, and over the box.
   const roadShown = hasPin && classify.state !== "idle";
   const searchBoxShown = searchMessage !== null || searchSwap !== null;
+  // #569: the road answer's own boxes (RoadQuestion's lookup message and
+  // its nearest-only notice).  Each says what to do next.
+  const roadBoxShown =
+    roadShown &&
+    classify.state !== "resolving" &&
+    (classify.state === "error" || bearingCandidates.length === 0 || nearestOnly);
   const roadHeading =
     searchBoxShown ||
     (roadShown &&
@@ -1727,7 +1769,9 @@ export function LocationPickerModal({
                 ) : (
                   !searchBoxShown && <p className="mw-line">{WORK_START_NO_PIN}</p>
                 )}
-                {!searchBoxShown && <p className="mw-hint">{WORK_START_MOVE}</p>}
+                {/* #569 (Ryan, 2026-11-25): nor is "Tap the map to move it."
+                    while any message box shows. */}
+                {!searchBoxShown && !roadBoxShown && <p className="mw-hint">{WORK_START_MOVE}</p>}
                 <CorridorPreviewPanel
                   corridor={corridor}
                   hasPin={hasPin}
@@ -1967,9 +2011,11 @@ function RoadQuestion({
   }
   return (
     <div className="road-pick-panel mw-roads" data-testid="road-pick-panel">
+      {/* #569 (Ryan, 2026-11-25): the town notice's box (--pri-off, no
+          border), not the lookup-failed one; this is not a failure. */}
       {nearestOnly && (
-        <div className="mw-status" role="status" data-testid="road-nearest-only">
-          <p className="mw-sub">{NEAREST_ROADS_TITLE}</p>
+        <div className="mw-feedback" role="status" data-testid="road-nearest-only">
+          <p className="mw-line mw-feedback-what">{NEAREST_ROADS_TITLE}</p>
           <p className="mw-line">{NEAREST_ROADS_LINE}</p>
         </div>
       )}

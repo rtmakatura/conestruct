@@ -330,7 +330,9 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
     expect(input().value).toBe("39.7401, -104.9811");
   });
 
-  it("with a pin and its roads: the box sits between the question and the road list, and the list is still named by the question", async () => {
+  // #569 (Ryan, 2026-11-25): a new search clears the pin and its roads, so
+  // the box of a search with no pin is never over the last pin's list.
+  it("with a pin and its roads: a search that places no pin leaves the question and the box, and the old list is gone (#569)", async () => {
     const user = userEvent.setup();
     roadAnswer = TWO_ROADS;
     mount();
@@ -345,12 +347,12 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
     geo = { ok: { lat: 38.05, lng: -102.12, placeType: "address", weak: true, placeName: "39 North Main Street, Holly, Colorado 81047" } };
     await searchFor(user, "39 N, 44.4");
     await screen.findByText("Closest match: 39 North Main Street, Holly, Colorado 81047.");
-    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback", "div.road-pick-panel"]);
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
     expect(screen.getAllByText(QUESTION)).toHaveLength(1);
-    expect(screen.getByRole("radiogroup", { name: QUESTION }).querySelectorAll('[role="radio"]')).toHaveLength(2);
+    expect(screen.queryAllByRole("radio")).toEqual([]);
     expect(screen.queryByText(TAP_LINE)).toBeNull();
-    // The pin and its roads are as they were.
-    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    // The pin and its roads are gone; no second lookup ran.
+    expect(bar().textContent).toBe("No pin yet");
     expect(detects).toEqual([PIN]);
   });
 });
@@ -514,7 +516,9 @@ describe("#567: while the box shows, its line is the only 'tap the map' instruct
     expect(tapLines()).toEqual([]);
   });
 
-  it("a message over a pin: 'At your pin.' stays and 'Tap the map to move it.' goes", async () => {
+  // #569 (Ryan, 2026-11-25): the search clears the pin, so "At your pin."
+  // goes with it (before, the message sat over the old pin).
+  it("a message after a pin: the pin is cleared, so 'At your pin.' and 'Tap the map to move it.' both go (#569)", async () => {
     const user = userEvent.setup();
     roadAnswer = TWO_ROADS;
     mount(PIN);
@@ -524,7 +528,7 @@ describe("#567: while the box shows, its line is the only 'tap the map' instruct
     await searchFor(user, "Lafayette, CO");
     await screen.findByText(TOWN);
     expect(tapLines()).toEqual([]);
-    expect(screen.getByText("At your pin.")).toBeTruthy();
+    expect(screen.queryByText("At your pin.")).toBeNull();
   });
 });
 
@@ -587,6 +591,12 @@ describe("#568: an address search's pin says so to the road lookup", () => {
     const panel = await screen.findByTestId("road-pick-panel");
     const note = within(panel).getByTestId("road-nearest-only");
     expect(Array.from(note.children).map((e) => e.textContent)).toEqual([NEAREST_TITLE, NEAREST_LINE]);
+    // #569 (Ryan, 2026-11-25): the town notice's box, not the lookup-failed
+    // one (--vd-flag-ground with a --warn border), and while it shows
+    // "Tap the map to move it." is not rendered.
+    expect(note.className).toBe("mw-feedback");
+    expect(Array.from(note.children).map((e) => e.className)).toEqual(["mw-line mw-feedback-what", "mw-line"]);
+    expect(screen.queryByText("Tap the map to move it.")).toBeNull();
     expect(panel.children[0]).toBe(note);
     const row = within(panel).getByRole("radio");
     expect(row.textContent).toContain("Cherokee Street");
@@ -631,5 +641,154 @@ describe("#568: an address search's pin says so to the road lookup", () => {
     await waitFor(() => expect(detects).toHaveLength(2));
     await waitFor(() => expect(screen.queryByTestId("road-nearest-only")).toBeNull());
     await screen.findByTestId("road-pick-panel");
+  });
+});
+
+// #569 (Ryan, 2026-11-25): "starting a new search clears the previous pin,
+// road list, saved choice and every message before the new result shows,
+// exactly like a fresh window".  Found in the browser: "1437 Bannock St,
+// Denver" then "Lafayette, CO" left the 30 m notice, the three Denver roads
+// and "Pin at 39.7392, -104.9910" under the town notice, and a pick would
+// have saved the plan in Denver.
+describe("#569: a new search starts from a window with no pin", () => {
+  const ADDRESS = { lat: 39.739247, lng: -104.99097 };
+  const near = (way_id: string, name: string, m: number): RoadCandidate => ({
+    ...road(way_id, 0),
+    name,
+    snap_distance_m: m,
+  });
+  const BANNOCK: RoadDetectResponse = {
+    scan_status: "ok",
+    candidates: [
+      near("130911277", "Cherokee Street", 57.8),
+      near("628677817", "West Colfax Avenue", 84.1),
+      near("6234567", "West 14th Avenue", 87.3),
+    ],
+    primary_index: 0,
+    isUrban: true,
+    placeName: "Denver",
+    nearest_only: true,
+  };
+  const save = () => screen.getByRole("button", { name: "Save and close" }) as HTMLButtonElement;
+
+  async function bannock(user: User) {
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    roadAnswer = BANNOCK;
+    await searchFor(user, "1437 Bannock St, Denver");
+    await screen.findByTestId("road-nearest-only");
+    expect(screen.getAllByRole("radio")).toHaveLength(3);
+    expect(bar().textContent).toBe("Pin at 39.7392, -104.9910");
+  }
+  /** The window as a fresh one shows it, under whatever the box says. */
+  function expectNoPinLeft() {
+    expect(bar().textContent).toBe("No pin yet");
+    expect(screen.queryByTestId("road-nearest-only")).toBeNull();
+    expect(screen.queryByTestId("road-pick-panel")).toBeNull();
+    expect(screen.queryAllByRole("radio")).toEqual([]);
+    expect(screen.queryByText("At your pin.")).toBeNull();
+    expect(save().disabled).toBe(true);
+  }
+
+  it("Bannock, then Lafayette: the town notice is all that shows; no Denver pin, roads or 30 m notice", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    await bannock(user);
+    geo = { ok: { lat: 39.9936, lng: -105.0897, placeType: "place" } };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByText(TOWN);
+    expectNoPinLeft();
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
+    expect(lines()).toEqual([
+      ["mw-line mw-feedback-what", TOWN],
+      ["mw-line", TOWN_NEXT],
+    ]);
+    // One lookup, the Bannock pin's: nothing was looked up for the town.
+    expect(detects).toHaveLength(1);
+  });
+
+  it("a road picked for the old pin is not kept: Save is shut after the next search", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    await bannock(user);
+    await user.click(screen.getAllByRole("radio")[0]);
+    await waitFor(() => expect(save().disabled).toBe(false));
+    geo = { ok: { lat: 39.9936, lng: -105.0897, placeType: "place" } };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByText(TOWN);
+    expectNoPinLeft();
+  });
+
+  it("it is cleared before the new result shows: while the search is still out, nothing of the old pin is left", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    await bannock(user);
+    geo = { parked: true };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByRole("button", { name: "Searching…" });
+    expectNoPinLeft();
+    expect(feedback().textContent).toBe("");
+  });
+
+  it.each<[string, Geo, string]>([
+    [
+      "a weak match",
+      { ok: { lat: 38.05, lng: -102.12, placeType: "address", weak: true, placeName: "39 North Main Street, Holly, Colorado 81047" } },
+      "39 N, 44.4",
+    ],
+    ["no match", { fail: [404, "check spelling"] }, "Lafayete"],
+    ["no answer", { down: true }, "Lafayette, CO"],
+    ["out of range", { parked: true }, "139.7401, -104.9811"],
+    ["did you mean", { parked: true }, "-104.9811, 39.7401"],
+  ])("%s after a pin clears it too", async (_name, answer, text) => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    await bannock(user);
+    geo = answer;
+    await searchFor(user, text);
+    await waitFor(() => expect(feedback().textContent).not.toBe(""));
+    expectNoPinLeft();
+  });
+
+  it("a search that places a pin shows its own roads only", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    await bannock(user);
+    geo = { ok: { lat: PIN.lat, lng: PIN.lng, placeType: "address" } };
+    roadAnswer = TWO_ROADS;
+    await searchFor(user, "1600 Broadway, Denver");
+    await waitFor(() => expect(bar().textContent).toBe("Pin at 39.7401, -104.9811"));
+    await waitFor(() => expect(screen.getAllByRole("radio")).toHaveLength(2));
+    expect(screen.queryByTestId("road-nearest-only")).toBeNull();
+    expect(screen.queryByText(/Cherokee Street/)).toBeNull();
+  });
+
+  it("the pin's own numbers are not a new search (#538): the pin and the pick stay", async () => {
+    const user = userEvent.setup();
+    roadAnswer = TWO_ROADS;
+    mount();
+    await mapReady();
+    await searchFor(user, "39.7401, -104.9811");
+    await waitFor(() => expect(screen.getAllByRole("radio")).toHaveLength(2));
+    await user.click(screen.getAllByRole("radio")[1]);
+    await searchFor(user, "39.7401, -104.9811");
+    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(screen.getAllByRole("radio")[1].getAttribute("aria-checked")).toBe("true");
+    expect(detects).toHaveLength(1);
+  });
+
+  it("the lookup's own message box hides 'Tap the map to move it.' too", async () => {
+    const user = userEvent.setup();
+    roadAnswer = { scan_status: "ok", candidates: [], primary_index: null, isUrban: true, placeName: "Denver" };
+    mount();
+    await mapReady();
+    await searchFor(user, "39.7401, -104.9811");
+    await screen.findByTestId("road-lookup-status");
+    expect(tapLines()).toEqual([]);
+    expect(screen.getByText("At your pin.")).toBeTruthy();
   });
 });

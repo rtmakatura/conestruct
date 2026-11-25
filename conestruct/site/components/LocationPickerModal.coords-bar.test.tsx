@@ -264,7 +264,9 @@ describe("#541 ruling 1: out of range or swapped", () => {
     expect(bar().textContent).toBe("No pin yet");
   });
 
-  it("longitude out of range names the longitude; a pin already placed stays", async () => {
+  // #569 (Ryan, 2026-11-25): a new search clears the pin before its result
+  // shows.  Before, "a pin already placed stays".
+  it("longitude out of range names the longitude; a pin already placed is cleared (#569)", async () => {
     const user = userEvent.setup();
     mount(PIN);
     await mapBuilt();
@@ -272,7 +274,7 @@ describe("#541 ruling 1: out of range or swapped", () => {
     expect(list().textContent).toBe("Longitude must be between -180 and 180");
     expect(geocodes).toEqual([]);
     expect(detects.filter((d) => d.lat !== PIN.lat || d.lng !== PIN.lng)).toEqual([]);
-    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(bar().textContent).toBe("No pin yet");
   });
 
   it("swapped: the line is the choice 'Did you mean 39.7401, -104.9811?'; nothing moves until it is taken", async () => {
@@ -790,7 +792,9 @@ describe("#554: a weak match is named in the box and nothing moves", () => {
     expect(camera.flies).toEqual([]);
   });
 
-  it("a pin already placed stays where it is", async () => {
+  // #569 (Ryan, 2026-11-25): the weak match still places nothing and flies
+  // nowhere, but the search that found it clears the pin placed before.
+  it("a pin already placed is cleared by the new search (#569); nothing is placed or flown to", async () => {
     const user = userEvent.setup();
     mount();
     await mapBuilt();
@@ -800,7 +804,7 @@ describe("#554: a weak match is named in the box and nothing moves", () => {
     geocodeAnswer = HOLLY;
     await searchFor(user, "39 N, 44.4");
     await screen.findByText(CASES[0][2]);
-    expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
+    expect(bar().textContent).toBe("No pin yet");
     expect(detects).toEqual([PIN]);
     expect(camera.flies).toHaveLength(flies);
   });
