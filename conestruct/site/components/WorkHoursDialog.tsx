@@ -26,6 +26,7 @@ import {
   NO_CLOSURES_LABEL,
   NO_RECORD_LABEL,
   NO_RECORD_SR,
+  NOT_CHECKED_LABEL,
   PICK_CLASS_TO_CHECK,
   SET_TIMES_TO_SEE,
   checkingDates,
@@ -102,6 +103,11 @@ function hourSpans(start: number, end: number): [number, number][] {
  *  backend sends `allowed: null` for it and checks nothing, so your hours
  *  there are not checked (Rule 10).  Read, never worked out here (Rule 3). */
 const needsClass = (k: DayKindEval) => k.record !== "none" && k.allowed === null;
+/** Your hours on this day kind draw hollow: no record, or no street class. */
+const notChecked = (k: DayKindEval) => k.record === "none" || needsClass(k);
+// #561 (S4), CHOSEN: the body has more below when over 1 px of it is under
+// its bottom edge (a scroll position can stop a fraction of a pixel short).
+const MORE_PX = 1;
 
 /** #556 (Ryan, 2026-11-24): "A notice at the top of the chart reads 'Pick a
  *  street class on the page and we'll check your hours against it.'" */
@@ -156,6 +162,8 @@ export function WorkHoursDialog({
 }) {
   const [view, setView] = useState<"day" | "week">("day");
   const ref = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [more, setMore] = useState(false);
   const titleId = useId();
   const subId = useId();
   const days = jurisdiction.hours_days ?? null;
@@ -195,6 +203,25 @@ export function WorkHoursDialog({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  // #561 (S4): whether the body has content under its bottom edge, read
+  // from the element after every render, on scroll and when its box changes.
+  const readMore = () => {
+    const el = bodyRef.current;
+    if (el) setMore(el.scrollHeight - el.scrollTop - el.clientHeight > MORE_PX);
+  };
+  useEffect(readMore);
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", readMore, { passive: true });
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(readMore);
+    ro?.observe(el);
+    return () => {
+      el.removeEventListener("scroll", readMore);
+      ro?.disconnect();
+    };
+  }, []);
+
   const sources = days
     ? [...days.kinds.weekday.sources, ...days.kinds.weekend.sources].filter(
         (s, i, all) =>
@@ -209,6 +236,15 @@ export function WorkHoursDialog({
   // striped, by the same test the stripes use.
   const noClosuresShown =
     view === "week" && days !== null && weekOf(days).some((d) => days.kinds[d.day_kind].no_closures);
+  // #561 (S1): "Not checked" joins the key only while a hollow
+  // bar is drawn, by the tests the two views draw it with.
+  const notCheckedShown =
+    days !== null &&
+    !verifying &&
+    timed &&
+    (view === "day"
+      ? notChecked(days.kinds.weekday)
+      : weekOf(days).some((d) => d.in_job && notChecked(days.kinds[d.day_kind])));
 
   return (
     <div className="whd-scrim">
@@ -263,7 +299,9 @@ export function WorkHoursDialog({
             scroll by keyboard (axe scrollable-region-focusable), named by
             the view it shows. */}
         <div
+          ref={bodyRef}
           className="whd-body"
+          data-more={more ? "" : undefined}
           role="region"
           tabIndex={0}
           aria-label={view === "day" ? "A weekday" : "The whole week"}
@@ -286,7 +324,7 @@ export function WorkHoursDialog({
           )}
         </div>
         <div className="whd-foot">
-          <Legend noRecord={noRecordShown} noClosures={noClosuresShown} />
+          <Legend noRecord={noRecordShown} noClosures={noClosuresShown} notChecked={notCheckedShown} />
           {source && (
             <p className="whd-source" data-testid="hours-dialog-source">
               {source}
@@ -298,7 +336,15 @@ export function WorkHoursDialog({
   );
 }
 
-function Legend({ noRecord, noClosures }: { noRecord: boolean; noClosures: boolean }) {
+function Legend({
+  noRecord,
+  noClosures,
+  notChecked,
+}: {
+  noRecord: boolean;
+  noClosures: boolean;
+  notChecked: boolean;
+}) {
   return (
     <ul className="whd-legend" aria-label="Key">
       <li>
@@ -309,6 +355,12 @@ function Legend({ noRecord, noClosures }: { noRecord: boolean; noClosures: boole
         <span className="whd-key is-yours" aria-hidden />
         Your hours
       </li>
+      {notChecked && (
+        <li data-testid="hours-key-not-checked">
+          <span className="whd-key is-unchecked" aria-hidden />
+          {NOT_CHECKED_LABEL}
+        </li>
+      )}
       <li>
         <span className="whd-key is-out" aria-hidden />
         Outside what&apos;s allowed
@@ -393,7 +445,7 @@ function Weekday({
   const allowed = placed(noRecord ? [] : (wd.allowed ?? []));
   // #556 (Ryan, 2026-11-24): "When no street class is set, your hours draw
   // as a dashed outline (not checked yet), not the solid 'inside' ink."
-  const unchecked = noRecord || needsClass(wd);
+  const unchecked = notChecked(wd);
   const yours = timed && start != null && end != null ? placed(hourSpans(start, end)) : null;
   const outside = placed(wd.outside);
   const holiday = holidayLine(days.holiday_rule);
@@ -532,7 +584,7 @@ function Week({
           // dashed column labelled "No record", never an Allowed band.
           const none = k.record === "none";
           // #556: no record or no street class, so not checked (hollow).
-          const unchecked = none || needsClass(k);
+          const unchecked = notChecked(k);
           const outside = placed(k.outside);
           return (
             <div

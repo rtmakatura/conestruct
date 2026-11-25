@@ -1,0 +1,220 @@
+{
+ "site": "http://localhost:3561",
+ "viewport": [
+  1440,
+  900
+ ],
+ "streetClass": "set",
+ "errors": [],
+ "states": {
+  "561-class-set-night": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "clientHeight": 364,
+      "scrollHeight": 364,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 526,
+      "clientWidth": 526
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 1,
+     "footHeight": 53.88,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "clientHeight": 364,
+      "scrollHeight": 364,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 526,
+      "clientWidth": 526
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 1,
+      "boxTop": 318,
+      "boxBottom": 337.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 1,
+     "footHeight": 53.88,
+     "hollowBars": 2,
+     "solidBars": 5,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   }
+  },
+  "561-class-set-weekdays": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "clientHeight": 384,
+      "scrollHeight": 384,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 526,
+      "clientWidth": 526
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 1
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 1,
+     "footHeight": 53.88,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 560,
+      "h": 600
+     },
+     "body": {
+      "clientHeight": 384,
+      "scrollHeight": 384,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 526,
+      "clientWidth": 526
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 1,
+      "boxTop": 318,
+      "boxBottom": 337.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 1
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 1,
+     "footHeight": 53.88,
+     "hollowBars": 0,
+     "solidBars": 5,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   }
+  }
+ },
+ "jurisdictionByHand": false
+}

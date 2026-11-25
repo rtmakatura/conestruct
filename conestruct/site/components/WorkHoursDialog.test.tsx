@@ -1051,3 +1051,135 @@ describe("#557 (S9): nothing is placed off the 6 am to 6 am scale, so the clip a
     expect(src).not.toContain("hours-clip-");
   });
 });
+
+// #561 (R145 self-ruled S1 to S6): the key names the hollow dashed bar while
+// one is drawn, and a body with more under its bottom edge is flagged for
+// the fade.  Layout is measured by the walk, not here (jsdom has none).
+describe("#561: the key names the hollow bar; a body with more below is flagged", () => {
+  const css = () => readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+  const keyItems = () => [...screen.getByLabelText("Key").querySelectorAll("li")].map((li) => li.textContent);
+  const toWeek = () => userEvent.setup().click(screen.getByTestId("hours-view-week"));
+  const unset = () => denverBlock({ ...denverDays("street_class"), job: denverDays("partial").job });
+
+  it("S1: no street class: the entry is in the key in both views, after 'Your hours', with a hollow swatch", async () => {
+    open({ block: unset(), start: 9, end: 14 });
+    expect(document.querySelectorAll(".whd-yours.is-unchecked").length).toBe(1);
+    const key = screen.getByTestId("hours-key-not-checked");
+    expect(key.textContent).toBe("Not checked");
+    expect(key.querySelector(".whd-key.is-unchecked")?.getAttribute("aria-hidden")).toBe("true");
+    expect(keyItems()).toEqual(["Allowed", "Your hours", "Not checked", "Outside what's allowed"]);
+    await toWeek();
+    expect(keyItems()).toEqual([
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record",
+    ]);
+  });
+
+  it("S1: a no-record weekend in the job: the entry shows in the whole week only, where the hollow bars are", async () => {
+    open({ block: denverBlock(denverDays("partial")), start: 9, end: 15 });
+    expect(document.querySelector(".whd-yours.is-unchecked")).toBeNull();
+    expect(screen.queryByTestId("hours-key-not-checked")).toBeNull();
+    await toWeek();
+    expect(document.querySelectorAll(".whd-yours.is-unchecked").length).toBe(2);
+    expect(screen.getByTestId("hours-key-not-checked")).not.toBeNull();
+  });
+
+  it("S1: no entry when no hollow bar is drawn: every day checked, a no-record weekend outside the job, or no times", async () => {
+    open({ block: denverBlock(denverDays("weekend_closed")), start: 9, end: 15 });
+    await toWeek();
+    expect(document.querySelector(".whd-yours.is-unchecked")).toBeNull();
+    expect(screen.queryByTestId("hours-key-not-checked")).toBeNull();
+    cleanup();
+    // Mon to Fri job: the no-record weekend draws no bar at all.
+    open({ block: denverBlock(denverDays("inside")), start: 9, end: 15 });
+    await toWeek();
+    expect(document.querySelector(".whd-yours.is-unchecked")).toBeNull();
+    expect(screen.queryByTestId("hours-key-not-checked")).toBeNull();
+    cleanup();
+    // No times: no bar of any kind, so nothing to name.
+    open({ block: unset(), start: null, end: null });
+    expect(document.querySelector(".whd-yours")).toBeNull();
+    expect(screen.queryByTestId("hours-key-not-checked")).toBeNull();
+  });
+
+  it("S2: the swatch is the bar's own dashed rule and 6 px (globals.css)", () => {
+    expect(css()).toMatch(
+      /\.workbench \.whd-key\.is-unchecked \{\s*height: 6px;\s*border: 1px dashed var\(--ink-faint\);\s*\}/,
+    );
+    expect(css()).toMatch(
+      /\.workbench \.whd-yours\.is-unchecked \{\s*background: transparent;\s*border: 1px dashed var\(--ink-faint\);\s*\}/,
+    );
+  });
+
+  it("S4: the body is flagged while more of it is under its bottom edge, and not at the end or when it fits", async () => {
+    open();
+    const body = screen.getByRole("region", { name: "A weekday" });
+    // jsdom lays nothing out: every size reads 0, so the view "fits".
+    expect(body.hasAttribute("data-more")).toBe(false);
+    Object.defineProperty(body, "scrollHeight", { configurable: true, value: 408 });
+    Object.defineProperty(body, "clientHeight", { configurable: true, value: 316 });
+    const scrollTo = (top: number) => {
+      body.scrollTop = top;
+      fireEvent.scroll(body);
+    };
+    scrollTo(0);
+    expect(body.getAttribute("data-more")).toBe("");
+    scrollTo(90);
+    expect(body.getAttribute("data-more")).toBe("");
+    // Within 1 px of the end counts as the end.
+    scrollTo(91.4);
+    expect(body.hasAttribute("data-more")).toBe(false);
+    scrollTo(92);
+    expect(body.hasAttribute("data-more")).toBe(false);
+    // It is read again when the view changes.
+    scrollTo(0);
+    await toWeek();
+    expect(screen.getByRole("region", { name: "The whole week" }).getAttribute("data-more")).toBe("");
+  });
+
+  it("S4, S5: the fade is drawn only on a flagged body, above the note or at the body's edge, 16 px into the ground (globals.css)", () => {
+    const sheet = css();
+    expect(sheet).toMatch(
+      /\.workbench \.whd-body\[data-more\] \.whd-note::before,\s*\.workbench \.whd-body\[data-more\]:not\(:has\(\.whd-note\)\) \+ \.whd-foot::before \{\s*content: "";\s*position: absolute;\s*left: 0;\s*right: 0;\s*bottom: 100%;\s*height: 16px;\s*background: linear-gradient\(to bottom, transparent, var\(--da-ground\)\);\s*pointer-events: none;\s*\}/,
+    );
+    // The weekday view's fade is drawn from the foot, up over the body's
+    // bottom edge: the window's 12 px row gap and the foot's 1 px rule.
+    expect(sheet).toMatch(
+      /\.workbench \.whd-body\[data-more\]:not\(:has\(\.whd-note\)\) \+ \.whd-foot::before \{\s*bottom: calc\(100% \+ 13px\);\s*\}/,
+    );
+    expect(sheet).toMatch(/\.workbench \.whd \{[^}]*gap: 12px;/);
+    expect(sheet).toMatch(/\.workbench \.whd-foot \{\s*position: relative;[^}]*border-top: 1px solid var\(--rule-soft\);/);
+    // No fade rule without the flag: on the body, the note or the foot.
+    expect(sheet).not.toMatch(/\.whd-body(?!\[data-more\])[^{,]*::(before|after)/);
+    expect(sheet).not.toMatch(/(^|[\s,}])\.workbench \.whd-(note|foot)::before/);
+  });
+
+  it("S3: a key of five entries takes an 8 px gap, so it stays on one line at the window's full width (globals.css)", () => {
+    expect(css()).toMatch(/\.workbench \.whd-legend:has\(li:nth-child\(5\)\) \{\s*column-gap: 8px;\s*\}/);
+    expect(css()).toMatch(/\.workbench \.whd-legend \{[^}]*gap: 4px 16px;/);
+  });
+
+  it("S6: a week with no-record days and no-closures days: 'No record' then 'No closures allowed' (#556 S1)", async () => {
+    const closed = denverDays("weekend_closed");
+    open({
+      block: denverBlock({
+        ...closed,
+        kinds: { weekday: denverDays("no_record").kinds.weekday, weekend: closed.kinds.weekend },
+      }),
+      start: 9,
+      end: 15,
+    });
+    await toWeek();
+    expect(keyItems()).toEqual([
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record",
+      "No closures allowed",
+    ]);
+  });
+});

@@ -1,0 +1,56 @@
+{
+ "viewport": [
+  1440,
+  900
+ ],
+ "keyWidth": 526,
+ "entries": [
+  [
+   "Allowed",
+   66.91
+  ],
+  [
+   "Your hours",
+   84.22
+  ],
+  [
+   "Not checked",
+   95
+  ],
+  [
+   "Outside what's allowed",
+   156.89
+  ],
+  [
+   "No record",
+   79.02
+  ]
+ ],
+ "entriesTotal": 482.04,
+ "asBuilt": {
+  "columnGap": "8px",
+  "keyLines": 1,
+  "bodyHeight": 364,
+  "contentHeight": 364
+ },
+ "at16": {
+  "keyLines": 2,
+  "bodyHeight": 342,
+  "contentHeight": 342
+ },
+ "at12": {
+  "keyLines": 2,
+  "bodyHeight": 342,
+  "contentHeight": 342
+ },
+ "at10": {
+  "keyLines": 1,
+  "bodyHeight": 364,
+  "contentHeight": 364
+ },
+ "at8": {
+  "keyLines": 1,
+  "bodyHeight": 364,
+  "contentHeight": 364
+ }
+}

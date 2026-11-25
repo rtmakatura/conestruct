@@ -6422,6 +6422,27 @@ input[type="number"] {
   z-index: 1;
   background: var(--da-ground);
 }
+/* #561 (R145 S4): while the body has more under its bottom edge
+   (data-more, set by the window), the content fades into the window's
+   ground there: above the note in the whole week, at the edge itself in
+   the weekday view (drawn from the foot, whose padding box starts 13 px
+   under the body: the window's 12 px row gap and the foot's 1 px rule).
+   CHOSEN (S5): 16 px, the chart's own side margin.
+   Neither is in the body's flow, so nothing moves when it shows or goes. */
+.workbench .whd-body[data-more] .whd-note::before,
+.workbench .whd-body[data-more]:not(:has(.whd-note)) + .whd-foot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 16px;
+  background: linear-gradient(to bottom, transparent, var(--da-ground));
+  pointer-events: none;
+}
+.workbench .whd-body[data-more]:not(:has(.whd-note)) + .whd-foot::before {
+  bottom: calc(100% + 13px);
+}
 .workbench .whd-verdict {
   display: flex;
   align-items: flex-start;
@@ -6595,6 +6616,7 @@ input[type="number"] {
   );
 }
 .workbench .whd-foot {
+  position: relative;
   display: grid;
   gap: 4px;
   border-top: 1px solid var(--rule-soft);
@@ -6609,6 +6631,14 @@ input[type="number"] {
   list-style: none;
   font-size: var(--fs-field-label);
   color: var(--ink-on-dark);
+}
+/* #561 (R145 S3): five entries share one line at the window's full width
+   (526 px of key): 482.04 px of entries and four gaps.  At 16 px they need
+   546.04 and wrap, and the second line (22.75 px) comes off the body.
+   CHOSEN: 8 px, so they take 514.04.  A key of three or four entries
+   keeps 16 px. */
+.workbench .whd-legend:has(li:nth-child(5)) {
+  column-gap: 8px;
 }
 .workbench .whd-legend li {
   display: inline-flex;
@@ -6670,6 +6700,12 @@ input[type="number"] {
    #556 (S4): the same bar when no street class is set. */
 .workbench .whd-yours.is-unchecked {
   background: transparent;
+  border: 1px dashed var(--ink-faint);
+}
+/* #561 (R145 S2): the key's swatch for it: the bar's own 6 px and its own
+   dashed rule. */
+.workbench .whd-key.is-unchecked {
+  height: 6px;
   border: 1px dashed var(--ink-faint);
 }
 /* Ruling 6: the shared listbox (components/ui/Listbox.tsx). */

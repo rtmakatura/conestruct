@@ -876,6 +876,9 @@ export function weekdayNoRecord(name: string): string {
 /** Round 2: the whole week's label for a day with no window on record. */
 export const NO_RECORD_LABEL = "No record";
 export const NO_RECORD_SR = "No hours on record.";
+/** #561 (R145 S1): the key's words for the hollow dashed bar, on a day
+ *  with no record or one that needs a street class. */
+export const NOT_CHECKED_LABEL = "Not checked";
 /** R145 S7: holidays are in the data as a rule only. */
 export function holidayLine(rule: "none" | "holidays_banned" | "holidays_and_eves_banned"): string | null {
   if (rule === "none") return null;
