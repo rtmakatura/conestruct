@@ -1,0 +1,8 @@
+390 set states: 561-class-set-night, 561-class-set-weekdays errors: none
+390 unset states: 561-class-unset-night, 561-class-unset-weekdays errors: none
+390x600 set states: 561-class-set-night, 561-class-set-weekdays errors: none
+390x600 unset states: 561-class-unset-night, 561-class-unset-weekdays errors: none
+390x480 set states: 561-class-set-night, 561-class-set-weekdays errors: none
+390x480 unset states: 561-class-unset-night, 561-class-unset-weekdays errors: none
+1440 set states: 561-class-set-night, 561-class-set-weekdays errors: none
+1440 unset states: 561-class-unset-night, 561-class-unset-weekdays errors: none

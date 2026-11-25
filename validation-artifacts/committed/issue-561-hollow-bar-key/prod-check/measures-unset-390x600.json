@@ -1,0 +1,507 @@
+{
+ "site": "https://www.conestruct.com",
+ "viewport": [
+  390,
+  600
+ ],
+ "streetClass": "unset",
+ "errors": [],
+ "states": {
+  "561-class-unset-night": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 316,
+      "scrollHeight": 316,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 3
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 1,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 316,
+      "scrollHeight": 408,
+      "scrollTop": 0,
+      "below": 92,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 277,
+      "boxBottom": 316.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 80.13
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 3
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 7,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    },
+    "atEnd": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 316,
+      "scrollHeight": 408,
+      "scrollTop": 92,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 2,
+      "boxTop": 277,
+      "boxBottom": 316.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 3
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 7,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    },
+    "backAtRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 316,
+      "scrollHeight": 408,
+      "scrollTop": 0,
+      "below": 92,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 277,
+      "boxBottom": 316.13,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 80.13
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 3
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 7,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    }
+   }
+  },
+  "561-class-unset-weekdays": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 336,
+      "scrollHeight": 336,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 1,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 336,
+      "scrollHeight": 408,
+      "scrollTop": 0,
+      "below": 72,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 296.56,
+      "boxBottom": 335.69,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 60.56
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 5,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    },
+    "atEnd": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 336,
+      "scrollHeight": 408,
+      "scrollTop": 72,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 2,
+      "boxTop": 296.56,
+      "boxBottom": 335.69,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 5,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    },
+    "backAtRest": {
+     "dialog": {
+      "w": 358,
+      "h": 568
+     },
+     "body": {
+      "clientHeight": 336,
+      "scrollHeight": 408,
+      "scrollTop": 0,
+      "below": 72,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 296.56,
+      "boxBottom": 335.69,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 60.56
+     },
+     "sub": {
+      "text": "Street class not set, so the hours for it aren't known. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 50.5,
+     "hollowBars": 5,
+     "solidBars": 0,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    }
+   }
+  }
+ },
+ "backendAnswer": {
+  "missing": "street_class",
+  "status": "unknown",
+  "weekdayAllowed": null,
+  "weekdayOutside": [],
+  "weekendRecord": "none"
+ },
+ "jurisdictionByHand": false
+}

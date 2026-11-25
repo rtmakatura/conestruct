@@ -1,0 +1,556 @@
+{
+ "site": "https://www.conestruct.com",
+ "viewport": [
+  390,
+  480
+ ],
+ "streetClass": "set",
+ "errors": [],
+ "states": {
+  "561-class-set-night": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 226,
+      "scrollTop": 0,
+      "below": 36,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "foot::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    },
+    "atEnd": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 226,
+      "scrollTop": 36,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    },
+    "backAtRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 226,
+      "scrollTop": 0,
+      "below": 36,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "foot::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 0,
+      "below": 167,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 155.56
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 2,
+     "solidBars": 5,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    },
+    "atEnd": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 167,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 2,
+     "solidBars": 5,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    },
+    "backAtRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 0,
+      "below": 167,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 155.56
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 8:30 pm to 5:30 am.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Not checked",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 2,
+     "solidBars": 5,
+     "swatch": {
+      "w": 14,
+      "h": 6,
+      "border": "1px dashed rgb(147, 160, 176)",
+      "bg": "rgba(0, 0, 0, 0)"
+     },
+     "bar": [
+      "1px dashed rgb(147, 160, 176)"
+     ],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    }
+   }
+  },
+  "561-class-set-weekdays": {
+   "day": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 190,
+      "scrollTop": 0,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": null,
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 1,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    }
+   },
+   "week": {
+    "atRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 0,
+      "below": 167,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 155.56
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 5,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ],
+     "axe": [],
+     "under44": []
+    },
+    "atEnd": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 167,
+      "below": 0,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": false,
+     "fade": null,
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 0
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 5,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    },
+    "backAtRest": {
+     "dialog": {
+      "w": 358,
+      "h": 448
+     },
+     "body": {
+      "clientHeight": 190,
+      "scrollHeight": 357,
+      "scrollTop": 0,
+      "below": 167,
+      "scrollWidth": 324,
+      "clientWidth": 324
+     },
+     "more": true,
+     "fade": {
+      "on": "note::before",
+      "height": "16px",
+      "position": "absolute",
+      "image": "linear-gradient(rgba(0, 0, 0, 0), rgb(16, 28, 41))",
+      "endsAboveEdgeBy": 0,
+      "pointerEvents": "none"
+     },
+     "note": {
+      "lines": 2,
+      "boxTop": 150.44,
+      "boxBottom": 189.56,
+      "whole": true,
+      "onTop": true,
+      "coversChartBy": 155.56
+     },
+     "sub": {
+      "text": "When you can close a lane on an arterial street. Your hours: 9 am to 3 pm.",
+      "lines": 2
+     },
+     "legend": [
+      "Allowed",
+      "Your hours",
+      "Outside what's allowed",
+      "No record"
+     ],
+     "legendLines": 2,
+     "footHeight": 76.63,
+     "hollowBars": 0,
+     "solidBars": 5,
+     "swatch": null,
+     "bar": [],
+     "ground": "rgb(16, 28, 41)",
+     "families": [
+      "__Inter_176161"
+     ],
+     "sizes": [
+      "12.5px",
+      "13.5px",
+      "19px"
+     ]
+    }
+   }
+  }
+ },
+ "jurisdictionByHand": false
+}

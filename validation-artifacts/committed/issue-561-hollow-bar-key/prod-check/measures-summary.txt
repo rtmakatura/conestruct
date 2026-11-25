@@ -1,0 +1,104 @@
+
+measures-set-1440.json  viewport 1440x900  class set  errors 0
+  561-class-set-night day rest: body 364/364 top 0 below 0 more false fade none
+    sub 2l; key (1 lines, foot 53.88): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 364/364
+  561-class-set-night week rest: body 364/364 top 0 below 0 more false fade none note 1l 318-337.56 whole true onTop true covers 0
+    sub 2l; key (1 lines, foot 53.88): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 2 solid 5; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 364/364
+  561-class-set-weekdays day rest: body 384/384 top 0 below 0 more false fade none
+    sub 1l; key (1 lines, foot 53.88): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week rest: body 384/384 top 0 below 0 more false fade none note 1l 318-337.56 whole true onTop true covers 0
+    sub 1l; key (1 lines, foot 53.88): Allowed | Your hours | Outside what's allowed | No record; hollow 0 solid 5; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+
+measures-set-390.json  viewport 390x844  class set  errors 0
+  561-class-set-night day rest: body 382/382 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 382/382
+  561-class-set-night week rest: body 382/382 top 0 below 0 more false fade none note 2l 318-357.13 whole true onTop true covers 0
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 2 solid 5; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 382/382
+  561-class-set-weekdays day rest: body 382/382 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week rest: body 382/382 top 0 below 0 more false fade none note 2l 318-357.13 whole true onTop true covers 0
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed | No record; hollow 0 solid 5; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+
+measures-set-390x480.json  viewport 390x480  class set  errors 0
+  561-class-set-night day rest: body 190/226 top 0 below 36 more true fade foot::before 16px absolute ends 0 from the edge
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-night day end : body 190/226 top 36 below 0 more false fade none
+  561-class-set-night week rest: body 190/357 top 0 below 167 more true fade note::before 16px absolute ends 0 from the edge note 2l 150.44-189.56 whole true onTop true covers 155.56
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 2 solid 5; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-night week end : body 190/357 top 167 below 0 more false fade none note 2l 150.44-189.56 whole true onTop true covers 0
+  561-class-set-weekdays day rest: body 190/190 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week rest: body 190/357 top 0 below 167 more true fade note::before 16px absolute ends 0 from the edge note 2l 150.44-189.56 whole true onTop true covers 155.56
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed | No record; hollow 0 solid 5; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week end : body 190/357 top 167 below 0 more false fade none note 2l 150.44-189.56 whole true onTop true covers 0
+
+measures-set-390x600.json  viewport 390x600  class set  errors 0
+  561-class-set-night day rest: body 310/310 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 310/310
+  561-class-set-night week rest: body 310/357 top 0 below 47 more true fade note::before 16px absolute ends 0 from the edge note 2l 270.44-309.56 whole true onTop true covers 35.56
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 2 solid 5; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 310/357
+  561-class-set-night week end : body 310/357 top 47 below 0 more false fade none note 2l 270.44-309.56 whole true onTop true covers 0
+  561-class-set-weekdays day rest: body 310/310 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed; hollow 0 solid 1; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week rest: body 310/357 top 0 below 47 more true fade note::before 16px absolute ends 0 from the edge note 2l 270.44-309.56 whole true onTop true covers 35.56
+    sub 2l; key (2 lines, foot 76.63): Allowed | Your hours | Outside what's allowed | No record; hollow 0 solid 5; swatch none; bar none; axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-set-weekdays week end : body 310/357 top 47 below 0 more false fade none note 2l 270.44-309.56 whole true onTop true covers 0
+
+measures-unset-1440.json  viewport 1440x900  class unset  errors 0  backend {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+  561-class-unset-night day rest: body 390/390 top 0 below 0 more false fade none
+    sub 2l; key (1 lines, foot 27.75): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 390/390
+  561-class-unset-night week rest: body 390/390 top 0 below 0 more false fade none note 1l 349.56-369.13 whole true onTop true covers 0
+    sub 2l; key (1 lines, foot 27.75): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 7 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 390/390
+  561-class-unset-weekdays day rest: body 390/390 top 0 below 0 more false fade none
+    sub 2l; key (1 lines, foot 27.75): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week rest: body 390/390 top 0 below 0 more false fade none note 1l 349.56-369.13 whole true onTop true covers 0
+    sub 2l; key (1 lines, foot 27.75): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 5 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+
+measures-unset-390.json  viewport 390x844  class unset  errors 0  backend {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+  561-class-unset-night day rest: body 388/388 top 0 below 0 more false fade none
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 388/388
+  561-class-unset-night week rest: body 388/408 top 0 below 20 more true fade note::before 16px absolute ends 0 from the edge note 2l 349-388.13 whole true onTop true covers 8.13
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 7 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 388/408
+  561-class-unset-night week end : body 388/408 top 20 below 0 more false fade none note 2l 349-388.13 whole true onTop true covers 0
+  561-class-unset-weekdays day rest: body 408/408 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week rest: body 408/408 top 0 below 0 more false fade none note 2l 368.56-407.69 whole true onTop true covers 0
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 5 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+
+measures-unset-390x480.json  viewport 390x480  class unset  errors 0  backend {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+  561-class-unset-night day rest: body 196/196 top 0 below 0 more false fade none
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-night week rest: body 196/408 top 0 below 212 more true fade note::before 16px absolute ends 0 from the edge note 2l 157-196.13 whole true onTop true covers 200.13
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 7 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-night week end : body 196/408 top 212 below 0 more false fade none note 2l 157-196.13 whole true onTop true covers 0
+  561-class-unset-weekdays day rest: body 216/216 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week rest: body 216/408 top 0 below 192 more true fade note::before 16px absolute ends 0 from the edge note 2l 176.56-215.69 whole true onTop true covers 180.56
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 5 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week end : body 216/408 top 192 below 0 more false fade none note 2l 176.56-215.69 whole true onTop true covers 0
+
+measures-unset-390x600.json  viewport 390x600  class unset  errors 0  backend {"missing":"street_class","status":"unknown","weekdayAllowed":null,"weekdayOutside":[],"weekendRecord":"none"}
+  561-class-unset-night day rest: body 316/316 top 0 below 0 more false fade none
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 316/316
+  561-class-unset-night week rest: body 316/408 top 0 below 92 more true fade note::before 16px absolute ends 0 from the edge note 2l 277-316.13 whole true onTop true covers 80.13
+    sub 3l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 7 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+    #556 body 316/408
+  561-class-unset-night week end : body 316/408 top 92 below 0 more false fade none note 2l 277-316.13 whole true onTop true covers 0
+  561-class-unset-weekdays day rest: body 336/336 top 0 below 0 more false fade none
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed; hollow 1 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week rest: body 336/408 top 0 below 72 more true fade note::before 16px absolute ends 0 from the edge note 2l 296.56-335.69 whole true onTop true covers 60.56
+    sub 2l; key (2 lines, foot 50.5): Allowed | Your hours | Not checked | Outside what's allowed | No record; hollow 5 solid 0; swatch 14x6 1px dashed rgb(147, 160, 176); bar 1px dashed rgb(147, 160, 176); axe 0; under44 []; __Inter_176161; 12.5px,13.5px,19px
+  561-class-unset-weekdays week end : body 336/408 top 72 below 0 more false fade none note 2l 296.56-335.69 whole true onTop true covers 0
+
+309 checks, 0 failed
