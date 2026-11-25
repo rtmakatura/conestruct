@@ -344,9 +344,6 @@ export const WORK_START_HEADING = "Where the work starts";
 /** R145-7: W1's line names the pin; the cross-street distance it shows
  *  is not read in the window, so the line stops at the pin. */
 export const WORK_START_AT_PIN = "At your pin.";
-/** R145: the old map overlay "Click the map or search to drop a pin",
- *  moved off the map (ruling 1) and reworded to the heading's verbs. */
-export const WORK_START_NO_PIN = "Search an address or tap the map to place your pin.";
 /** Ruling 1, as a plain line (R145-7). */
 export const WORK_START_MOVE = "Tap the map to move it.";
 /** Ruling 4. */
@@ -1329,7 +1326,12 @@ export function LocationPickerModal({
   // pin, road list, saved choice and every message before the new result
   // shows, exactly like a fresh window".  Before this only a search that
   // placed a pin cleared them (in detectAt), so a town's notice sat over
-  // the last pin's roads and a pick saved the plan at the old place.  The
+  // the last pin's roads and a pick saved the plan at the old place.
+  // #570 (Ryan, 2026-11-25) amends when it runs: "A search that finds
+  // nothing or is refused (typo, out-of-range pair, outside Colorado, no
+  // match) leaves the existing pin, road list and pick exactly as they
+  // were; only a search that returns a new place clears them."  So this is
+  // called once a search has a new place, not when it starts.  The
   // token is bumped so a road lookup still running can't answer for the
   // removed pin.  The text saved as the address and a marked cross street
   // belong to the old pin and go with it (R145 self-ruled).
@@ -1380,14 +1382,15 @@ export function LocationPickerModal({
       // #541 ruling 1: geocode sender 2 of 2.  Coordinates are read here,
       // before any request; only an address goes on to the geocoder.
       const read = readSearchCoords(q);
-      // #569: every search starts from a window with no pin.  The one
-      // search that is not new is the pin's own numbers (#538 fold-in (a)):
-      // it moves nothing, so the pin and its road pick stay.
-      const pinsOwnNumbers =
-        read.kind === "point" && hasPin && fmt4(read.lat) === fmt4(lat) && fmt4(read.lng) === fmt4(lng);
-      if (pinsOwnNumbers) setCoarseNotice(null);
-      else resetForNewSearch();
+      // #565 ruling 2: the last search's notice goes when a new one starts.
+      // #570: the pin, its roads and the pick wait for the answer; they are
+      // cleared (#569) only where this search has a new place, below.
+      setCoarseNotice(null);
       if (read.kind === "point") {
+        // A new place, unless it is the pin's own numbers (#538 fold-in
+        // (a)): those move nothing, so the pin and its road pick stay.
+        const pinsOwnNumbers = hasPin && fmt4(read.lat) === fmt4(lat) && fmt4(read.lng) === fmt4(lng);
+        if (!pinsOwnNumbers) resetForNewSearch();
         placeSearchCoords(read.lat, read.lng);
         return;
       }
@@ -1420,12 +1423,16 @@ export function LocationPickerModal({
         if (j.weak) {
           // #554 (Ryan, 2026-11-23): a weak match is named (#565: in the
           // right panel's box) and nothing moves: no pin, no fly, no road
-          // lookup, and the text is not saved as the address.
+          // lookup, and the text is not saved as the address.  #570: so
+          // it is not a new place, and a pin already placed stays.
           setCoarseNotice(
             searchMessageLines(weakMatchNotice(j.placeName ?? `${fmt4(j.lat)}, ${fmt4(j.lng)}`)),
           );
           return;
         }
+        // #570: a town or a street address is a new place; the last pin,
+        // its roads and the pick go now (#569).
+        resetForNewSearch();
         if (!isPreciseGeocode(j.placeType ?? null)) {
           // Coarse match (locality/place, e.g. "Lafayette, CO"):
           // recenter the map and ask for a pin.  Detection fires only
@@ -1757,20 +1764,18 @@ export function LocationPickerModal({
                   onClear={clearCrossPin}
                 />
               )}
+              {/* #570 (Ryan, 2026-11-25): "Hide the whole 'Where the work
+                  starts' section, heading included, until a pin exists, so
+                  no empty heading shows (e.g. after a town search)." */}
+              {hasPin && (
               <section className="mw-section" aria-labelledby="mw-start-h">
                 <h3 id="mw-start-h" className="mw-sub">
                   {WORK_START_HEADING}
                 </h3>
-                {/* #567 (Ryan, 2026-11-24): while the search's box shows, its
-                    line is the window's only instruction, so the two "tap
-                    the map" lines here are not rendered. */}
-                {hasPin ? (
-                  <p className="mw-line">{WORK_START_AT_PIN}</p>
-                ) : (
-                  !searchBoxShown && <p className="mw-line">{WORK_START_NO_PIN}</p>
-                )}
-                {/* #569 (Ryan, 2026-11-25): nor is "Tap the map to move it."
-                    while any message box shows. */}
+                <p className="mw-line">{WORK_START_AT_PIN}</p>
+                {/* #567 (Ryan, 2026-11-24) and #569 (Ryan, 2026-11-25):
+                    "Tap the map to move it." is not rendered while any
+                    message box shows; the box's line is the instruction. */}
                 {!searchBoxShown && !roadBoxShown && <p className="mw-hint">{WORK_START_MOVE}</p>}
                 <CorridorPreviewPanel
                   corridor={corridor}
@@ -1797,6 +1802,7 @@ export function LocationPickerModal({
                   declined={geometry.state === "error" ? (geometry.message ?? null) : null}
                 />
               </section>
+              )}
             </div>
           </div>
         </div>
