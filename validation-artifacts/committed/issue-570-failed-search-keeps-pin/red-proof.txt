@@ -1,0 +1,22 @@
+Red proof for #570: this branch's two test files run against f7b49e66's LocationPickerModal.tsx (the code before the fix).
+Command: npx vitest run --reporter=verbose components/LocationPickerModal.search-feedback.test.tsx components/LocationPickerModal.coords-bar.test.tsx
+
+ × components/LocationPickerModal.coords-bar.test.tsx > #541 ruling 1: out of range or swapped > longitude out of range names the longitude; a pin already placed stays (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > with a pin and its roads: the box of a search that found nothing sits between the question and the road list (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #567: while the box shows, its line is the only 'tap the map' instruction > no message, no pin: the work-start section is not in the window, heading included (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #567: while the box shows, its line is the only 'tap the map' instruction > a town, no pin: no work-start heading under the notice, nor when a new search starts (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #567: while the box shows, its line is the only 'tap the map' instruction > a pin: the section shows, its heading over 'At your pin.'; a town search after it takes the section away (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #567: while the box shows, its line is the only 'tap the map' instruction > a failed search's message over a pin: 'At your pin.' stays and 'Tap the map to move it.' goes (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > while the search is still out, the old pin, its roads and the pick stay; the town's answer clears them (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > a weak match after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > a typo (no match) after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the box and nothing moves > a pin already placed stays where it is (#570); nothing is placed or flown to
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > outside Colorado after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > a failed search after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > no answer after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > an out-of-range pair after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > did you mean after a pin leaves the pin, the road list and the pick as they were (#570)
+ × components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > the saved address stays the old pin's after a failed search (#570)
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  16 failed | 132 passed (148)
