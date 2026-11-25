@@ -1,0 +1,465 @@
+{
+ "ranAt": "2026-11-25T18:16:38.749Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "typo: the box says something, and not the town notice",
+     "pass": false,
+     "got": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ]
+    },
+    {
+     "name": "typo: the bar still reads the Bannock pin",
+     "pass": false,
+     "got": "No pin yet"
+    },
+    {
+     "name": "typo: the same road rows",
+     "pass": false,
+     "got": []
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "typo",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 0,
+   "tokenHits": 0,
+   "step": "typo",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "typo",
+     "text": "Lafayete",
+     "box": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ],
+     "geocodeStatus": [
+      200
+     ]
+    }
+   ],
+   "error": "locator.getAttribute: Timeout 30000ms exceeded."
+  },
+  {
+   "size": "1198x930",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "typo: the box says something, and not the town notice",
+     "pass": false,
+     "got": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ]
+    },
+    {
+     "name": "typo: the bar still reads the Bannock pin",
+     "pass": false,
+     "got": "No pin yet"
+    },
+    {
+     "name": "typo: the same road rows",
+     "pass": false,
+     "got": []
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "typo",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 0,
+   "tokenHits": 0,
+   "step": "typo",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "typo",
+     "text": "Lafayete",
+     "box": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ],
+     "geocodeStatus": [
+      200
+     ]
+    }
+   ],
+   "error": "locator.getAttribute: Timeout 30000ms exceeded."
+  },
+  {
+   "size": "390x844",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "typo: the box says something, and not the town notice",
+     "pass": false,
+     "got": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ]
+    },
+    {
+     "name": "typo: the bar still reads the Bannock pin",
+     "pass": false,
+     "got": "No pin yet"
+    },
+    {
+     "name": "typo: the same road rows",
+     "pass": false,
+     "got": []
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "typo",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED",
+    "typo: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 0,
+   "tokenHits": 0,
+   "step": "typo",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "typo",
+     "text": "Lafayete",
+     "box": [
+      "That search found a town or area, not a street.",
+      "Tap the map on the road where the work starts. The roads near your tap show up here."
+     ],
+     "geocodeStatus": [
+      200
+     ]
+    }
+   ],
+   "error": "locator.getAttribute: Timeout 30000ms exceeded."
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "status": 200,
+  "sha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+  "isHead": true
+ }
+}

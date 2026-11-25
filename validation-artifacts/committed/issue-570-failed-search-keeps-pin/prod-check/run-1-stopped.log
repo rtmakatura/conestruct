@@ -1,0 +1,17 @@
+healthz sha 8df9e51 equals head: true
+served /api/version HTTP 200 sha 8df9e51: head true
+  1440 FAIL typo: the box says something, and not the town notice: ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."]
+  1440 FAIL typo: the bar still reads the Bannock pin: "No pin yet"
+  1440 FAIL typo: the same road rows: []
+  1440 ERROR at typo: locator.getAttribute: Timeout 30000ms exceeded.
+1440x900: 11 checks, 3 failed, stopped on an error
+  1198 FAIL typo: the box says something, and not the town notice: ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."]
+  1198 FAIL typo: the bar still reads the Bannock pin: "No pin yet"
+  1198 FAIL typo: the same road rows: []
+  1198 ERROR at typo: locator.getAttribute: Timeout 30000ms exceeded.
+1198x930: 11 checks, 3 failed, stopped on an error
+  390 FAIL typo: the box says something, and not the town notice: ["That search found a town or area, not a street.","Tap the map on the road where the work starts. The roads near your tap show up here."]
+  390 FAIL typo: the bar still reads the Bannock pin: "No pin yet"
+  390 FAIL typo: the same road rows: []
+  390 ERROR at typo: locator.getAttribute: Timeout 30000ms exceeded.
+390x844: 11 checks, 3 failed, stopped on an error

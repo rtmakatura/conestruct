@@ -1,0 +1,1241 @@
+{
+ "ranAt": "2026-11-25T18:19:13.996Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "nonsense: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: one map marker",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "nonsense: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "nonsense: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "nonsense: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: one map marker",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "out of range: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "out of range: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "out of range: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "out of range: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "out of range: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "out of range: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "out of range: one map marker",
+     "pass": true
+    },
+    {
+     "name": "out of range: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "out of range: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "out of range: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: one map marker",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box's line",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box is the 'Did you mean' button",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": false,
+     "got": [
+      {
+       "step": "nonsense",
+       "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      },
+      {
+       "step": "outside Colorado",
+       "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+      }
+     ]
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "nonsense",
+     "status": 404
+    },
+    {
+     "step": "outside Colorado",
+     "status": 422
+    },
+    {
+     "step": "town",
+     "status": 200
+    }
+   ],
+   "console": [
+    {
+     "step": "nonsense",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+     "step": "outside Colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    }
+   ],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 2,
+   "tokenHits": 0,
+   "step": "town",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "nonsense",
+     "text": "qqzzxxqq vvkkjj",
+     "box": [
+      "No match for that address"
+     ],
+     "geocodeStatus": [
+      404
+     ]
+    },
+    {
+     "name": "outside Colorado",
+     "text": "Cheyenne, WY",
+     "box": [
+      "Plans cover Colorado roads only."
+     ],
+     "geocodeStatus": [
+      422
+     ]
+    },
+    {
+     "name": "out of range",
+     "text": "139.7401, -104.9811",
+     "box": [
+      "Latitude must be between -90 and 90"
+     ],
+     "geocodeStatus": []
+    },
+    {
+     "name": "swapped pair",
+     "text": "-104.9811, 39.7401",
+     "box": [
+      "Did you mean 39.7401, -104.9811?"
+     ],
+     "geocodeStatus": []
+    }
+   ]
+  },
+  {
+   "size": "1198x930",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "nonsense: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: one map marker",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "nonsense: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "nonsense: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "nonsense: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: one map marker",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "out of range: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "out of range: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "out of range: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "out of range: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "out of range: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "out of range: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "out of range: one map marker",
+     "pass": true
+    },
+    {
+     "name": "out of range: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "out of range: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "out of range: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: one map marker",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box's line",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box is the 'Did you mean' button",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": false,
+     "got": [
+      {
+       "step": "nonsense",
+       "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      },
+      {
+       "step": "outside Colorado",
+       "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+      }
+     ]
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "nonsense",
+     "status": 404
+    },
+    {
+     "step": "outside Colorado",
+     "status": 422
+    },
+    {
+     "step": "town",
+     "status": 200
+    }
+   ],
+   "console": [
+    {
+     "step": "nonsense",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+     "step": "outside Colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    }
+   ],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 2,
+   "tokenHits": 0,
+   "step": "town",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "nonsense",
+     "text": "qqzzxxqq vvkkjj",
+     "box": [
+      "No match for that address"
+     ],
+     "geocodeStatus": [
+      404
+     ]
+    },
+    {
+     "name": "outside Colorado",
+     "text": "Cheyenne, WY",
+     "box": [
+      "Plans cover Colorado roads only."
+     ],
+     "geocodeStatus": [
+      422
+     ]
+    },
+    {
+     "name": "out of range",
+     "text": "139.7401, -104.9811",
+     "box": [
+      "Latitude must be between -90 and 90"
+     ],
+     "geocodeStatus": []
+    },
+    {
+     "name": "swapped pair",
+     "text": "-104.9811, 39.7401",
+     "box": [
+      "Did you mean 39.7401, -104.9811?"
+     ],
+     "geocodeStatus": []
+    }
+   ]
+  },
+  {
+   "size": "390x844",
+   "checks": [
+    {
+     "name": "fresh: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "fresh: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "fresh: the window's own line still says how to start",
+     "pass": true
+    },
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: the heading shows, with 'At your pin.'",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "nonsense: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "nonsense: one map marker",
+     "pass": true
+    },
+    {
+     "name": "nonsense: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "nonsense: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "nonsense: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "nonsense: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: one map marker",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "out of range: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "out of range: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "out of range: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "out of range: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "out of range: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "out of range: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "out of range: one map marker",
+     "pass": true
+    },
+    {
+     "name": "out of range: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "out of range: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "out of range: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box says something, and not the town notice",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the bar still reads the Bannock pin",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the same road rows",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the picked road is still picked",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the 30 m notice is still there",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: Save is still open",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: one map marker",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the heading and 'At your pin.' show",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: 'Tap the map to move it.' is not shown beside the box",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: no new road lookup",
+     "pass": true
+    },
+    {
+     "name": "outside Colorado: the box's line",
+     "pass": true
+    },
+    {
+     "name": "swapped pair: the box is the 'Did you mean' button",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'Where the work starts' heading",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": false,
+     "got": [
+      {
+       "step": "nonsense",
+       "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      },
+      {
+       "step": "outside Colorado",
+       "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+      }
+     ]
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "nonsense",
+     "status": 404
+    },
+    {
+     "step": "outside Colorado",
+     "status": 422
+    },
+    {
+     "step": "town",
+     "status": 200
+    }
+   ],
+   "console": [
+    {
+     "step": "nonsense",
+     "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+     "step": "outside Colorado",
+     "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    }
+   ],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 2,
+   "tokenHits": 0,
+   "step": "town",
+   "priOff": "rgb(29, 44, 60)",
+   "found": [
+    {
+     "name": "nonsense",
+     "text": "qqzzxxqq vvkkjj",
+     "box": [
+      "No match for that address"
+     ],
+     "geocodeStatus": [
+      404
+     ]
+    },
+    {
+     "name": "outside Colorado",
+     "text": "Cheyenne, WY",
+     "box": [
+      "Plans cover Colorado roads only."
+     ],
+     "geocodeStatus": [
+      422
+     ]
+    },
+    {
+     "name": "out of range",
+     "text": "139.7401, -104.9811",
+     "box": [
+      "Latitude must be between -90 and 90"
+     ],
+     "geocodeStatus": []
+    },
+    {
+     "name": "swapped pair",
+     "text": "-104.9811, 39.7401",
+     "box": [
+      "Did you mean 39.7401, -104.9811?"
+     ],
+     "geocodeStatus": []
+    }
+   ]
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "status": 200,
+  "sha": "8df9e51ca417c6cc073dc750146d6ca33383a950",
+  "isHead": true
+ }
+}

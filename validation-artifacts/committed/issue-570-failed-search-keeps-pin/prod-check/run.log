@@ -1,0 +1,8 @@
+healthz sha 8df9e51 equals head: true
+served /api/version HTTP 200 sha 8df9e51: head true
+  1440 FAIL no console errors: [{"step":"nonsense","text":"Failed to load resource: the server responded with a status of 404 (Not Found)"},{"step":"outside Colorado","text":"Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"}]
+1440x900: 64 checks, 1 failed
+  1198 FAIL no console errors: [{"step":"nonsense","text":"Failed to load resource: the server responded with a status of 404 (Not Found)"},{"step":"outside Colorado","text":"Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"}]
+1198x930: 64 checks, 1 failed
+  390 FAIL no console errors: [{"step":"nonsense","text":"Failed to load resource: the server responded with a status of 404 (Not Found)"},{"step":"outside Colorado","text":"Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"}]
+390x844: 64 checks, 1 failed
