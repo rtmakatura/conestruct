@@ -1,0 +1,16 @@
+      Tests  14 failed | 128 passed (142)
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #541 ruling 1: out of range or swapped > longitude out of range names the longitude; a pin already placed is cleared (#569)
+ FAIL  components/LocationPickerModal.coords-bar.test.tsx > #554: a weak match is named in the box and nothing moves > a pin already placed is cleared by the new search (#569); nothing is placed or flown to
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #565 ruling 2: the box, under the question and over the road list > with a pin and its roads: a search that places no pin leaves the question and the box, and the old list is gone (#569)
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #567: while the box shows, its line is the only 'tap the map' instruction > a message after a pin: the pin is cleared, so 'At your pin.' and 'Tap the map to move it.' both go (#569)
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #568: an address search's pin says so to the road lookup > nearest-only roads: the two lines over the list, each row's distance, and nothing picked
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > Bannock, then Lafayette: the town notice is all that shows; no Denver pin, roads or 30 m notice
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > a road picked for the old pin is not kept: Save is shut after the next search
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > a weak match after a pin clears it too
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > did you mean after a pin clears it too
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > it is cleared before the new result shows: while the search is still out, nothing of the old pin is left
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > no answer after a pin clears it too
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > no match after a pin clears it too
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > out of range after a pin clears it too
+ FAIL  components/LocationPickerModal.search-feedback.test.tsx > #569: a new search starts from a window with no pin > the lookup's own message box hides 'Tap the map to move it.' too
+ Test Files  2 failed (2)
