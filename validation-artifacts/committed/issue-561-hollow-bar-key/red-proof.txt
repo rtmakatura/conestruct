@@ -1,0 +1,13 @@
+Red proof for #561: this branch's WorkHoursDialog.test.tsx run against 0880fed3's WorkHoursDialog.tsx, lib/scenarios/why-lines.ts and app/globals.css (the code before the change).
+Command: npx vitest run --reporter=verbose components/WorkHoursDialog.test.tsx
+The eighth new test (S1: no entry when no hollow bar is drawn) passes on the old code, as an absence test does. S6 fails there only because its list includes the new entry; the order of "No record" and "No closures allowed" was already right.
+
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S1: no street class: the entry is in the key in both views, after 'Your hours', with a hollow swatch
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S1: a no-record weekend in the job: the entry shows in the whole week only, where the hollow bars are
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S2: the swatch is the bar's own dashed rule and 6 px (globals.css)
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S4: the body is flagged while more of it is under its bottom edge, and not at the end or when it fits
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S4, S5: the fade is drawn only on a flagged body, above the note or at the body's edge, 16 px into the ground (globals.css)
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S3: a key of five entries takes an 8 px gap, so it stays on one line at the window's full width (globals.css)
+ × components/WorkHoursDialog.test.tsx > #561: the key names the hollow bar; a body with more below is flagged > S6: a week with no-record days and no-closures days: 'No record' then 'No closures allowed' (#556 S1)
+ Test Files  1 failed (1)
+      Tests  7 failed | 59 passed (66)
