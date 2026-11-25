@@ -43,6 +43,20 @@ const SEARCH_RADIUS_M = 50;
 // carriageway, while still wide enough to forgive normal click
 // imprecision on undivided roads.
 const SNAP_MAX_DISTANCE_M = 30;
+// #568: how far the lookup reaches for a pin an address search placed,
+// and only when no road is within SNAP_MAX_DISTANCE_M of it.  Mapbox puts
+// a street address at its building ("accuracy": "rooftop"), not on the
+// street: `1437 Bannock St, Denver` lands at the centre of the City and
+// County Building, 57.8 m from the nearest road open to traffic (Cherokee
+// Street; Bannock Street there is `highway=pedestrian`), so the lookup
+// answered 0 roads for a searched street address.
+//
+// CHOSEN (#568, 2026-11-24), not traced: no source says how far a
+// building's centre sits from its street.  100 m holds that pin's three
+// nearest roads, measured at 57.8, 84.1 and 87.3 m (recorded in
+// __fixtures__/bannock-1437-568.json).  The roads it adds are flagged
+// `nearest_only` on the wire and never picked for the operator.
+const ADDRESS_REACH_M = 100;
 // Place-node search radius.  Used to decide isUrban for road-type
 // classification.
 //
@@ -141,20 +155,21 @@ interface OverpassResponse {
   elements?: OverpassElement[];
 }
 
-function buildQuery(lat: number, lng: number): string {
+function buildQuery(lat: number, lng: number, wayRadiusM: number): string {
   // Single round-trip union: motorized ways within SEARCH_RADIUS_M +
   // urban place nodes within PLACE_RADIUS_M.  `out geom tags;` returns
   // way geometry for snap projection and full tag sets for downstream
   // classification.
   return (
     `[out:json][timeout:10];` +
-    `(way(around:${SEARCH_RADIUS_M.toFixed(0)},${lat},${lng})` +
+    `(way(around:${wayRadiusM.toFixed(0)},${lat},${lng})` +
     `["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];` +
     `node(around:${PLACE_RADIUS_M.toFixed(0)},${lat},${lng})` +
     `["place"~"^(city|town|suburb|neighbourhood|village|hamlet)$"];` +
     // Signal nodes near the pin: the `signalized` default for
     // cross-street approaches (near_intersection #117).  Same radius
-    // as the way search so a pin on the intersection sees its signals.
+    // as a tapped pin's way search so a pin on the intersection sees its
+    // signals (#568: it stays SEARCH_RADIUS_M when the way search is wider).
     `node(around:${SEARCH_RADIUS_M.toFixed(0)},${lat},${lng})` +
     `["highway"="traffic_signals"];` +
     `);out geom tags;`
@@ -165,8 +180,9 @@ async function overpassQuery(
   lat: number,
   lng: number,
   signal: AbortSignal | undefined,
+  wayRadiusM: number,
 ): Promise<OverpassResponse | null> {
-  return overpassRace<OverpassResponse>(buildQuery(lat, lng), signal, "roads");
+  return overpassRace<OverpassResponse>(buildQuery(lat, lng, wayRadiusM), signal, "roads");
 }
 
 function toRad(deg: number): number {
@@ -300,10 +316,14 @@ function unavailableResponse(): RoadDetectUnavailable {
   };
 }
 
+// #568: `addressPin` is true for a pin an address search placed.  The
+// answer is the same as any pin's whenever a road is within
+// SNAP_MAX_DISTANCE_M; only with none does it reach to ADDRESS_REACH_M.
 function buildResponse(
   payload: OverpassResponse,
   lat: number,
   lng: number,
+  addressPin = false,
 ): RoadDetectOk {
   const elements = payload.elements ?? [];
 
@@ -341,20 +361,71 @@ function buildResponse(
     signalNodes.push({ lat: node.lat, lon: node.lon });
   }
 
-  // #305 (d): only ways that answer this query -- extent meeting the
-  // `around:SEARCH_RADIUS_M` circle -- with at least one run of real points.
-  const ways: OverpassWay[] = usableWays(
-    elements.filter(
-      (el): el is OverpassWay =>
-        el.type === "way" &&
-        Array.isArray((el as OverpassWay).geometry) &&
-        ((el as OverpassWay).geometry?.length ?? 0) >= 2,
-    ),
+  const allWays = elements.filter(
+    (el): el is OverpassWay =>
+      el.type === "way" &&
+      Array.isArray((el as OverpassWay).geometry) &&
+      ((el as OverpassWay).geometry?.length ?? 0) >= 2,
+  );
+  let candidates = snapCandidates(
+    allWays,
     lat,
     lng,
     SEARCH_RADIUS_M,
-  ).ways;
-  if (ways.length === 0) return emptyResponse(isUrban, placeName);
+    SNAP_MAX_DISTANCE_M,
+    signalNodes,
+  );
+  let nearestOnly = false;
+  if (candidates.length === 0 && addressPin) {
+    candidates = snapCandidates(
+      allWays,
+      lat,
+      lng,
+      ADDRESS_REACH_M,
+      ADDRESS_REACH_M,
+      signalNodes,
+    );
+    nearestOnly = candidates.length > 0;
+  }
+  if (candidates.length === 0) return emptyResponse(isUrban, placeName);
+
+  // Dedup clusters same-road segment duplicates (the dominant noise
+  // source in raw Overpass output), then sort what remains by snap
+  // distance so primary_index points at the geometrically nearest
+  // *logical road*.
+  // #525: then one entry per street, at its nearest way, and the street
+  // each entry meets at the pin (same-street.ts).  Both read the ways'
+  // own geometry, before the centerline is stitched.
+  const deduped = mergeSameStreet(
+    candidates,
+    dedupCandidates(candidates).sort((a, b) => a.snap_distance_m - b.snap_distance_m),
+  );
+  attachCrossStreets(candidates, deduped, lat, lng);
+
+  return {
+    scan_status: "ok",
+    candidates: deduped,
+    primary_index: 0,
+    isUrban,
+    placeName,
+    // #568: present only when true, so every other answer's bytes stay.
+    ...(nearestOnly ? { nearest_only: true as const } : {}),
+  };
+}
+
+// One candidate per way that answers an `around:searchRadiusM` query and
+// passes within `snapMaxM` of the pin.
+function snapCandidates(
+  allWays: OverpassWay[],
+  lat: number,
+  lng: number,
+  searchRadiusM: number,
+  snapMaxM: number,
+  signalNodes: Array<{ lat: number; lon: number }>,
+): RoadCandidate[] {
+  // #305 (d): only ways that answer this query -- extent meeting the
+  // `around:searchRadiusM` circle -- with at least one run of real points.
+  const ways: OverpassWay[] = usableWays(allWays, lat, lng, searchRadiusM).ways;
 
   const candidates: RoadCandidate[] = [];
   for (const way of ways) {
@@ -381,7 +452,7 @@ function buildResponse(
       }
     }
     if (!bestA || !bestB || !bestProj) continue;
-    if (bestDistance > SNAP_MAX_DISTANCE_M) continue;
+    if (bestDistance > snapMaxM) continue;
 
     const tags = way.tags ?? {};
     const brg = bearingDeg(bestA.lat, bestA.lon, bestB.lat, bestB.lon);
@@ -419,28 +490,7 @@ function buildResponse(
     });
   }
 
-  if (candidates.length === 0) return emptyResponse(isUrban, placeName);
-
-  // Dedup clusters same-road segment duplicates (the dominant noise
-  // source in raw Overpass output), then sort what remains by snap
-  // distance so primary_index points at the geometrically nearest
-  // *logical road*.
-  // #525: then one entry per street, at its nearest way, and the street
-  // each entry meets at the pin (same-street.ts).  Both read the ways'
-  // own geometry, before the centerline is stitched.
-  const deduped = mergeSameStreet(
-    candidates,
-    dedupCandidates(candidates).sort((a, b) => a.snap_distance_m - b.snap_distance_m),
-  );
-  attachCrossStreets(candidates, deduped, lat, lng);
-
-  return {
-    scan_status: "ok",
-    candidates: deduped,
-    primary_index: 0,
-    isUrban,
-    placeName,
-  };
+  return candidates;
 }
 
 // ---------------------------------------------------------------------------
@@ -561,7 +611,11 @@ export async function POST(req: NextRequest) {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  const { lat, lng } = (body as { lat?: unknown; lng?: unknown }) ?? {};
+  const { lat, lng, reach } =
+    (body as { lat?: unknown; lng?: unknown; reach?: unknown }) ?? {};
+  // #568: the picker sends `reach: "address"` for a pin an address search
+  // placed.  Anything else is a tapped or typed pin.
+  const addressPin = reach === "address";
   if (
     typeof lat !== "number" ||
     typeof lng !== "number" ||
@@ -577,7 +631,12 @@ export async function POST(req: NextRequest) {
 
   let payload: OverpassResponse | null = null;
   try {
-    payload = await overpassQuery(lat, lng, req.signal);
+    payload = await overpassQuery(
+      lat,
+      lng,
+      req.signal,
+      addressPin ? ADDRESS_REACH_M : SEARCH_RADIUS_M,
+    );
   } catch (err) {
     if ((err as Error).name === "AbortError") {
       return new Response("Aborted", { status: 499 });
@@ -593,7 +652,7 @@ export async function POST(req: NextRequest) {
     return Response.json(unavailableResponse());
   }
 
-  const response = buildResponse(payload, lat, lng);
+  const response = buildResponse(payload, lat, lng, addressPin);
   if (response.candidates.length > 0) {
     let pool: OverpassWay[] | null = null;
     try {

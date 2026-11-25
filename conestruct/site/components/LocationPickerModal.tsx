@@ -330,9 +330,13 @@ export const MAP_WINDOW_LINE =
   "Search an address or tap the map where the work starts, then pick the road.";
 /** Ruling 1. */
 export const ROAD_QUESTION = "Which road is the work on?";
-/** #565 ruling 2: under the search's box while there is no pin, where the
- *  road list will be. */
-export const ROADS_NO_PIN = "Tap the map to find the roads.";
+/** #568: over the road list when no road is within 30 m of an address
+ *  search's pin and the list is the nearest roads instead (the route's
+ *  `nearest_only`; the 30 m is its SNAP_MAX_DISTANCE_M). */
+export const NEAREST_ROADS_TITLE = "No mapped road runs within 30 m of this address.";
+/** #568: the next step under it. */
+export const NEAREST_ROADS_LINE =
+  "These are the nearest. Pick one, or tap the map on the road where the work starts.";
 /** W1 board. */
 export const SIDE_NEXT_LINE = "You'll pick the side of the road next, on the page.";
 /** Ruling 1. */
@@ -557,6 +561,12 @@ export function LocationPickerModal({
   // allowed to mutate state, so a fast drag doesn't get a stale snap
   // from an earlier request.  One pipeline now → one token.
   const bearingTokenRef = useRef(0);
+  // #568: whether the pin is an address search's answer (a building, not
+  // a point on the road), kept for Try again at the same pin; and whether
+  // the lookup's list is the nearest roads only (its `nearest_only`).
+  const pinFromAddressRef = useRef(false);
+  const [nearestOnly, setNearestOnly] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   // ---- The corridor: the BACKEND's geometry (#290, ruling 7) -------------
   // The overlay used to fetch zone lengths (/api/render/corridor-spec) and
@@ -789,11 +799,18 @@ export function LocationPickerModal({
       setSelectedCandidateIdx(null);
       confirmedMethodRef.current = null;
       setClassify({ state: "resolving" });
+      setNearestOnly(false);
       try {
         const r = await fetch("/api/road-bearing", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ lat: qLat, lng: qLng }),
+          // #568: a pin an address search placed says so; the route then
+          // reaches further when no road is at the pin.
+          body: JSON.stringify({
+            lat: qLat,
+            lng: qLng,
+            ...(pinFromAddressRef.current ? { reach: "address" } : {}),
+          }),
         });
         if (bearingTokenRef.current !== myToken) return;
         if (!r.ok) {
@@ -825,7 +842,11 @@ export function LocationPickerModal({
           return;
         }
         setBearingCandidates(cands);
-        if (cands.length === 1) {
+        // #568: roads that are only the nearest to an address are listed
+        // and said to be so; none is picked for the operator.
+        const nearest = j.nearest_only === true;
+        setNearestOnly(nearest);
+        if (cands.length === 1 && !nearest) {
           // Unambiguous — select it and synthesize properties from the
           // candidate's OSM tags.  (#290: no direction of travel is
           // adopted from its bearing.)
@@ -972,9 +993,12 @@ export function LocationPickerModal({
         detect: boolean;
         fly: boolean;
         targetZoom?: number;
+        /** #568: the pin is an address search's answer. */
+        fromAddress?: boolean;
       },
     ) => {
       if (!isValidLat(newLat) || !isValidLng(newLng)) return;
+      pinFromAddressRef.current = opts.fromAddress === true;
       setHasPin(true);
       setCoarseNotice(null);
       setLat(newLat);
@@ -1225,6 +1249,7 @@ export function LocationPickerModal({
                   detect: true,
                   fly: true,
                   targetZoom: PIN_ZOOM,
+                  fromAddress: true,
                 });
               }
             } else {
@@ -1383,6 +1408,7 @@ export function LocationPickerModal({
           detect: true,
           fly: true,
           targetZoom: PIN_ZOOM,
+          fromAddress: true,
         });
       } catch {
         // #565 ruling 4: a fixed line, not the raw error text.
@@ -1397,6 +1423,9 @@ export function LocationPickerModal({
   const onTakeSwap = (swap: { lat: number; lng: number }) => {
     setSearchQuery(`${swap.lat}, ${swap.lng}`);
     placeSearchCoords(swap.lat, swap.lng);
+    // #567 item 3: the pressed button leaves the page with its box, so
+    // focus goes to the search box, which now holds the pair (CHOSEN).
+    searchInputRef.current?.focus();
   };
 
   // Editing the box withdraws a refused-coordinates line (it answered the
@@ -1517,9 +1546,9 @@ export function LocationPickerModal({
   // The road question's answer shows once a pin has one; its heading shows
   // with the list, with the lookup running, and over the box.
   const roadShown = hasPin && classify.state !== "idle";
+  const searchBoxShown = searchMessage !== null || searchSwap !== null;
   const roadHeading =
-    searchMessage !== null ||
-    searchSwap !== null ||
+    searchBoxShown ||
     (roadShown &&
       (classify.state === "resolving" || (classify.state !== "error" && bearingCandidates.length > 0)));
 
@@ -1571,6 +1600,7 @@ export function LocationPickerModal({
             <form onSubmit={onSubmitSearch} className="mw-search">
               <div className="mw-search-box">
                 <input
+                  ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
@@ -1669,10 +1699,9 @@ export function LocationPickerModal({
                     roadAxis={roadAxis}
                     onAxis={setRoadAxis}
                     onTryAgain={onRedetect}
+                    nearestOnly={nearestOnly}
                   />
-                ) : (
-                  (searchMessage || searchSwap) && <p className="mw-line">{ROADS_NO_PIN}</p>
-                )}
+                ) : null}
               </section>
               {isNearIntersectionKind && (
                 <CrossStreetPanel
@@ -1690,8 +1719,15 @@ export function LocationPickerModal({
                 <h3 id="mw-start-h" className="mw-sub">
                   {WORK_START_HEADING}
                 </h3>
-                <p className="mw-line">{hasPin ? WORK_START_AT_PIN : WORK_START_NO_PIN}</p>
-                <p className="mw-hint">{WORK_START_MOVE}</p>
+                {/* #567 (Ryan, 2026-11-24): while the search's box shows, its
+                    line is the window's only instruction, so the two "tap
+                    the map" lines here are not rendered. */}
+                {hasPin ? (
+                  <p className="mw-line">{WORK_START_AT_PIN}</p>
+                ) : (
+                  !searchBoxShown && <p className="mw-line">{WORK_START_NO_PIN}</p>
+                )}
+                {!searchBoxShown && <p className="mw-hint">{WORK_START_MOVE}</p>}
                 <CorridorPreviewPanel
                   corridor={corridor}
                   hasPin={hasPin}
@@ -1859,6 +1895,7 @@ function RoadQuestion({
   roadAxis,
   onAxis,
   onTryAgain,
+  nearestOnly,
 }: {
   classify: ClassifyStatus;
   candidates: RoadCandidate[];
@@ -1867,6 +1904,7 @@ function RoadQuestion({
   roadAxis: RoadAxis | null;
   onAxis: (a: RoadAxis) => void;
   onTryAgain: () => void;
+  nearestOnly: boolean;
 }) {
   if (classify.state === "resolving") {
     return (
@@ -1929,6 +1967,12 @@ function RoadQuestion({
   }
   return (
     <div className="road-pick-panel mw-roads" data-testid="road-pick-panel">
+      {nearestOnly && (
+        <div className="mw-status" role="status" data-testid="road-nearest-only">
+          <p className="mw-sub">{NEAREST_ROADS_TITLE}</p>
+          <p className="mw-line">{NEAREST_ROADS_LINE}</p>
+        </div>
+      )}
       <div role="radiogroup" aria-labelledby="mw-road-h" className="mw-road-rows">
         {candidates.map((c, idx) => {
           const picked = idx === selectedIdx;

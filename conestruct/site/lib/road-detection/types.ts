@@ -147,6 +147,11 @@ export interface RoadDetectOk {
   primary_index: number | null;
   isUrban: boolean;
   placeName: string | null;
+  /** #568: set (and only ever `true`) when no road is within the snap
+   *  distance of a pin an address search placed, and `candidates` are the
+   *  roads within the route's ADDRESS_REACH_M instead.  The picker says so
+   *  and never picks one for the operator. */
+  nearest_only?: true;
 }
 
 export interface RoadDetectUnavailable {

@@ -224,7 +224,8 @@ describe("#541 ruling 1: the search box takes coordinates", () => {
     mount();
     await mapBuilt();
     await searchFor(user, "1600 E Colfax Ave, Denver");
-    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966 }]));
+    // #568: an address search's pin says so to the road lookup.
+    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966, reach: "address" }]));
     expect(geocodes).toEqual([{ address: "1600 E Colfax Ave, Denver", jurisdiction_key: null }]);
     expect(bar().textContent).toBe("Pin at 39.7400, -104.9660");
   });
@@ -702,7 +703,7 @@ describe("#548: half a coordinate goes to the geocoder and places no pin", () =>
     mount();
     await mapBuilt();
     await searchFor(user, "39° 44.4");
-    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966 }]));
+    await waitFor(() => expect(detects).toEqual([{ lat: 39.74, lng: -104.966, reach: "address" }]));
     expect(geocodes).toEqual([{ address: "39° 44.4", jurisdiction_key: null }]);
     expect(bar().textContent).toBe("Pin at 39.7400, -104.9660");
   });
@@ -813,7 +814,7 @@ describe("#554: a weak match is named in the box and nothing moves", () => {
     await screen.findByText(CASES[0][2]);
     geocodeAnswer = { lat: HOLLY.lat, lng: HOLLY.lng, placeType: "address" };
     await searchFor(user, "39 N Main St, Holly");
-    await waitFor(() => expect(detects).toEqual([{ lat: HOLLY.lat, lng: HOLLY.lng }]));
+    await waitFor(() => expect(detects).toEqual([{ lat: HOLLY.lat, lng: HOLLY.lng, reach: "address" }]));
     expect(screen.queryByText(CASES[0][2])).toBeNull();
     expect(bar().textContent).toBe("Pin at 38.0534, -102.1227");
   });

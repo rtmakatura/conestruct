@@ -9,7 +9,8 @@
 //      work on?".
 //   2. T1: a box, one line saying what happened, then one saying what to do
 //      next.  "Did you mean ..." stays a real button inside the box.  The
-//      road list (or "Tap the map to find the roads.") follows below it.
+//      road list follows below it (#567: "Tap the map to find the roads."
+//      is gone; the box's own line is the only instruction).
 //      The box goes away when a pin is placed or a new search starts.
 //   3. Nothing moves; a live region stays.
 //   4. The wording of each message is kept unless it's jargon.
@@ -138,6 +139,11 @@ const lines = () => Array.from(feedback().children).map((e) => [e.className, e.t
 /** The road section's own children, each named by its tag and first class. */
 const order = () =>
   Array.from(section().children).map((e) => `${e.tagName.toLowerCase()}.${e.className.split(" ")[0]}`);
+/** The rail's lines that tell the operator to tap the map, outside the box. */
+const tapLines = () =>
+  Array.from(rail().querySelectorAll("p"))
+    .filter((p) => !feedback().contains(p) && /tap the map/i.test(p.textContent ?? ""))
+    .map((p) => p.textContent);
 const mapBuilt = () => waitFor(() => expect(mapStub.built).toBeGreaterThan(0));
 const mapReady = () => waitFor(() => expect(mapStub.click).not.toBeNull());
 
@@ -222,7 +228,7 @@ describe("#565 ruling 1: nothing of the search is in the map column", () => {
 });
 
 describe("#565 ruling 2: the box, under the question and over the road list", () => {
-  it("a town: the question, the box's two lines, then 'Tap the map to find the roads.'", async () => {
+  it("a town: the question and the box's two lines, and no other 'tap the map' line (#567)", async () => {
     const user = userEvent.setup();
     mount();
     await mapBuilt();
@@ -233,9 +239,9 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
       ["mw-line mw-feedback-what", TOWN],
       ["mw-line", TOWN_NEXT],
     ]);
-    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback", "p.mw-line"]);
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
     expect(section().children[0].textContent).toBe(QUESTION);
-    expect(section().children[2].textContent).toBe(TAP_LINE);
+    expect(tapLines()).toEqual([]);
     // It is the right panel's first section.
     expect(document.querySelector(".mw-rail-body")!.children[0]).toBe(section());
     expect(detects).toEqual([]);
@@ -246,7 +252,7 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
     mount({ address: "Lafayette, CO" });
     await screen.findByText(TOWN);
     expect(feedback().textContent).toBe(TOWN + TOWN_NEXT);
-    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback", "p.mw-line"]);
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
   });
 
   it("a weak match: the place on the first line, the next step on the second; a full stop in the name doesn't split it", async () => {
@@ -287,7 +293,7 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
           ],
     );
     expect(feedback().textContent).not.toMatch(/Geocod|Failed to fetch/);
-    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback", "p.mw-line"]);
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
   });
 
   it("out of range: the one line, no button, no request", async () => {
@@ -310,7 +316,7 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
     expect(choice.tagName).toBe("BUTTON");
     expect(choice.className).toBe("mw-link mw-search-pick");
     expect(feedback().textContent).toBe("Did you mean 39.7401, -104.9811?");
-    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback", "p.mw-line"]);
+    expect(order()).toEqual(["h3.mw-sub", "div.mw-feedback"]);
     expect(bar().textContent).toBe("No pin yet");
 
     await user.click(choice);
@@ -318,6 +324,10 @@ describe("#565 ruling 2: the box, under the question and over the road list", ()
     expect(geocodes).toBe(0);
     expect(bar().textContent).toBe("Pin at 39.7401, -104.9811");
     expect(feedback().textContent).toBe("");
+    // #567 item 3: the pressed button is gone with its box; focus is in
+    // the search box, which holds the pair.
+    expect(document.activeElement).toBe(input());
+    expect(input().value).toBe("39.7401, -104.9811");
   });
 
   it("with a pin and its roads: the box sits between the question and the road list, and the list is still named by the question", async () => {
@@ -463,5 +473,163 @@ describe("#565: globals.css draws the box from existing tokens and nothing float
 
   it("the 'Did you mean' button keeps its 44 px", () => {
     expect(rule(".map-window .mw-search-pick")).toContain("min-height: 44px;");
+  });
+});
+
+describe("#567: while the box shows, its line is the only 'tap the map' instruction", () => {
+  const START = "Search an address or tap the map to place your pin.";
+  const MOVE = "Tap the map to move it.";
+
+  it("no message, no pin: the two work-start lines show, as before", async () => {
+    mount();
+    await mapBuilt();
+    expect(tapLines()).toEqual([START, MOVE]);
+  });
+
+  it("a town, no pin: both work-start lines go, and come back when a new search starts", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    geo = { ok: { lat: 39.9936, lng: -105.0897, placeType: "place" } };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByText(TOWN);
+    expect(tapLines()).toEqual([]);
+    expect(screen.getByText("Where the work starts")).toBeTruthy();
+
+    geo = { parked: true };
+    await searchFor(user, "1600 E Colfax Ave, Denver");
+    await screen.findByRole("button", { name: "Searching…" });
+    expect(tapLines()).toEqual([START, MOVE]);
+  });
+
+  it("the 'Did you mean' button and a refused pair hide them too", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapBuilt();
+    await searchFor(user, "-104.9811, 39.7401");
+    within(feedback()).getByRole("button");
+    expect(tapLines()).toEqual([]);
+    await searchFor(user, "139.7401, -104.9811");
+    expect(feedback().textContent).not.toBe("");
+    expect(tapLines()).toEqual([]);
+  });
+
+  it("a message over a pin: 'At your pin.' stays and 'Tap the map to move it.' goes", async () => {
+    const user = userEvent.setup();
+    roadAnswer = TWO_ROADS;
+    mount(PIN);
+    await screen.findByTestId("road-pick-panel");
+    expect(tapLines()).toEqual([MOVE]);
+    geo = { ok: { lat: 39.9936, lng: -105.0897, placeType: "place" } };
+    await searchFor(user, "Lafayette, CO");
+    await screen.findByText(TOWN);
+    expect(tapLines()).toEqual([]);
+    expect(screen.getByText("At your pin.")).toBeTruthy();
+  });
+});
+
+describe("#568: an address search's pin says so to the road lookup", () => {
+  const ADDRESS = { lat: 39.739247, lng: -104.99097 };
+  const far = (way_id: string, name: string, m: number): RoadCandidate => ({
+    ...road(way_id, 0),
+    name,
+    snap_distance_m: m,
+  });
+  const NEAREST_TITLE = "No mapped road runs within 30 m of this address.";
+  const NEAREST_LINE =
+    "These are the nearest. Pick one, or tap the map on the road where the work starts.";
+
+  it("the search sends reach: address; a tap after it does not", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    await searchFor(user, "1437 Bannock St, Denver");
+    await waitFor(() => expect(detects).toHaveLength(1));
+    expect(detects[0]).toEqual({ ...ADDRESS, reach: "address" });
+
+    mapStub.click!({ lngLat: { lat: PIN.lat, lng: PIN.lng } });
+    await waitFor(() => expect(detects).toHaveLength(2));
+    expect(detects[1]).toEqual(PIN);
+  });
+
+  it("the open-time lookup of a saved address (the other sender) sends it too", async () => {
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    mount({ address: "1437 Bannock St, Denver" });
+    await waitFor(() => expect(detects).toHaveLength(1));
+    expect(detects[0]).toEqual({ ...ADDRESS, reach: "address" });
+  });
+
+  it("typed coordinates and a saved pin send no reach", async () => {
+    const user = userEvent.setup();
+    mount(PIN);
+    await waitFor(() => expect(detects).toHaveLength(1));
+    expect(detects[0]).toEqual(PIN);
+    await searchFor(user, "39.7392, -104.9910");
+    await waitFor(() => expect(detects).toHaveLength(2));
+    expect(detects[1]).toEqual({ lat: 39.7392, lng: -104.991 });
+  });
+
+  it("nearest-only roads: the two lines over the list, each row's distance, and nothing picked", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    roadAnswer = {
+      scan_status: "ok",
+      candidates: [far("130911277", "Cherokee Street", 57.8)],
+      primary_index: 0,
+      isUrban: true,
+      placeName: "Denver",
+      nearest_only: true,
+    };
+    await searchFor(user, "1437 Bannock St, Denver");
+    const panel = await screen.findByTestId("road-pick-panel");
+    const note = within(panel).getByTestId("road-nearest-only");
+    expect(Array.from(note.children).map((e) => e.textContent)).toEqual([NEAREST_TITLE, NEAREST_LINE]);
+    expect(panel.children[0]).toBe(note);
+    const row = within(panel).getByRole("radio");
+    expect(row.textContent).toContain("Cherokee Street");
+    expect(row.textContent).toContain("58 m from your pin");
+    // One road, but only the nearest: it is not picked for the operator.
+    expect(row.getAttribute("aria-checked")).toBe("false");
+    expect(screen.queryByText("We didn't find a road at your pin.")).toBeNull();
+
+    await user.click(row);
+    expect(within(panel).getByRole("radio").getAttribute("aria-checked")).toBe("true");
+  });
+
+  it("one road at the pin (no flag) is still picked, with no nearest-only lines", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    roadAnswer = { ...TWO_ROADS, candidates: [road("201", 0)] };
+    await searchFor(user, "1600 Broadway, Denver");
+    const panel = await screen.findByTestId("road-pick-panel");
+    expect(within(panel).getByRole("radio").getAttribute("aria-checked")).toBe("true");
+    expect(screen.queryByTestId("road-nearest-only")).toBeNull();
+  });
+
+  it("a tap after a nearest-only answer clears the lines", async () => {
+    const user = userEvent.setup();
+    mount();
+    await mapReady();
+    geo = { ok: { ...ADDRESS, placeType: "address" } };
+    roadAnswer = {
+      scan_status: "ok",
+      candidates: [far("130911277", "Cherokee Street", 57.8), far("628677817", "West Colfax Avenue", 84.1)],
+      primary_index: 0,
+      isUrban: true,
+      placeName: "Denver",
+      nearest_only: true,
+    };
+    await searchFor(user, "1437 Bannock St, Denver");
+    await screen.findByTestId("road-nearest-only");
+    roadAnswer = TWO_ROADS;
+    mapStub.click!({ lngLat: { lat: PIN.lat, lng: PIN.lng } });
+    await waitFor(() => expect(detects).toHaveLength(2));
+    await waitFor(() => expect(screen.queryByTestId("road-nearest-only")).toBeNull());
+    await screen.findByTestId("road-pick-panel");
   });
 });
