@@ -1,0 +1,37 @@
+{
+ "id": "address.2765063372120324",
+ "place_type": [
+  "address"
+ ],
+ "relevance": 1,
+ "text": "Bannock Street",
+ "address": "1437",
+ "place_name": "1437 Bannock Street, Denver, Colorado 80202, United States",
+ "center": [
+  -104.99097,
+  39.739247
+ ],
+ "geometry": {
+  "type": "Point",
+  "coordinates": [
+   -104.99097,
+   39.739247
+  ]
+ },
+ "routable_points": {
+  "points": [
+   {
+    "name": "default_routable_point",
+    "note": "PA",
+    "coordinates": [
+     -104.991322,
+     39.739412
+    ]
+   }
+  ]
+ },
+ "properties": {
+  "accuracy": "rooftop",
+  "mapbox_id": "dXJuOm1ieGFkcjplZTZiODYzOC0yZDA3LTQyODMtOWY3Ni0wZDUzNmUxZDU5NzU"
+ }
+}
