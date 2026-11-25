@@ -1,0 +1,1108 @@
+{
+ "ranAt": "2026-11-25T17:22:23.339Z",
+ "site": "https://www.conestruct.com",
+ "headSha": "029b982231123b1fed14a11c5c2d9628251357e3",
+ "sizes": [
+  {
+   "size": "1440x900",
+   "checks": [
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the two lines",
+     "pass": true
+    },
+    {
+     "name": "address: the notice is on --pri-off with no border",
+     "pass": true
+    },
+    {
+     "name": "address: 'Tap the map to move it.' is not shown beside the notice",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: the town box and the 30 m notice are the same box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "refused: the box has its line",
+     "pass": true
+    },
+    {
+     "name": "refused: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "refused: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "refused: no road rows",
+     "pass": true
+    },
+    {
+     "name": "refused: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "refused: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "refused: no map marker",
+     "pass": true
+    },
+    {
+     "name": "pair: its own roads, no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "pair: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "pair: 'Tap the map to move it.' shows (no message box)",
+     "pass": true
+    },
+    {
+     "name": "same pair: no new lookup, the pin stays",
+     "pass": true
+    },
+    {
+     "name": "same pair: the pick stays",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads and the lookup's own message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'Tap the map to move it.' is not shown beside the message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'At your pin.' shows",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "refused",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "pair",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.7392521562918,
+      "lng": -104.99096999999942
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "refused",
+     "status": 200
+    },
+    {
+     "step": "tap",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "tap: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "priOff": "rgb(29, 44, 60)",
+   "noticeStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   },
+   "townStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   }
+  },
+  {
+   "size": "1198x930",
+   "checks": [
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the two lines",
+     "pass": true
+    },
+    {
+     "name": "address: the notice is on --pri-off with no border",
+     "pass": true
+    },
+    {
+     "name": "address: 'Tap the map to move it.' is not shown beside the notice",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: the town box and the 30 m notice are the same box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "refused: the box has its line",
+     "pass": true
+    },
+    {
+     "name": "refused: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "refused: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "refused: no road rows",
+     "pass": true
+    },
+    {
+     "name": "refused: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "refused: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "refused: no map marker",
+     "pass": true
+    },
+    {
+     "name": "pair: its own roads, no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "pair: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "pair: 'Tap the map to move it.' shows (no message box)",
+     "pass": true
+    },
+    {
+     "name": "same pair: no new lookup, the pin stays",
+     "pass": true
+    },
+    {
+     "name": "same pair: the pick stays",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads and the lookup's own message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'Tap the map to move it.' is not shown beside the message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'At your pin.' shows",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "refused",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "pair",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.73925285280336,
+      "lng": -104.9909710058288
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "refused",
+     "status": 200
+    },
+    {
+     "step": "tap",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "pair: api.mapbox.com net::ERR_ABORTED",
+    "tap: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "priOff": "rgb(29, 44, 60)",
+   "noticeStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   },
+   "townStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   }
+  },
+  {
+   "size": "390x844",
+   "checks": [
+    {
+     "name": "address: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "address: the bar",
+     "pass": true
+    },
+    {
+     "name": "address: the two lines",
+     "pass": true
+    },
+    {
+     "name": "address: the notice is on --pri-off with no border",
+     "pass": true
+    },
+    {
+     "name": "address: 'Tap the map to move it.' is not shown beside the notice",
+     "pass": true
+    },
+    {
+     "name": "address: one map marker",
+     "pass": true
+    },
+    {
+     "name": "address: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "pick: the first road is picked and Save is open",
+     "pass": true
+    },
+    {
+     "name": "town: the box's two lines",
+     "pass": true
+    },
+    {
+     "name": "town: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "town: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "town: no road rows",
+     "pass": true
+    },
+    {
+     "name": "town: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "town: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "town: no map marker",
+     "pass": true
+    },
+    {
+     "name": "town: no road lookup for the town",
+     "pass": true
+    },
+    {
+     "name": "town: no 'tap the map' line outside the box",
+     "pass": true
+    },
+    {
+     "name": "town: the town box and the 30 m notice are the same box",
+     "pass": true
+    },
+    {
+     "name": "town: axe on the window",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "refused, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "refused: the box has its line",
+     "pass": true
+    },
+    {
+     "name": "refused: the bar reads 'No pin yet'",
+     "pass": true
+    },
+    {
+     "name": "refused: no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "refused: no road rows",
+     "pass": true
+    },
+    {
+     "name": "refused: 'At your pin.' is gone",
+     "pass": true
+    },
+    {
+     "name": "refused: Save is disabled",
+     "pass": true
+    },
+    {
+     "name": "refused: no map marker",
+     "pass": true
+    },
+    {
+     "name": "pair: its own roads, no 30 m notice",
+     "pass": true
+    },
+    {
+     "name": "pair: the bar",
+     "pass": true
+    },
+    {
+     "name": "pair: the box is empty",
+     "pass": true
+    },
+    {
+     "name": "pair: 'Tap the map to move it.' shows (no message box)",
+     "pass": true
+    },
+    {
+     "name": "same pair: no new lookup, the pin stays",
+     "pass": true
+    },
+    {
+     "name": "same pair: the pick stays",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the 30 m notice over the lookup's roads",
+     "pass": true
+    },
+    {
+     "name": "tap, before: the bar",
+     "pass": true
+    },
+    {
+     "name": "tap: 0 roads and the lookup's own message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'Tap the map to move it.' is not shown beside the message",
+     "pass": true
+    },
+    {
+     "name": "tap: 'At your pin.' shows",
+     "pass": true
+    },
+    {
+     "name": "no console errors",
+     "pass": true
+    },
+    {
+     "name": "no token in the page",
+     "pass": true
+    }
+   ],
+   "roads": [
+    {
+     "step": "address",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "refused",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "pair",
+     "status": 200,
+     "sent": {
+      "lat": 39.7401,
+      "lng": -104.9811
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": [
+      {
+       "name": "Pennsylvania Street",
+       "m": 1.69
+      },
+      {
+       "name": "East Colfax Avenue",
+       "m": 4.98
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.739247,
+      "lng": -104.99097,
+      "reach": "address"
+     },
+     "scan_status": "ok",
+     "nearest_only": true,
+     "candidates": [
+      {
+       "name": "Cherokee Street",
+       "m": 57.76
+      },
+      {
+       "name": "West Colfax Avenue",
+       "m": 84.02
+      },
+      {
+       "name": "West 14th Avenue",
+       "m": 87.22
+      }
+     ]
+    },
+    {
+     "step": "tap",
+     "status": 200,
+     "sent": {
+      "lat": 39.73924848243311,
+      "lng": -104.99096999999912
+     },
+     "scan_status": "ok",
+     "nearest_only": "absent",
+     "candidates": []
+    }
+   ],
+   "geocodes": [
+    {
+     "step": "address",
+     "status": 200
+    },
+    {
+     "step": "town",
+     "status": 200
+    },
+    {
+     "step": "refused",
+     "status": 200
+    },
+    {
+     "step": "tap",
+     "status": 200
+    }
+   ],
+   "console": [],
+   "failed": [
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "address: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "town: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED",
+    "refused: api.mapbox.com net::ERR_ABORTED"
+   ],
+   "tokenChecks": 1,
+   "tokenHits": 0,
+   "step": "tap",
+   "priOff": "rgb(29, 44, 60)",
+   "noticeStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   },
+   "townStyle": {
+    "bg": "rgb(29, 44, 60)",
+    "border": "0px",
+    "first": "600"
+   }
+  }
+ ],
+ "healthz": {
+  "status": "ok",
+  "sha": "029b982231123b1fed14a11c5c2d9628251357e3",
+  "equalsHead": true
+ },
+ "served": {
+  "route": "/api/version",
+  "status": 200,
+  "sha": "029b982231123b1fed14a11c5c2d9628251357e3",
+  "isHead": true
+ }
+}
